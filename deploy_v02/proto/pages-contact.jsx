@@ -3,6 +3,8 @@
 function ContactPage() {
   const [form, setForm] = React.useState({ name: '', email: '', project: '' });
   const [sent, setSent] = React.useState(false);
+  const bp = useBP();
+  const sendCursor = useCursorLabel('send', 'link');
 
   const submit = (e) => {
     e.preventDefault();
@@ -75,12 +77,12 @@ function ContactPage() {
                 <div style={{ marginTop: 20, fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase' }}>I&apos;ll reply to {form.email} within a day.</div>
               </div>
             ) : (
-              <form onSubmit={submit} name="contact" data-netlify="true" style={{ display: 'grid', gridTemplateColumns: useBP() === 'mobile' ? '1fr' : '1fr 1fr', gap: 20 }}>
+              <form onSubmit={submit} name="contact" data-netlify="true" style={{ display: 'grid', gridTemplateColumns: bp === 'mobile' ? '1fr' : '1fr 1fr', gap: 20 }}>
                 <input type="hidden" name="form-name" value="contact" />
                 {field('name', '01 · name')}
                 {field('email', '02 · your email')}
                 <div style={{ gridColumn: 'span 2' }}>{field('project', '03 · the project', 4)}</div>
-                <button type="submit" {...useCursorLabel('send', 'link')}
+                <button type="submit" {...sendCursor}
                   style={{ gridColumn: 'span 2', background: 'var(--accent)', color: '#0b0b0c', border: 'none', padding: '20px 28px', fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', cursor: 'none', textAlign: 'left', marginTop: 8 }}>
                   Send the transmission &nbsp;&nbsp;→
                 </button>
