@@ -1,0 +1,2 @@
+# (uncomment to force www → apex once your custom domain is set up)
+# https://www.yourdomain.com/* https://yourdomain.com/:splat 301!
