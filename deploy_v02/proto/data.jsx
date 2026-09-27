@@ -38,20 +38,21 @@ const SCENES = {
 const PROJECTS = [
   // ── Virtual Production (2) ─────────────────────────────────
   {
-    slug: 'xr01-chinese-temple', n: '01', title: 'XR01 — Chinese Temple', role: 'Env. Artist & Brain Operator',
+    slug: 'xr01-chinese-temple', n: '01', title: 'The Gate Within', role: 'Environment Artist · Virtual Production',
     kind: 'Virtual Production', kindShort: 'VP', year: '2025', tone: 'ember',
-    tags: ['UE5', 'nDisplay', 'LED Volume', 'On-set'],
-    tagline: 'A Chinese temple environment built and operated for an XR-stage short film.',
-    blurb: 'Built a Chinese temple environment for an XR stage short film, then ran the brain on shoot day — managing nDisplay, LED budgets, frame rate, on-set lighting, and real-time optimization while the camera rolled.',
-    client: 'SCAD · XR Stage', duration: '6 weeks', plates: 8, assets: 64,
+    tags: ['UE5', 'Gaea', 'LED Volume', 'On-set'],
+    hero: 'media/projects/xr01-chinese-temple/web/unreal-bd-3.webp',
+    tagline: 'Unreal environment development and on-stage foliage optimization for a student virtual production film.',
+    blurb: 'A student virtual production film at SCAD, with responsibility for Unreal environment development and XR-stage adaptation. My contribution covered Gaea terrain generation, Fab asset integration, scene composition, and on-set foliage optimization. The project connected environment art with the practical requirements of camera framing, physical lighting, and a collaborative film production.',
+    client: 'SCAD · Student film', focus: 'Environment · XR adaptation',
     breakdown: [
-      { tone: 'studio', label: '01 · blockout',  meta: 'greybox / scale' },
-      { tone: 'ember',  label: '02 · materials', meta: 'PBR / weathering' },
-      { tone: 'canyon', label: '03 · lookdev',   meta: 'lumen · dressed' },
-      { tone: 'dusk',   label: '04 · on-set',    meta: 'nDisplay · live' },
+      { tone: 'studio', label: '01 · terrain', meta: 'Gaea', image: 'media/projects/xr01-chinese-temple/web/gaea-wf.webp' },
+      { tone: 'ember', label: '02 · layout', meta: 'Unreal', image: 'media/projects/xr01-chinese-temple/web/unreal-bd.webp' },
+      { tone: 'canyon', label: '03 · environment', meta: 'foliage / lighting', image: 'media/projects/xr01-chinese-temple/web/unreal-bd-3.webp' },
+      { tone: 'dusk', label: '04 · on-set', meta: 'XR stage', image: 'media/projects/xr01-chinese-temple/web/xr-screen-01.webp' },
     ],
-    problem: 'The LED volume has a strict GPU budget and the director wanted a hand-held camera moving through carved interiors at 24fps without a single dropped frame.',
-    approach: 'Modular kit with shared masters, instanced everything, and a culling pass tuned per camera angle. On the day I ran the brain — adjusting frustums, exposure, and frame pacing live between takes.',
+    problem: 'Dense foliage and animated trees made the original scene too demanding for the virtual production stage.',
+    approach: 'Rebuilt the foliage around the camera view: manually placed plants replaced the PCG layout, and lightweight tree cards with subtle motion replaced some of the heavier meshes.',
   },
   {
     slug: 'xr02-1920s-nyc', n: '02', title: 'XR02 — 1920s NYC Industrial', role: 'Env. Artist & Brain Operator',
@@ -255,21 +256,127 @@ const GALLERY = [
 //           `cap` is placeholder caption copy — rewrite per photo.
 // video   · final piece. Set `vimeo` (URL or id) or `src` (local mp4).
 // closing · the last line on the page.
+function xrMedia(name, alt, caption, width = 2400, height = 1350, portrait = false) {
+  return { image: `media/projects/xr01-chinese-temple/web/${name}.webp`, alt, caption, width, height, portrait };
+}
+
 const CASE_EXTRAS = {
   'xr01-chinese-temple': {
-    software: ['Unreal Engine 5','nDisplay','ZBrush','Substance 3D'],
-    stage: 'Delivered · shot on stage',
-    layout: 'stagger',
-    video: { vimeo: '', src: '', cap: 'XR01 · final cut' },
-    process: [
-      { tone: 'studio', title: 'Reference', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'ember', title: 'Blockout', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'canyon', title: 'The temple kit', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'dusk', title: 'Materials', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'ember', title: 'Lighting', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'studio', title: 'Shoot day', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
+    software: ['Unreal Engine 5', 'Gaea', 'Fab assets'],
+    stage: 'Completed · class film',
+    spreads: [
+      { id: 'build', title: 'Environment development for the XR stage', label: '01 / Build', layout: 'build', chapters: ['terrain', 'layout'], paragraphs: [
+        'For my first virtual production course project, I developed the Unreal environment and adapted it for use on an XR stage. The work combined terrain generation, asset integration, scene assembly, and production-driven optimization.',
+        'I generated the mountain backdrop in Gaea and integrated selected Fab assets into Unreal. Scene layout established the relationship between the gate, temple, and path, with terrain providing depth beyond the foreground. I also explored AI-assisted asset creation as part of the development process.'
+      ] },
+      { id: 'environment', title: 'From blockout to a living environment', label: '02 / Look development', layout: 'inspect', chapters: ['look', 'breakdown'], paragraphs: [
+        'Foliage placement established foreground framing and visual depth around the temple. Wind animation introduced environmental motion, while lighting and atmospheric treatment unified the composition.',
+        'The Unreal breakdowns document the environment through surface-channel and geometry visualizations alongside the final lit result.'
+      ] },
+      { id: 'stage', title: 'Build for what the camera sees', label: '03 / On-stage problem solving', layout: 'stage', chapters: ['adaptation'], paragraphs: [
+        'Stage testing exposed a key performance constraint: dense foliage combined with wind animation was too demanding for the XR setup. I reworked the vegetation around the camera framing and the requirements of the shoot.',
+        'I replaced the procedural content generation (PCG) layout with manually placed vegetation in camera-visible areas. Selected tree meshes were replaced with image-based cards retaining subtle motion. This reduced scene complexity while preserving the intended composition and supported the environment used for filming.'
+      ] },
+      { id: 'production', title: 'A small crew. A first film.', label: '04 / Production & reflection', layout: 'crew', chapters: ['shoot', 'learning', 'crew'], paragraphs: [
+        'Working with the student crew introduced me to the relationship between the digital backdrop, physical set, camera, and practical lighting. My first on-set experience also developed my understanding of call sheets, production coordination, and adapting environment work to the needs of a live shoot.',
+        'The team completed the film with the adapted environment on stage. The project strengthened my ability to balance visual intent with real-time constraints and contribute environment work within a collaborative production workflow.'
+      ] }
     ],
-    closing: 'The camera moved, the wall held, and for a second nobody could tell where the set ended.',
+    statement: 'Building a world. Learning a set.',
+    processIntro: 'The Gate Within was my first virtual production class film and my first experience on a film set. I knew how I wanted the environment to feel. This project taught me what it takes for that environment to work with a camera, a physical set, and a crew.',
+    video: { vimeo: 'https://vimeo.com/1230103396', aspectRatio: '100 / 41.89', label: 'The Gate Within · final film', cap: 'The finished class film, captured on the virtual production stage.' },
+    chapters: [
+      {
+        id: 'terrain', short: 'Terrain', title: 'A mountain backdrop in Gaea', wide: true,
+        paragraphs: [
+          'I began with terrain generation in Gaea, developing a mountain backdrop to extend the environment beyond the immediate foreground.',
+          'My responsibility was the complete environment assembly and its adaptation for virtual production. I combined the terrain with selected assets from Fab, and explored AI-assisted asset creation during the project. The build brought these different sources together into one scene.'
+        ],
+        media: [xrMedia('gaea-wf', 'A mountain terrain preview above a node graph in Gaea.', 'Gaea workflow: shaping the mountain backdrop before bringing it into the environment.')]
+      },
+      {
+        id: 'layout', short: 'Scene layout', title: 'Finding the scene before filling it',
+        paragraphs: [
+          'In Unreal, the early layout established the relationship between the steps, gate, temple, and distant terrain. The blockout images show this structure before the dense foliage became part of the scene.',
+          'Working with existing assets let me spend the short build window on assembling the environment, arranging the composition, and developing its overall appearance.'
+        ],
+        media: [
+          xrMedia('unreal-wf', 'Two Unreal Editor viewports showing the temple layout and surrounding terrain.', 'Unreal workspace: the camera composition alongside the wider environment layout.', 2400, 742),
+          xrMedia('unreal-bd', 'A pale blockout of temple steps, a gate, pagoda, and mountains.', 'Early scene structure: architecture, terrain, and a character scale reference before vegetation.')
+        ]
+      },
+      {
+        id: 'look', short: 'Environment', title: 'Giving the temple its atmosphere',
+        paragraphs: [
+          'Trees and plants became a major part of the environment. They framed the architecture and filled the space around the path. I also added wind to the trees so the scene would have movement.',
+          'These environment images capture the visual goal. The density that helped the scene feel alive would later become the main challenge when we took it onto the virtual production stage.'
+        ],
+        media: [
+          xrMedia('unreal-bd-3', 'A dark gate and stone steps framed by trees, with a red pagoda beyond.', 'Environment view: foliage frames the route toward the temple.'),
+          xrMedia('unreal-bd-4', 'The temple composition with a greener, cooler atmosphere.', 'An alternate look at the environment and its lighting.')
+        ],
+        video: { vimeo: 'https://vimeo.com/1230103395', label: 'Unreal environment render', cap: 'The digital environment on its own, before the live-action film.' }
+      },
+      {
+        id: 'breakdown', short: 'Technical views', title: 'Looking beneath the finished image',
+        paragraphs: [
+          'The Unreal breakdowns document more than the final appearance. They include diagnostic visualizations and neutral surface views that expose different aspects of the scene.',
+          'Together, they make the amount of vegetation around the architecture easier to see. These are records of the environment build; they are not a measured before-and-after performance comparison.'
+        ],
+        media: [
+          xrMedia('unreal-bd-5', 'A grid of Unreal render-buffer views surrounding the finished temple image.', 'Buffer-style overview: several surface and scene channels shown beside the finished image.'),
+          xrMedia('unreal-bd-6', 'Colored geometry diagnostic views surrounding a lit environment render.', 'Geometry visualization montage: different diagnostic views of the same composition.'),
+          xrMedia('unreal-bd-7', 'The temple environment with diagnostic overlays in the upper-left corner.', 'Scene inspection: diagnostic overlays alongside the lit environment.'),
+          xrMedia('unreal-bd-8', 'The temple and foliage shown with neutral surface shading and warm light.', 'Neutral surface view: the forms and lighting read without the final material colors.'),
+          xrMedia('unreal-bd-9', 'A second neutral-shaded view of the temple and surrounding trees.', 'A second neutral view of the architecture and vegetation.')
+        ]
+      },
+      {
+        id: 'adaptation', short: 'Stage adaptation', title: 'Rebuilding around what the camera could see',
+        paragraphs: [
+          'On the XR stage, the original foliage setup was too demanding. The scene contained a large number of trees and plants, and the added wind made that setup harder to run for virtual production.',
+          'I removed the original foliage arrangement and rebuilt it on stage. Instead of relying on PCG, I manually placed plants where the camera would see them. For some trees, I replaced full meshes with lightweight plane cards carrying tree images and a small amount of motion.',
+          'That change let us achieve the scene for the shoot. It was my first practical lesson in building for the actual camera view: keeping the visual contribution of the vegetation while simplifying what the stage had to render.'
+        ],
+        media: [
+          xrMedia('xr-screen-03', 'A workstation monitor showing Unreal and virtual production diagnostic windows.', 'The stage workstation during setup. This photo documents the working environment, rather than a performance benchmark.'),
+          xrMedia('xr-screen-02', 'Physical tree props and a platform in front of the temple displayed on the LED wall.', 'The environment on the LED wall, seen with the physical foreground set.')
+        ]
+      },
+      {
+        id: 'shoot', short: 'The shoot', title: 'The environment becomes a film set',
+        paragraphs: [
+          'Once the environment was on the wall, it became one part of a much larger process. Physical lighting, camera framing, performers, and the foreground set all had to work together.',
+          'This was my first time on a film set. I learned about cameras, real lighting, call sheets, and the coordination behind a shoot by working alongside the crew. The photographs below show the environment in that shared production context.'
+        ],
+        media: [
+          xrMedia('xr-screen-01', 'A cinema camera aimed toward a performer and the temple on the LED wall.', 'Camera, physical foreground, and digital backdrop in the same setup.'),
+          xrMedia('xr-shoot-01', 'Two performers being staged in front of the virtual environment.', 'Preparing the performers in front of the XR backdrop.', 2400, 1800),
+          xrMedia('xr-shoot-02', 'A camera operator, boom microphone, and performer on the lit stage.', 'The crew working with the camera, lighting, and sound around the scene.'),
+          { video: 'media/projects/xr01-chinese-temple/web/on-set.mp4', poster: 'media/projects/xr01-chinese-temple/web/on-set-poster.webp', alt: 'Behind-the-scenes clip from the XR shoot', caption: 'A short behind-the-scenes clip from the shoot. Web preview without audio.' }
+        ]
+      },
+      {
+        id: 'learning', short: 'What I learned', title: 'My first experience inside the production',
+        paragraphs: [
+          'I arrived at this project as an environment artist, with no previous experience of a working film set. Adapting the scene on stage taught me to make technical decisions in the context of the shot and the needs of the crew.',
+          'The biggest lesson was flexibility. The first build gave us the visual direction, but making the film required changes under real production conditions. I left with a better understanding of both virtual production and the filmmaking around it.'
+        ],
+        media: [
+          xrMedia('xr-and-me-2', 'Kiran at the workstation beside the virtual production stage.', 'At the stage workstation during production.', 1800, 2400, true),
+          xrMedia('xr-and-me', 'Kiran on the film set beside lighting and sound equipment.', 'A first film-set experience, beyond the Unreal viewport.', 1800, 2400, true)
+        ]
+      },
+      {
+        id: 'crew', short: 'The crew', title: 'A small crew, a finished film', wide: true,
+        paragraphs: [
+          'We were a small crew working within a short timeframe, and we brought the project through to a completed film. My contribution was the environment and its stage adaptation; the final piece came from everyone working together.',
+          'The Gate Within developed my experience in environment assembly, foliage optimization, and adapting digital work to a live production setting.'
+        ],
+        media: [xrMedia('crew-pic', 'The cast and crew together in front of the temple on the LED wall.', 'The cast and crew of The Gate Within on the virtual production stage.')]
+      }
+    ],
+    closing: 'Balancing environment design, real-time performance, and the requirements of the shot.',
   },
   'xr02-1920s-nyc': {
     software: ['Unreal Engine 5','Maya','ZBrush','Substance 3D'],
