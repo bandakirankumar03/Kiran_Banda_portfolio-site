@@ -159,19 +159,6 @@ function HomeIntro() {
   const bp = useBP();
   return (
     <div style={{ minHeight: bp === 'mobile' ? 'auto' : '85vh', display: 'flex', alignItems: 'center', padding: bp === 'mobile' ? '48px var(--pad) 40px' : 'clamp(90px,20vw,140px) var(--pad) clamp(48px,10vw,80px)', borderTop: `1px solid var(--hair)`, gap: 80, position: 'relative', overflow: 'hidden' }}>
-      <div className="home-deco" style={{
-        position: 'absolute', right: 48, bottom: 40, display: 'flex', flexDirection: 'column', alignItems: 'center',
-        gap: 14, opacity: 0.14, pointerEvents: 'none', userSelect: 'none',
-      }}>
-        <img src="proto/logo.png" alt="" aria-hidden="true" style={{
-          height: 200, width: 'auto', filter: 'grayscale(1) brightness(2)',
-        }} />
-        <div style={{ fontFamily: 'var(--serif)', fontSize: 22, fontStyle: 'italic', letterSpacing: 1, color: 'var(--ink)', whiteSpace: 'nowrap', marginTop: -4 }}>
-        </div>
-        <div style={{ fontSize: 23, lineHeight: 1, position: 'absolute', left: 114, top: 140 }}>
-          Kiran Banda
-        </div>
-      </div>
       <div style={{ maxWidth: 1300, width: '100%', flex: '1 1 auto' }}>
         <Reveal>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 23, lineHeight: 1, letterSpacing: 3, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 32, height: 23, paddingLeft: 3 }}>
@@ -203,6 +190,14 @@ function ProjectCarousel({ onOpen }) {
   const speedRef = React.useRef(0.5);
   const dispRef = React.useRef(0.5);
   const cursorXRef = React.useRef(null);
+  const manualRef = React.useRef(0);
+  const pauseUntilRef = React.useRef(0);
+  const moveByCard = direction => {
+    const cards = trackRef.current?.querySelectorAll('[data-card]');
+    if (!cards || cards.length < 2) return;
+    manualRef.current -= direction * (cards[1].offsetLeft - cards[0].offsetLeft);
+    pauseUntilRef.current = performance.now() + 2200;
+  };
   const loop = [...PROJECTS, ...PROJECTS];
 
   React.useEffect(() => {
@@ -230,9 +225,16 @@ function ProjectCarousel({ onOpen }) {
       }
       speedRef.current = target;
       dispRef.current += (speedRef.current - dispRef.current) * 0.08;
-      posRef.current -= dispRef.current;
-      const half = track.scrollWidth / 2;
-      if (-posRef.current >= half) posRef.current += half;
+      if (Math.abs(manualRef.current) > .1) {
+        const step = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? manualRef.current : manualRef.current * .14;
+        posRef.current += step;
+        manualRef.current -= step;
+      } else if (performance.now() > pauseUntilRef.current) {
+        posRef.current -= dispRef.current;
+      }
+      const cards = track.querySelectorAll('[data-card]');
+      const half = cards[PROJECTS.length].offsetLeft - cards[0].offsetLeft;
+      if (half > 0) posRef.current = -(((-posRef.current % half) + half) % half);
       track.style.transform = `translate3d(${posRef.current}px, 0, 0)`;
       raf = requestAnimationFrame(loopFn);
     };
@@ -242,14 +244,27 @@ function ProjectCarousel({ onOpen }) {
 
   return (
     <div style={{ borderTop: `1px solid var(--hair)`, padding: 'clamp(60px,12vw,100px) 0 clamp(60px,14vw,120px)', overflow: 'hidden' }}>
+      <style>{`
+        .work-carousel-actions { display:flex; align-items:center; gap:24px; }
+        .work-carousel-arrows { display:flex; gap:8px; }
+        .work-carousel-arrows button { width:46px; height:46px; display:grid; place-items:center; border:1px solid var(--hair); border-radius:50%; background:transparent; color:var(--ink); cursor:pointer; transition:border-color .2s,color .2s; }
+        .work-carousel-arrows button:hover { border-color:var(--accent); color:var(--accent); }
+        .work-carousel-arrows button:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+        .work-carousel-arrows svg { pointer-events:none; }
+        @media(max-width:600px) { .work-carousel-actions { width:100%; justify-content:space-between; } }
+      `}</style>
       <Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'baseline', padding: '0 var(--pad)', marginBottom: 48, fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)' }}>
           <span style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: '#f2ede3', fontWeight: 300 }}>
             worlds,&nbsp;<span style={{ fontStyle: 'italic', color: '#C1663B' }}>so far</span>
           </span>
-          <NavLink onClick={() => window.__go__({ name: 'work' })} style={{ color: 'var(--accent)' }}>
+          <div className="work-carousel-actions"><NavLink onClick={() => window.__go__({ name: 'work' })} style={{ color: 'var(--accent)' }}>
             full index &nbsp;→
           </NavLink>
+          <div className="work-carousel-arrows" role="group" aria-label="Browse projects">
+            <button type="button" aria-label="Previous projects" onClick={()=>moveByCard(-1)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg></button>
+            <button type="button" aria-label="Next projects" onClick={()=>moveByCard(1)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          </div></div>
         </div>
       </Reveal>
       <div ref={trackRef} style={{ display: 'flex', gap: 'clamp(14px,4vw,28px)', willChange: 'transform', padding: '0 clamp(12px,4vw,24px)' }}>

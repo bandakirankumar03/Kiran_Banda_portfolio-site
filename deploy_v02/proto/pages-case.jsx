@@ -315,7 +315,7 @@ function ProcessBook({ p, x }) {
   );
 }
 
-function StoryImage({ media, className = '' }) {
+function StoryImage({ media, className = '', onInspect }) {
   const reset = event => {
     event.currentTarget.style.setProperty('--xr-x', '0px');
     event.currentTarget.style.setProperty('--xr-y', '0px');
@@ -326,12 +326,13 @@ function StoryImage({ media, className = '' }) {
     event.currentTarget.style.setProperty('--xr-x', `${((event.clientX - box.left) / box.width - .5) * 7}px`);
     event.currentTarget.style.setProperty('--xr-y', `${((event.clientY - box.top) / box.height - .5) * 7}px`);
   };
-  return <div className={`xr-photo ${className}`} onPointerMove={move} onPointerLeave={reset} onPointerCancel={reset}>
+  return <button type="button" aria-label={`Expand image: ${media.alt}`} onClick={()=>onInspect(media)} className={`xr-photo ${className}`} onPointerMove={move} onPointerLeave={reset} onPointerCancel={reset}>
     <img src={media.image} alt={media.alt} width={media.width} height={media.height} loading="lazy" decoding="async" />
-  </div>;
+    <span className="xr-expand" aria-hidden="true">⤢</span>
+  </button>;
 }
 
-function RenderComparison({ media }) {
+function RenderComparison({ media, onInspect }) {
   const [active, setActive] = React.useState(0);
   const start = React.useRef(null);
   const labels = ['Final image', 'Color view', 'Gray shading'];
@@ -346,6 +347,7 @@ function RenderComparison({ media }) {
         {media.map((item,i)=><img key={item.image} src={item.image} alt={item.alt} aria-hidden={i!==active} width={2400} height={1350} loading="lazy" decoding="async" draggable={false}/>)}
       </div>
     </div>
+    <button type="button" className="xr-view-button" onClick={()=>onInspect(media[active])}>⤢ Expand current image</button>
     <div className="xr-comparison-controls">
       <button type="button" onClick={()=>change(-1)} aria-label="Previous render view">←</button>
       <div className="xr-comparison-options">{labels.map((label,i)=><button type="button" key={label} aria-pressed={i===active} onClick={()=>setActive(i)}>{label}</button>)}</div>
@@ -355,11 +357,65 @@ function RenderComparison({ media }) {
   </div>;
 }
 
+function ProjectImageViewer({ media, onClose }) {
+  const dialog = React.useRef(null), canvas = React.useRef(null), image = React.useRef(null);
+  const view = React.useRef({scale:1,x:0,y:0});
+  const drag = React.useRef(null);
+  const [state,setState] = React.useState(view.current);
+  const [dragging,setDragging] = React.useState(false);
+  const update = next => {
+    const box=canvas.current.getBoundingClientRect(), img=image.current;
+    const limitX=Math.max(0,(img.offsetWidth*next.scale-box.width)/2);
+    const limitY=Math.max(0,(img.offsetHeight*next.scale-box.height)/2);
+    const bounded={scale:next.scale,x:Math.max(-limitX,Math.min(limitX,next.x)),y:Math.max(-limitY,Math.min(limitY,next.y))};
+    view.current=bounded; setState(bounded);
+  };
+  const zoom = (factor,x=0,y=0) => {
+    const old=view.current, scale=Math.max(1,Math.min(6,old.scale*factor)), ratio=scale/old.scale;
+    update({scale,x:x-(x-old.x)*ratio,y:y-(y-old.y)*ratio});
+  };
+  React.useEffect(()=>{
+    const element=dialog.current, surface=canvas.current;
+    const overflow=document.body.style.overflow;
+    element.showModal(); document.body.style.overflow='hidden';
+    const wheel=event=>{
+      event.preventDefault();
+      const box=surface.getBoundingClientRect();
+      const delta=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?box.height:1);
+      zoom(Math.exp(-Math.max(-100,Math.min(100,delta))*.003),event.clientX-box.left-box.width/2,event.clientY-box.top-box.height/2);
+    };
+    const resize=()=>update(view.current);
+    surface.addEventListener('wheel',wheel,{passive:false}); window.addEventListener('resize',resize);
+    return ()=>{surface.removeEventListener('wheel',wheel); window.removeEventListener('resize',resize); element.close(); document.body.style.overflow=overflow;};
+  },[]);
+  const endDrag=()=>{drag.current=null;setDragging(false);};
+  return <dialog ref={dialog} className="xr-image-dialog" aria-label="Expanded project image" onCancel={onClose}
+    onKeyDown={event=>{
+      if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) {
+        event.preventDefault();
+        if(event.key==='+'||event.key==='=') zoom(1.25);
+        else if(event.key==='-') zoom(.8);
+        else if(event.key==='0') update({scale:1,x:0,y:0});
+        else update({...view.current,x:view.current.x+(event.key==='ArrowLeft'?60:event.key==='ArrowRight'?-60:0),y:view.current.y+(event.key==='ArrowUp'?60:event.key==='ArrowDown'?-60:0)});
+      }
+    }}>
+    <div ref={canvas} className="xr-image-canvas" data-zoomed={state.scale>1} data-dragging={dragging}
+      onDoubleClick={()=>view.current.scale>1?update({scale:1,x:0,y:0}):zoom(2)}
+      onPointerDown={event=>{if(event.button!==0||view.current.scale<=1)return;event.preventDefault();event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,view:{...view.current}};setDragging(true);}}
+      onPointerMove={event=>{if(!drag.current)return;update({...drag.current.view,x:drag.current.view.x+event.clientX-drag.current.x,y:drag.current.view.y+event.clientY-drag.current.y});}}
+      onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={endDrag}>
+      <img ref={image} src={media.image} alt={media.alt} draggable={false} style={{transform:`translate(${state.x}px,${state.y}px) scale(${state.scale})`}}/>
+    </div>
+    <button type="button" className="xr-image-close" aria-label="Close image" autoFocus onClick={onClose}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </dialog>;
+}
+
 function StoryBook({ p, x }) {
+  const [selected, setSelected] = React.useState(null);
   const groups = x.spreads.map(spread => ({ ...spread, media: spread.chapters.flatMap(id => x.chapters.find(ch => ch.id === id).media || []).filter(m => m.image) }));
   const [build, look, stage, crew] = groups;
   const mediaPlate = (media, cls = '') => (
-    <StoryImage key={media.image} media={media} className={cls} />
+    <StoryImage key={media.image} media={media} className={cls} onInspect={setSelected} />
   );
   return (
     <div className="xr-book">
@@ -391,6 +447,20 @@ function StoryBook({ p, x }) {
         .xr-copy h2 { font-size:clamp(28px,3vw,42px); line-height:1.12; font-weight:300; margin:16px 0 22px; color:var(--ink); }
         .xr-copy p { font:16px/1.8 var(--sans); color:var(--ink); opacity:.83; margin:0 0 16px; }
         .xr-photo { position:relative; display:block; width:100%; min-width:0; padding:0; border:1px solid var(--hair); border-radius:6px; overflow:hidden; background:#101112; }
+        .xr-photo { cursor:zoom-in; }
+        .xr-expand { position:absolute; right:10px; bottom:10px; display:grid; place-items:center; width:38px; height:38px; border:1px solid #ffffff55; border-radius:50%; background:#101112dd; color:#fff; font:24px/1 var(--sans); }
+        .xr-photo:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+        @media(hover:hover) { .xr-expand { opacity:0; transition:opacity .2s; } .xr-photo:hover .xr-expand,.xr-photo:focus-visible .xr-expand { opacity:1; } }
+        .xr-view-button { display:block; margin:8px 0 0 auto; padding:8px; border:0; background:transparent; color:var(--dim); font:11px var(--mono); cursor:zoom-in; }
+        .xr-image-dialog { position:fixed; inset:0; margin:0; padding:0; border:0; border-radius:0; background:transparent; width:100vw; height:100dvh; max-width:none; max-height:none; overflow:hidden; cursor:default!important; }
+        .xr-image-dialog::backdrop { background:rgba(0,0,0,.92); }
+        .xr-image-canvas { width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; touch-action:none; cursor:zoom-in!important; }
+        .xr-image-canvas[data-zoomed=true] { cursor:grab!important; }
+        .xr-image-canvas[data-dragging=true] { cursor:grabbing!important; }
+        .xr-image-canvas img { display:block; max-width:94vw; max-height:90dvh; width:auto; height:auto; object-fit:contain; user-select:none; pointer-events:none; transform-origin:center; }
+        .xr-image-close { position:absolute; z-index:2; top:16px; right:16px; width:44px; height:44px; display:grid; place-items:center; padding:0; border:0; background:rgba(0,0,0,.35); border-radius:50%; color:#fff; cursor:pointer!important; }
+        .xr-image-close svg { pointer-events:none; }
+        .xr-image-close:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
         .xr-photo img { display:block; width:100%; height:100%; object-fit:cover; }
         .xr-comparison-frame { overflow:hidden; border:1px solid var(--hair); border-radius:6px; aspect-ratio:16/9; touch-action:pan-y; cursor:grab; }
         .xr-comparison-frame:active { cursor:grabbing; }
@@ -450,23 +520,79 @@ function StoryBook({ p, x }) {
           .xr-crew { grid-template-rows:115px 85px 65px; }
           .xr-stage .xr-photo:last-child { margin-top:-40px; }
         }
+
+        .xr-flow { gap:44px 28px; }
+        .xr-opening { grid-column:1/6; }
+        .xr-mountain { grid-column:8/13; padding-top:0; }
+        .xr-assembly { grid-column:1/9; }
+        .xr-build-note { grid-column:9/13; padding:0 0 0 16px; }
+        .xr-look-note { grid-column:2/5; }
+        .xr-beauty { grid-column:5/13; }
+        .xr-diagnostics { grid-column:5/13; margin-top:-26px; }
+        .xr-bridge { grid-column:1/10; padding:38px 0 0; }
+        .xr-stage-view { grid-column:1/9; }
+        .xr-stage-note { grid-column:9/13; }
+        .xr-reflection { grid-column:1/5; padding-top:22px; }
+        .xr-set { grid-column:5/13; }
+        .xr-crew-end { grid-column:2/10; }
+        .xr-ending { grid-column:10/13; align-self:end; }
+        .xr-copy p { font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.8; color:#bdbab3; opacity:1; max-width:48ch; }
+        .xr-copy h2 { font-family:var(--serif); font-size:clamp(32px,3.8vw,54px); letter-spacing:-1.5px; line-height:1.15; margin:15px 0 20px; }
+        .xr-copy h2 em { color:#c88968; font-weight:400; }
+        .xr-kicker { color:#c88968; font-size:10px; letter-spacing:2px; display:block; }
+        .xr-photo { border-radius:2px; }
+        .xr-caption { font:10px/1.7 var(--mono); letter-spacing:.3px; }
+        .xr-caption span { color:#c88968; margin-right:12px; }
+        .xr-mountain .xr-photo { aspect-ratio:16/10; }
+        .xr-assembly .xr-photo { aspect-ratio:2400/742; }
+        .xr-stage .xr-photo:first-child { aspect-ratio:16/10; }
+        .xr-stage .xr-photo:last-child { width:62%; margin-left:auto; grid-column:1/-1; margin-top:-120px; margin-right:-16px; box-shadow:0 12px 40px #0008; }
+        .xr-set-grid { grid-template-columns:1.2fr 1fr .85fr; grid-template-rows:180px 125px; }
+        .xr-ending .xr-photo { width:100%; aspect-ratio:3/4; margin-bottom:12px; }
+        .xr-tech-label { font:10px var(--mono); letter-spacing:1px; text-transform:uppercase; color:#c88968; margin:0 0 8px; }
+        .xr-tech-note { border-left:1px solid #c8896860; padding-left:18px; margin-bottom:25px; }
+        .xr-tech-note p { margin:0; }
+        .xr-comparison-controls { border-bottom:1px solid var(--hair); padding-bottom:12px; }
+        .xr-comparison-controls button { border:0; border-radius:0; }
+        .xr-comparison-options button[aria-pressed=true] { color:#e5b196; box-shadow:inset 0 -1px #c88968; }
+        .xr-view-button { color:#c88968; }
+        .xr-outcome { grid-column:2/10; padding:12px 0 32px; }
+        .xr-outcome p { font:clamp(23px,2.6vw,36px)/1.5 var(--serif); color:var(--ink); max-width:35ch; letter-spacing:-.6px; }
+        @media(max-width:760px) {
+          .xr-flow { gap:28px 12px; }
+          .xr-flow > * { grid-column:1/-1; padding:0; }
+          .xr-flow .xr-mountain { grid-column:2/7; }
+          .xr-flow .xr-build-note { grid-column:2/7; }
+          .xr-flow .xr-diagnostics { grid-column:1/7; margin-top:-12px; }
+          .xr-flow .xr-stage-note { grid-column:2/7; }
+          .xr-stage .xr-photo:last-child { margin-top:-50px; margin-right:0; }
+          .xr-flow .xr-crew-end { grid-column:1/6; }
+          .xr-flow .xr-ending { grid-column:6/7; }
+          .xr-ending > div { display:block; }
+          .xr-ending .xr-photo { aspect-ratio:3/5; }
+          .xr-set-grid { grid-template-rows:130px 90px; }
+          .xr-copy h2 { font-size:34px; }
+          .xr-outcome p { font-size:25px; }
+        }
       `}</style>
-      <div className="xr-flow">
-        <div className="xr-reveal xr-opening"><Reveal y={20}><div className="xr-copy"><h2>{build.title}</h2><p>{build.paragraphs[0]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-mountain"><Reveal delay={100} y={24}>{mediaPlate(build.media[0])}<p className="xr-caption">The backdrop begins in Gaea.</p></Reveal></div>
-        <div className="xr-reveal xr-assembly"><Reveal y={24}>{mediaPlate(build.media[1])}<p className="xr-caption">Finding the composition inside Unreal.</p></Reveal></div>
-        <div className="xr-reveal xr-build-note"><Reveal delay={100} y={20}><div className="xr-copy"><p>{build.paragraphs[1]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-look-note"><Reveal y={20}><div className="xr-copy"><p>{look.paragraphs[0]}</p><p>{look.paragraphs[1]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-beauty"><Reveal delay={100} y={24}><RenderComparison media={[look.media[0],look.media[1],look.media[6]]}/></Reveal></div>
-        <div className="xr-diagnostics">{[look.media[2],look.media[3]].map((m,i)=><div key={m.image} className="xr-reveal"><Reveal delay={i*100} y={24}>{mediaPlate(m)}</Reveal></div>)}</div>
-        <div className="xr-reveal xr-bridge"><Reveal y={20}><div className="xr-copy"><h2>Optimizing for the camera.</h2><p>{stage.paragraphs[0]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-stage-view"><Reveal y={24}><div className="xr-stage">{mediaPlate(stage.media[1])}{mediaPlate(stage.media[0])}</div></Reveal></div>
-        <div className="xr-reveal xr-stage-note"><Reveal delay={100} y={20}><div className="xr-copy"><p>{stage.paragraphs[1]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-reflection"><Reveal y={20}><div className="xr-copy"><p>{crew.paragraphs[0]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-set"><Reveal delay={100} y={24}><div className="xr-set-grid">{[crew.media[0],crew.media[4],crew.media[1],crew.media[2]].map(m=>mediaPlate(m))}</div><p className="xr-caption">Beyond the viewport: camera, light, sound, and the people behind the shot.</p></Reveal></div>
-        <div className="xr-reveal xr-crew-end"><Reveal y={24}>{mediaPlate(crew.media[5])}</Reveal></div>
-        <div className="xr-reveal xr-ending"><Reveal delay={100} y={20}>{mediaPlate(crew.media[3])}<div className="xr-copy"><p>{crew.paragraphs[1]}</p></div></Reveal></div>
+      <div className="xr-flow" id="xr-process">
+        <div className="xr-reveal xr-opening"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Environment / Development</span><h2>A world built<br/>for the <em>frame.</em></h2><p>{build.paragraphs[0]}</p></div></Reveal></div>
+        <div className="xr-reveal xr-mountain"><Reveal y={24}>{mediaPlate(build.media[0])}<p className="xr-caption"><span>01</span>Gaea / terrain generation</p></Reveal></div>
+        <div className="xr-reveal xr-assembly"><Reveal y={24}>{mediaPlate(build.media[1])}<p className="xr-caption"><span>02</span>Unreal Engine / scene assembly</p></Reveal></div>
+        <div className="xr-reveal xr-build-note"><Reveal y={20}><div className="xr-copy"><div className="xr-tech-label">Terrain → composition</div><p>{build.paragraphs[1]}</p></div></Reveal></div>
+        <div className="xr-reveal xr-look-note"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Inside the scene</span><h2>Look closer.</h2><p>{look.paragraphs[0]}</p><p className="xr-caption">Three views. One environment.<br/>Select a view or swipe to compare.</p></div></Reveal></div>
+        <div className="xr-reveal xr-beauty"><Reveal y={24}><RenderComparison onInspect={setSelected} media={[look.media[0],look.media[1],look.media[6]]}/></Reveal></div>
+        <div className="xr-diagnostics">{[look.media[2],look.media[3]].map((m,i)=><div key={m.image} className="xr-reveal"><Reveal delay={i*80} y={24}>{mediaPlate(m)}<p className="xr-caption">{i===0?'Render buffers':'Geometry diagnostics'} ↗</p></Reveal></div>)}</div>
+        <div className="xr-reveal xr-bridge"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">The production challenge</span><h2>Built in Unreal.<br/><em>Resolved on stage.</em></h2></div></Reveal></div>
+        <div className="xr-reveal xr-stage-view"><Reveal y={24}><div className="xr-stage">{mediaPlate(stage.media[1])}{mediaPlate(stage.media[0])}</div><p className="xr-caption"><span>03</span>The environment meets the physical set.</p></Reveal></div>
+        <div className="xr-reveal xr-stage-note"><Reveal y={20}><div className="xr-copy"><div className="xr-tech-note"><div className="xr-tech-label">Constraint</div><p>Dense foliage and wind animation were too demanding for the XR setup.</p></div><div className="xr-tech-note"><div className="xr-tech-label">Intervention</div><p>Replaced PCG with camera-visible manual placement. Swapped selected tree meshes for image cards with subtle motion.</p></div><div className="xr-tech-note"><div className="xr-tech-label">Result</div><p>Reduced scene complexity while preserving the composition used for filming.</p></div></div></Reveal></div>
+        <div className="xr-reveal xr-reflection"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Beyond the viewport</span><h2>A shared<br/><em>production.</em></h2><p>{crew.paragraphs[0]}</p></div></Reveal></div>
+        <div className="xr-reveal xr-set"><Reveal y={24}><div className="xr-set-grid">{[crew.media[0],crew.media[4],crew.media[1],crew.media[2]].map(m=>mediaPlate(m))}</div><p className="xr-caption">Camera / light / sound / collaboration</p></Reveal></div>
+        <div className="xr-reveal xr-crew-end"><Reveal y={24}>{mediaPlate(crew.media[5])}<p className="xr-caption"><span>04</span>The cast and crew behind The Gate Within.</p></Reveal></div>
+        <div className="xr-reveal xr-ending"><Reveal y={24}>{mediaPlate(crew.media[3])}</Reveal></div>
+        <div className="xr-reveal xr-outcome"><Reveal y={20}><span className="xr-kicker">What I took forward</span><p>Design for the image.<br/>Optimize for the shot.<br/><em>Build with the crew.</em></p></Reveal></div>
       </div>
+      {selected && <ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
     </div>
   );
 }
@@ -564,6 +690,62 @@ function CaseFooterNav({ prev, next, go }) {
   );
 }
 
+function XRCasePage({p,x,prev,next,go}) {
+  return <div className="xr-editorial">
+    <style>{`
+      .xr-editorial { --accent:#c88968; }
+      .xr-cover { position:relative; min-height:660px; height:88svh; max-height:1000px; display:flex; align-items:flex-end; padding:100px var(--pad) 48px; overflow:hidden; }
+      .xr-cover > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 48%; }
+      .xr-cover:after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#0004 0%,#0000 30%,#0b0b0c88 62%,#0b0b0c 100%); }
+      .xr-cover-copy { position:relative; z-index:1; width:100%; max-width:1280px; margin:auto auto 0; }
+      .xr-cover-meta { font:10px var(--mono); text-transform:uppercase; letter-spacing:2px; color:#e0d7ca; display:flex; gap:18px; margin-bottom:24px; }
+      .xr-cover h1 { font:400 clamp(64px,9.4vw,142px)/.98 var(--serif); letter-spacing:-5px; margin:0 0 24px; text-shadow:0 3px 35px #0005; }
+      .xr-cover h1 em { color:#d79a7b; }
+      .xr-cover-bottom { display:flex; justify-content:space-between; align-items:flex-end; gap:28px; }
+      .xr-cover-bottom p { font:15px/1.7 Arial,sans-serif; max-width:350px; margin:0; color:#d6d0c6; }
+      .xr-cover-links { display:flex; gap:24px; font:11px var(--mono); flex-shrink:0; }
+      .xr-cover-links a { border-bottom:1px solid #d79a7b80; padding:12px 0; cursor:pointer; }
+      .xr-cover-links a:hover { color:#d79a7b; }
+      .xr-case-body { padding:0 var(--pad); max-width:1440px; margin:auto; }
+      .xr-brief { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:32px; padding:32px 0 40px; margin:0 auto 64px; max-width:1280px; border-bottom:1px solid var(--hair); }
+      .xr-brief span { display:block; font:9px var(--mono); text-transform:uppercase; letter-spacing:1.8px; color:#c88968; margin-bottom:12px; }
+      .xr-brief p { font:13px/1.8 Arial,sans-serif; margin:0; color:#c7c2b9; }
+      .xr-brief strong { color:var(--ink); font-weight:400; }
+      .xr-screening { max-width:1280px; margin:0 auto; scroll-margin-top:90px; border-top:1px solid var(--hair); padding-top:38px; }
+      .xr-screening-heading { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; }
+      .xr-screening h2 { font:400 clamp(32px,4vw,52px)/1.2 var(--serif); margin:0; letter-spacing:-1px; }
+      .xr-screening .xr-films { max-width:none; }
+      .xr-screening .xr-tabs { gap:24px; }
+      .xr-screening .xr-tab { border:0; border-radius:0; border-bottom:1px solid transparent; padding:12px 0; }
+      .xr-screening .xr-tab[aria-pressed=true] { border-bottom-color:var(--accent); }
+      #xr-process { scroll-margin-top:100px; }
+      @media(max-width:760px) {
+        .xr-cover { min-height:580px; height:82svh; padding-bottom:28px; }
+        .xr-cover h1 { font-size:clamp(58px,13vw,90px); letter-spacing:-2.5px; }
+        .xr-cover-meta { font-size:8px; gap:12px; letter-spacing:1px; }
+        .xr-cover-bottom { display:block; }
+        .xr-cover-bottom p { font-size:13px; max-width:32ch; }
+        .xr-cover-links { margin-top:20px; }
+        .xr-brief { grid-template-columns:1fr 1fr; gap:24px; margin-bottom:44px; padding-top:24px; }
+        .xr-brief > div:first-child { grid-column:1/-1; }
+        .xr-screening-heading { display:block; }
+        .xr-screening-heading .xr-kicker { margin-top:12px; }
+      }
+      @media(prefers-reduced-motion:reduce) { .xr-editorial * { scroll-behavior:auto; } }
+    `}</style>
+    <header className="xr-cover">
+      <img src={p.hero} alt="The temple and gate framed by foliage in the Unreal environment" fetchpriority="high"/>
+      <div className="xr-cover-copy"><Reveal y={20}><div className="xr-cover-meta"><span>SCAD / Student film</span><span>Virtual production · {p.year}</span></div><h1>The Gate<br/><em>Within.</em></h1><div className="xr-cover-bottom"><p>An Unreal environment brought to life on the virtual production stage.</p><nav className="xr-cover-links" aria-label="Project shortcuts"><a href="#xr-screening" onClick={e=>{e.preventDefault();document.getElementById('xr-screening').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}}>Watch the film ↗</a></nav></div></Reveal></div>
+    </header>
+    <main className="xr-case-body">
+      <div className="xr-brief"><div><span>My contribution</span><p><strong>Environment artist · Virtual production</strong><br/>Scene development, composition, and on-stage adaptation.</p></div><div><span>Toolset</span><p>Unreal Engine 5 / Gaea<br/>Fab asset integration</p></div><div><span>Production focus</span><p>Camera-led foliage placement<br/>Real-time scene optimization</p></div></div>
+      <StoryBook p={p} x={x}/>
+      <div id="xr-screening" className="xr-screening"><div className="xr-screening-heading"><h2>The finished work.</h2><span className="xr-kicker">Film / environment / on set</span></div><StoryFilms p={p} x={x}/></div>
+    </main>
+    <CaseFooterNav prev={prev} next={next} go={go}/>
+  </div>;
+}
+
 function CasePage({ slug }) {
   const { go } = React.useContext(RouteCtx);
   const idx = PROJECTS.findIndex((p) => p.slug === slug);
@@ -571,6 +753,7 @@ function CasePage({ slug }) {
   const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(idx + 1) % PROJECTS.length];
   const x = (window.CASE_EXTRAS || {})[p.slug] || {};
+  if (x.spreads) return <XRCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
 
   return (
     <div>

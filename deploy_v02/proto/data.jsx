@@ -43,7 +43,7 @@ const PROJECTS = [
     tags: ['UE5', 'Gaea', 'LED Volume', 'On-set'],
     hero: 'media/projects/xr01-chinese-temple/web/unreal-bd-3.webp',
     tagline: 'Unreal environment development and on-stage foliage optimization for a student virtual production film.',
-    blurb: 'A student virtual production film at SCAD, with responsibility for Unreal environment development and XR-stage adaptation. My contribution covered Gaea terrain generation, Fab asset integration, scene composition, and on-set foliage optimization. The project connected environment art with the practical requirements of camera framing, physical lighting, and a collaborative film production.',
+    blurb: 'A SCAD student film. I developed the Unreal environment and adapted it for the XR stage, from terrain and scene composition to on-set foliage optimization.',
     client: 'SCAD · Student film', focus: 'Environment · XR adaptation',
     breakdown: [
       { tone: 'studio', label: '01 · terrain', meta: 'Gaea', image: 'media/projects/xr01-chinese-temple/web/gaea-wf.webp' },
@@ -266,20 +266,20 @@ const CASE_EXTRAS = {
     stage: 'Completed · class film',
     spreads: [
       { id: 'build', title: 'Environment development for the XR stage', label: '01 / Build', layout: 'build', chapters: ['terrain', 'layout'], paragraphs: [
-        'For my first virtual production course project, I developed the Unreal environment and adapted it for use on an XR stage. The work combined terrain generation, asset integration, scene assembly, and production-driven optimization.',
-        'I generated the mountain backdrop in Gaea and integrated selected Fab assets into Unreal. Scene layout established the relationship between the gate, temple, and path, with terrain providing depth beyond the foreground. I also explored AI-assisted asset creation as part of the development process.'
+        'My first virtual production project combined environment art with the practical demands of an XR stage.',
+        'I built the mountain backdrop in Gaea and assembled Fab assets in Unreal, composing the gate, temple, and path for camera. I also explored AI-assisted asset creation.'
       ] },
       { id: 'environment', title: 'From blockout to a living environment', label: '02 / Look development', layout: 'inspect', chapters: ['look', 'breakdown'], paragraphs: [
-        'Foliage placement established foreground framing and visual depth around the temple. Wind animation introduced environmental motion, while lighting and atmospheric treatment unified the composition.',
-        'The Unreal breakdowns document the environment through surface-channel and geometry visualizations alongside the final lit result.'
+        'Layered foliage framed the temple; wind, lighting, and atmosphere brought the environment to life.',
+        'Compare the final image with color and gray shading views to inspect the scene.'
       ] },
       { id: 'stage', title: 'Build for what the camera sees', label: '03 / On-stage problem solving', layout: 'stage', chapters: ['adaptation'], paragraphs: [
-        'Stage testing exposed a key performance constraint: dense foliage combined with wind animation was too demanding for the XR setup. I reworked the vegetation around the camera framing and the requirements of the shoot.',
-        'I replaced the procedural content generation (PCG) layout with manually placed vegetation in camera-visible areas. Selected tree meshes were replaced with image-based cards retaining subtle motion. This reduced scene complexity while preserving the intended composition and supported the environment used for filming.'
+        'Dense, wind-animated foliage proved too demanding during stage testing. The environment needed a camera-focused optimization pass.',
+        'I replaced PCG foliage with manual placement in camera-visible areas and substituted selected tree meshes with image cards retaining subtle motion—reducing complexity while preserving the composition.'
       ] },
       { id: 'production', title: 'A small crew. A first film.', label: '04 / Production & reflection', layout: 'crew', chapters: ['shoot', 'learning', 'crew'], paragraphs: [
-        'Working with the student crew introduced me to the relationship between the digital backdrop, physical set, camera, and practical lighting. My first on-set experience also developed my understanding of call sheets, production coordination, and adapting environment work to the needs of a live shoot.',
-        'The team completed the film with the adapted environment on stage. The project strengthened my ability to balance visual intent with real-time constraints and contribute environment work within a collaborative production workflow.'
+        'On set, I learned how camera framing and practical lighting shape environment decisions, alongside call sheets and crew coordination.',
+        'Our small crew completed the film using the adapted environment. I gained hands-on experience balancing visual quality, real-time constraints, and production needs.'
       ] }
     ],
     statement: 'Building a world. Learning a set.',
