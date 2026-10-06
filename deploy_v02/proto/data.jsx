@@ -271,7 +271,7 @@ const CASE_EXTRAS = {
       ] },
       { id: 'environment', title: 'From blockout to a living environment', label: '02 / Look development', layout: 'inspect', chapters: ['look', 'breakdown'], paragraphs: [
         'Layered foliage framed the temple; wind, lighting, and atmosphere brought the environment to life.',
-        'Compare the final image with color and gray shading views to inspect the scene.'
+        'Compare gray shading, mesh, and the final image to inspect the scene.'
       ] },
       { id: 'stage', title: 'Build for what the camera sees', label: '03 / On-stage problem solving', layout: 'stage', chapters: ['adaptation'], paragraphs: [
         'Dense, wind-animated foliage proved too demanding during stage testing. The environment needed a camera-focused optimization pass.',

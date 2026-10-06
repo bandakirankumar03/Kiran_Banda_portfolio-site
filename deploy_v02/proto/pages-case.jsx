@@ -335,7 +335,7 @@ function StoryImage({ media, className = '', onInspect }) {
 function RenderComparison({ media, onInspect }) {
   const [active, setActive] = React.useState(0);
   const start = React.useRef(null);
-  const labels = ['Final image', 'Color view', 'Gray shading'];
+  const labels = ['Gray shading', 'Mesh', 'Final image'];
   const change = step => setActive(i => (i + step + media.length) % media.length);
   return <div className="xr-comparison" role="region" aria-label="Unreal render comparison">
     <div className="xr-comparison-frame" tabIndex={0} aria-label="Use left and right arrow keys to compare render views"
@@ -581,7 +581,7 @@ function StoryBook({ p, x }) {
         <div className="xr-reveal xr-assembly"><Reveal y={24}>{mediaPlate(build.media[1])}<p className="xr-caption"><span>02</span>Unreal Engine / scene assembly</p></Reveal></div>
         <div className="xr-reveal xr-build-note"><Reveal y={20}><div className="xr-copy"><div className="xr-tech-label">Terrain → composition</div><p>{build.paragraphs[1]}</p></div></Reveal></div>
         <div className="xr-reveal xr-look-note"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Inside the scene</span><h2>Look closer.</h2><p>{look.paragraphs[0]}</p><p className="xr-caption">Three views. One environment.<br/>Select a view or swipe to compare.</p></div></Reveal></div>
-        <div className="xr-reveal xr-beauty"><Reveal y={24}><RenderComparison onInspect={setSelected} media={[look.media[0],look.media[1],look.media[6]]}/></Reveal></div>
+        <div className="xr-reveal xr-beauty"><Reveal y={24}><RenderComparison onInspect={setSelected} media={[look.media[6],look.media[1],look.media[0]]}/></Reveal></div>
         <div className="xr-diagnostics">{[look.media[2],look.media[3]].map((m,i)=><div key={m.image} className="xr-reveal"><Reveal delay={i*80} y={24}>{mediaPlate(m)}<p className="xr-caption">{i===0?'Render buffers':'Geometry diagnostics'} ↗</p></Reveal></div>)}</div>
         <div className="xr-reveal xr-bridge"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">The production challenge</span><h2>Built in Unreal.<br/><em>Resolved on stage.</em></h2></div></Reveal></div>
         <div className="xr-reveal xr-stage-view"><Reveal y={24}><div className="xr-stage">{mediaPlate(stage.media[1])}{mediaPlate(stage.media[0])}</div><p className="xr-caption"><span>03</span>The environment meets the physical set.</p></Reveal></div>
