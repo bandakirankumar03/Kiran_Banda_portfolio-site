@@ -20,7 +20,7 @@ function NYCCasePage({p,x,prev,next,go}) {
       .nyc-cover-bottom { display:flex; justify-content:space-between; align-items:end; gap:24px; }
       .nyc-cover-bottom p { margin:0; max-width:43ch; font:15px/1.7 Arial,sans-serif; color:#d7d3cd; }
       .nyc-action { color:var(--accent); background:none; border:0; border-bottom:1px solid var(--hair); padding:13px 0; font:11px var(--mono); cursor:pointer; white-space:nowrap; }
-      .nyc-main { max-width:1376px; padding:0 var(--pad) 70px; margin:auto; }
+      .nyc-main { max-width:none; padding:0 var(--pad) 70px; margin:auto; }
       .nyc-brief { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:28px; padding:28px 0 34px; border-bottom:1px solid var(--hair); margin-bottom:54px; }
       .nyc-brief dt { font:9px var(--mono); text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:10px; }
       .nyc-brief dd { margin:0; font:13px/1.75 Arial,sans-serif; color:var(--nyc-muted); }
