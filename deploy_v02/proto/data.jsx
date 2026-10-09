@@ -55,20 +55,21 @@ const PROJECTS = [
     approach: 'Rebuilt the foliage around the camera view: manually placed plants replaced the PCG layout, and lightweight tree cards with subtle motion replaced some of the heavier meshes.',
   },
   {
-    slug: 'xr02-1920s-nyc', n: '02', title: 'XR02 — 1920s NYC Industrial', role: 'Env. Artist & Brain Operator',
-    kind: 'Virtual Production', kindShort: 'VP', year: '2025', tone: 'rain',
-    tags: ['UE5', 'In-Camera VFX', 'AI Workflow', 'Retopo'],
-    tagline: 'A 1920s New York industrial set, matched plate-perfect to a physical build.',
-    blurb: 'Worked on a 1920s NYC industrial XR project with the production team — matching the digital extension to a physical set on stage, while testing AI-assisted asset workflows with retopology and texture baking to hit the schedule.',
-    client: 'SCAD · ICVFX', duration: '7 weeks', plates: 10, assets: 88,
+    slug: 'xr02-1920s-nyc', n: '02', title: 'The Parley', role: 'Environment Artist · Motion Capture',
+    kind: 'Virtual Production', kindShort: 'VP', year: '2026', tone: 'rain',
+    hero: 'media/projects/xr02-1920s-nyc/web/highresscreenshot00000.webp',
+    tags: ['Unreal Engine', 'Blender', 'AI Workflow', 'Sony mocopi'],
+    tagline: 'An environment inspired by 1890s industrial New York, built for a student virtual production film.',
+    blurb: 'My second virtual production film: a setting inspired by 1890s industrial New York for a confrontation between two rival gangs. I developed the Unreal environment and operated Sony mocopi capture sessions using XYN, while our team explored AI-assisted assets and practical set integration.',
+    client: 'SCAD · Student film', focus: 'Environment · Motion capture',
     breakdown: [
-      { tone: 'studio', label: '01 · plate match', meta: 'physical set' },
-      { tone: 'rain',   label: '02 · AI assets',   meta: 'concept → block' },
-      { tone: 'ember',  label: '03 · retopo',      meta: 'clean topology' },
-      { tone: 'rain',   label: '04 · final',       meta: 'in-camera vfx' },
+      { tone: 'rain', label: '01 · environment', meta: 'Unreal Engine', image: 'media/projects/xr02-1920s-nyc/web/highresscreenshot00000.webp' },
+      { tone: 'studio', label: '02 · façade', meta: 'image-based geometry', image: 'media/projects/xr02-1920s-nyc/web/screenshot-2026-10-06-115029.webp' },
+      { tone: 'studio', label: '03 · capture', meta: 'Sony mocopi · XYN', image: 'media/projects/xr02-1920s-nyc/web/mocopi-session.webp' },
+      { tone: 'rain', label: '04 · stage', meta: 'virtual production', image: 'media/projects/xr02-1920s-nyc/web/photo-feb-17-2026-2-41-15-pm.webp' },
     ],
-    problem: 'Tight prep window. We needed dozens of period-correct hero props and a full street extension to match a built set, and traditional asset pipelines would have eaten the schedule.',
-    approach: 'Used AI tools for concept and rough blockout, then ran every asset through proper retopology and PBR texture baking. The AI did the sketch; the pipeline did the production-ready build.',
+    problem: 'Translate an industrial street concept into a practical XR environment while testing AI-assisted assets, captured motion, and on-stage effects.',
+    approach: 'Build shallow façade geometry from generated images, assemble and light the environment in Unreal, capture motion with Sony mocopi and XYN, and simplify the scene around the needs of the shoot.'
   },
 
   // ── Unreal Environment Projects (4) ────────────────────────
@@ -222,7 +223,7 @@ const EDUCATION = [
 
 // EXPERIENCE — straight from resume + current student VP roles
 const EXPERIENCE = [
-  { yr: '2025 — now',  role: 'Env. Artist & Brain Operator', org: 'SCAD · XR Stage Productions', note: 'Built environments and ran the brain on two XR-stage shorts (XR01 Chinese Temple, XR02 1920s NYC). nDisplay, LED budgets, on-set live ops.' },
+  { yr: '2025 — now',  role: 'Env. Artist & Brain Operator', org: 'SCAD · XR Stage Productions', note: 'Built environments and ran the brain on two XR-stage shorts (XR01 Chinese Temple, The Parley). nDisplay, LED budgets, on-set live ops.' },
   { yr: 'Mar — May 2024', role: 'VFX Compositor (Intern)', org: 'Studio Raaga · Remote', note: 'Prep and face-tracking for a short film in Nuke. Clean mattes, organized node graphs, and a lot of node-graph etiquette I still use.' },
   { yr: 'Jan — Mar 2024', role: 'VFX Lighting Artist (Intern)', org: 'Green Gold Animation · Hyderabad', note: 'Lighting on the animated TV series Booth Bandhuk. Production-ready rigs, mood/depth/consistency, AOV pass management for compositing.' },
 ];
@@ -379,18 +380,15 @@ const CASE_EXTRAS = {
     closing: 'Balancing environment design, real-time performance, and the requirements of the shot.',
   },
   'xr02-1920s-nyc': {
-    software: ['Unreal Engine 5','Maya','ZBrush','Substance 3D'],
-    stage: 'Delivered · in-camera VFX',
-    layout: 'filmstrip',
-    video: { vimeo: '', src: '', cap: 'XR02 · final cut' },
-    process: [
-      { tone: 'studio', title: 'Measuring the set', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'rain', title: 'AI concepts', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'ember', title: 'Retopology', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'rain', title: 'Street extension', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'dusk', title: 'Final match', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
+    software: ['Unreal Engine','Blender','Gemini','Claude','Sony mocopi','XYN'],
+    stage: 'Student film · virtual production',
+    layout: 'nyc',
+    video: { vimeo: '1233905426', src: '', cap: 'The Parley · final film' },
+    films: [
+      {label:'Final film',vimeo:'1233905426',aspectRatio:'16 / 9',cap:'The Parley · final film'},
+      {label:'Unreal render',src:'media/projects/xr02-1920s-nyc/web/parley-unreal-borderless.mp4',poster:'media/projects/xr02-1920s-nyc/web/parley-unreal-borderless.webp',cap:'The digital street / Unreal environment render'},
+      {label:'Behind the scenes',src:'media/projects/xr02-1920s-nyc/web/xr02-bts-30s-mocopi-xyn.mp4',poster:'media/projects/xr02-1920s-nyc/web/xr02-bts-poster.jpg',cap:'Sony mocopi capture, crew, and the XR stage / 30 seconds'}
     ],
-    closing: 'A machine can sketch a city in a minute. Making it stand up still takes a week and a hand.',
   },
   'hollow-forest': {
     software: ['Unreal Engine 5','SpeedTree','Megascans','Substance 3D'],

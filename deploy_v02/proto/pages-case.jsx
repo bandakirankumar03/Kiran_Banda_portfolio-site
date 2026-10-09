@@ -1,3 +1,39 @@
+function ProjectCover({p, description, actionLabel, onAction}) {
+  const ref=React.useRef(null);
+  const words=p.title.split(' '), last=words.pop();
+  const move=e=>{if(!matchMedia('(hover:hover) and (prefers-reduced-motion:no-preference)').matches)return;const r=e.currentTarget.getBoundingClientRect();ref.current.style.setProperty('--cx',`${(e.clientX-r.left-r.width/2)*.012}px`);ref.current.style.setProperty('--cy',`${(e.clientY-r.top-r.height/2)*.012}px`);};
+  return <header className="project-cover" ref={ref} onPointerMove={move} onPointerLeave={()=>{ref.current.style.setProperty('--cx','0px');ref.current.style.setProperty('--cy','0px');}}>
+    <style>{`
+      .project-cover {--accent:#73c2fb;position:relative;isolation:isolate;overflow:hidden;min-height:660px;height:92svh;max-height:1080px;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:125px var(--pad) 28px;}
+      .project-cover .pc-image {position:absolute;inset:0;z-index:-3;overflow:hidden;animation:pc-open 1.5s cubic-bezier(.2,.7,.2,1) both;}
+      .project-cover .pc-image>img {width:100%;height:100%;object-fit:cover;transform:translate(var(--cx,0px),var(--cy,0px)) scale(1.045);transition:transform 1.2s ease-out;}
+      .project-cover:after {content:'';position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,#0b0b0c65,transparent 27%,#0b0b0c22 45%,#0b0b0cd9 85%,var(--bg)),linear-gradient(90deg,#0b0b0c66,transparent 75%);pointer-events:none;}
+      .pc-top,.pc-foot {display:flex;justify-content:space-between;align-items:center;gap:20px;font:10px/1.6 var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink);}
+      .pc-top a {color:var(--ink);text-decoration:none;border-bottom:1px solid #f2ede350;padding-bottom:6px;cursor:pointer;}
+      .pc-top span {color:var(--accent);}
+      .pc-story {width:100%;max-width:1280px;margin:auto auto 28px;animation:pc-copy 1s .2s both;}
+      .pc-role {font:10px/1.6 var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:22px;}
+      .pc-story h1 {font:400 clamp(60px,8.8vw,138px)/.98 var(--serif);letter-spacing:-.055em;margin:0 0 26px;max-width:13ch;text-shadow:0 4px 35px #0003;}
+      .pc-story h1 em {color:#C1663B;font-weight:400;}
+      .pc-bottom {display:flex;align-items:flex-end;justify-content:space-between;gap:32px;}
+      .pc-bottom p {font:14px/1.8 Arial,sans-serif;color:var(--ink);max-width:48ch;margin:0;}
+      .pc-action {display:flex;align-items:center;gap:24px;border:0;background:transparent;color:var(--ink);padding:0;cursor:pointer;font:11px var(--mono);white-space:nowrap;}
+      .pc-action span {display:grid;place-items:center;width:54px;height:54px;border:1px solid #f2ede360;border-radius:50%;font-size:21px;transition:background .25s,transform .25s;}
+      .pc-action:hover span {background:#C1663B;transform:rotate(45deg);}
+      .pc-foot {border-top:1px solid #f2ede335;padding-top:18px;font-size:9px;color:var(--dim);}
+      .pc-scroll {display:flex;align-items:center;gap:14px;}.pc-scroll:after {content:'↓';font-size:17px;color:var(--accent);}
+      @keyframes pc-open {from{clip-path:inset(10% 5% 5%);opacity:.35}to{clip-path:inset(0);opacity:1}}
+      @keyframes pc-copy {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+      @media(max-width:760px) {.project-cover{min-height:640px;height:90svh;padding-top:100px;}.pc-top{font-size:8px;}.pc-story{margin-top:auto;margin-bottom:24px;}.pc-story h1{font-size:clamp(56px,12vw,88px);}.pc-role{font-size:9px;}.pc-bottom{display:block;}.pc-bottom p{font-size:13px;max-width:38ch;}.pc-action{margin-top:20px;gap:15px;}.pc-action span{width:40px;height:40px;}.pc-foot{font-size:8px;}}
+      @media(prefers-reduced-motion:reduce){.project-cover *{animation:none!important;transition:none!important;}.project-cover .pc-image>img{transform:none;}}
+    `}</style>
+    <div className="pc-image">{p.hero ? <img src={p.hero} alt={p.title+' environment'} fetchpriority="high"/> : <Scene tone={p.tone} video={p.heroVideo} vimeo={p.heroVimeo} style={{width:'100%',height:'100%'}}/>}</div>
+    <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
+    <div className="pc-story"><div className="pc-role">{p.role}</div><h1>{words.join(' ')}<br/><em>{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
+    <div className="pc-foot"><span>{p.client || 'Selected project'}</span><span className="pc-scroll">Scroll into the process</span></div>
+  </header>;
+}
+
 // proto/pages-case.jsx — project page: hero + metadata, editorial process book, film, closing, prev/next.
 
 function seedOf(str) {
@@ -598,19 +634,33 @@ function StoryBook({ p, x }) {
 }
 
 function StoryFilms({p,x}) {
-  const [active,setActive] = React.useState(0);
-  const films = [x.video, x.chapters.find(ch=>ch.video).video, {src:'media/projects/xr01-chinese-temple/web/on-set.mp4',label:'On set',cap:'Behind the scenes on the XR stage.'}];
-  return <div className="xr-films"><div className="xr-tabs" aria-label="Choose project video">{['Final film','Unreal render','Behind the scenes'].map((label,i)=><button key={label} className="xr-tab" aria-pressed={i===active} onClick={()=>setActive(i)}>{label}</button>)}</div><FinalVideo key={active} v={{...films[active],clickToPlay:true}} poster={active===0?'media/projects/xr01-chinese-temple/web/xr-shoot-02.webp':active===2?'media/projects/xr01-chinese-temple/web/on-set-poster.webp':p.hero} tone={p.tone}/></div>;
+  const [active,setActive]=React.useState(0);
+  const gate=p.slug==='xr01-chinese-temple';
+  const candidates=x.films || (gate ? [
+    {...x.video,label:'Final film',poster:'media/projects/xr01-chinese-temple/web/xr-shoot-02.webp'},
+    {...(x.chapters || []).find(ch=>ch.video)?.video,label:'Unreal render',poster:p.hero},
+    {src:'media/projects/xr01-chinese-temple/web/on-set.mp4',label:'Behind the scenes',poster:'media/projects/xr01-chinese-temple/web/on-set-poster.webp',cap:'Behind the scenes on the XR stage.'}
+  ] : [{...x.video,label:'Final film'},...(x.chapters || []).filter(ch=>ch.video).map(ch=>({...ch.video,label:ch.video.label || 'Unreal render'}))]);
+  const films=candidates.filter(v=>v.vimeo || v.src);
+  if(!films.length) return null;
+  const current=films[Math.min(active,films.length-1)];
+  return <div className="xr-films shared-films">
+    <style>{`.shared-films .xr-tabs{display:flex;gap:24px;flex-wrap:wrap;margin:0 0 24px;}.shared-films .xr-tab{background:none;border:0;border-bottom:1px solid transparent;border-radius:0;padding:12px 0;color:var(--dim);font:11px var(--mono);cursor:pointer;}.shared-films .xr-tab[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--accent);}.shared-films .xr-tab:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}.shared-films video{object-fit:contain!important;cursor:auto;}`}</style>
+    <div className="xr-tabs" role="group" aria-label="Choose project video">{films.map((film,i)=><button key={film.label+i} className="xr-tab" aria-pressed={i===active} onClick={()=>setActive(i)}>{film.label}</button>)}</div>
+    <FinalVideo key={current.src || current.vimeo} v={{...current,clickToPlay:true}} poster={current.poster || p.hero} tone={p.tone}/>
+  </div>;
 }
 
 function FinalVideo({ v, poster, tone }) {
   const vid = vimeoIdFrom(v.vimeo);
   const [started,setStarted] = React.useState(!v.clickToPlay);
+  const [nativeRatio,setNativeRatio]=React.useState(null);
+  const ratio=nativeRatio || ({'1233905426':'16 / 9','1230103396':'426 / 178','1230103395':'16 / 9'}[vid]) || v.aspectRatio || '16 / 9';
   return (
     <div style={{ marginBottom: 96 }}>
       <SectionLabel note={v.note || 'sound on'}>{v.label || 'the film'}</SectionLabel>
       <Reveal>
-        <div style={{ position: 'relative', width: '100%', aspectRatio: v.aspectRatio || '16 / 9', background: '#0b0b0d', border: '1px solid var(--hair)', overflow: 'hidden', borderRadius: RADIUS }}>
+        <div style={{ position: 'relative', width: '100%', aspectRatio: ratio, background: 'transparent', border: 0, overflow: 'hidden', borderRadius: 0 }}>
           {vid && !started ? <button onClick={()=>setStarted(true)} aria-label={`Play ${v.label || 'video'}`} style={{position:'absolute',inset:0,width:'100%',height:'100%',padding:0,border:0,cursor:'pointer',background:'#101112',color:'#fff'}}><img src={poster} alt="" style={{width:'100%',height:'100%',objectFit:'cover',opacity:.65}}/><span style={{position:'absolute',inset:0,display:'grid',placeItems:'center',font:'18px var(--mono)'}}>▶ PLAY {v.label || 'FILM'}</span></button> : vid ? (
             <iframe
               src={`https://player.vimeo.com/video/${vid}?title=0&byline=0&portrait=0&playsinline=1${v.clickToPlay ? '&autoplay=1' : ''}`}
@@ -619,8 +669,8 @@ function FinalVideo({ v, poster, tone }) {
               loading="lazy"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }} />
           ) : v.src ? (
-            <video src={v.src} poster={poster} controls preload="metadata"
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+            <video src={v.src} poster={poster} controls playsInline preload="metadata" onLoadedMetadata={e=>{const el=e.currentTarget;if(el.videoWidth && el.videoHeight)setNativeRatio(`${el.videoWidth} / ${el.videoHeight}`);}}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', maxHeight:'none', aspectRatio:'auto', objectFit: 'contain', border:0, borderRadius:0 }} />
           ) : (
             <div style={{ position: 'absolute', inset: 0 }}>
               <Scene tone={tone} image={poster} poster={poster} style={{ height: '100%' }} />
@@ -733,10 +783,7 @@ function XRCasePage({p,x,prev,next,go}) {
       }
       @media(prefers-reduced-motion:reduce) { .xr-editorial * { scroll-behavior:auto; } }
     `}</style>
-    <header className="xr-cover">
-      <img src={p.hero} alt="The temple and gate framed by foliage in the Unreal environment" fetchpriority="high"/>
-      <div className="xr-cover-copy"><Reveal y={20}><div className="xr-cover-meta"><span>SCAD / Student film</span><span>Virtual production · {p.year}</span></div><h1>The Gate<br/><em>Within.</em></h1><div className="xr-cover-bottom"><p>An Unreal environment brought to life on the virtual production stage.</p><nav className="xr-cover-links" aria-label="Project shortcuts"><a href="#xr-screening" onClick={e=>{e.preventDefault();document.getElementById('xr-screening').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}}>Watch the film ↗</a></nav></div></Reveal></div>
-    </header>
+    <ProjectCover p={p} description="An Unreal environment brought to life on the virtual production stage." actionLabel="Watch the film" onAction={()=>document.getElementById('xr-screening').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}/>
     <main className="xr-case-body">
       <div className="xr-brief"><div><span>My contribution</span><p><strong>Environment artist · Virtual production</strong><br/>Scene development, composition, and on-stage adaptation.</p></div><div><span>Toolset</span><p>Unreal Engine 5 / Gaea<br/>Fab asset integration</p></div><div><span>Production focus</span><p>Camera-led foliage placement<br/>Real-time scene optimization</p></div></div>
       <StoryBook p={p} x={x}/>
@@ -753,12 +800,12 @@ function CasePage({ slug }) {
   const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(idx + 1) % PROJECTS.length];
   const x = (window.CASE_EXTRAS || {})[p.slug] || {};
+  if (x.layout === 'nyc') return <NYCCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
   if (x.spreads) return <XRCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
 
   return (
     <div>
-      <Scene tone={p.tone} image={p.hero} video={p.heroVideo} vimeo={p.heroVimeo} poster={p.hero}
-        style={{ height: x.spreads ? '48vh' : '70vh', minHeight: 280, position: 'relative' }} />
+      <ProjectCover p={p}/>
 
       <div style={{ padding: 'clamp(36px,8vw,60px) var(--pad)' }}>
         <Reveal>
@@ -767,17 +814,7 @@ function CasePage({ slug }) {
           </div>
         </Reveal>
 
-        <Reveal delay={100}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(32px,6vw,80px)', marginBottom: 'clamp(36px,6vw,60px)' }}>
-            <div style={{ fontSize: 'clamp(56px, 7vw, 96px)', lineHeight: 1, letterSpacing: -2.5, fontWeight: 300 }}>
-              {p.title.split(' ').slice(0, -1).join(' ')}<br/>
-              <span style={{ fontStyle: 'italic', color: '#C1663B' }}>{p.title.split(' ').slice(-1)}.</span>
-            </div>
-            <div style={{ fontFamily: 'var(--sans)', fontSize: 15, lineHeight: 1.8, color: 'var(--dim)', fontWeight: 300, paddingTop: 12 }}>
-              {p.blurb}
-            </div>
-          </div>
-        </Reveal>
+        <Reveal delay={100}><p style={{fontSize:15,lineHeight:1.8,color:'var(--dim)',maxWidth:760,margin:'0 0 48px'}}>{p.blurb}</p></Reveal>
 
         <Reveal delay={180}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24, marginBottom: 'clamp(48px,8vw,90px)', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -792,7 +829,7 @@ function CasePage({ slug }) {
 
         <ProcessBook p={p} x={x} />
 
-        {x.spreads ? <StoryFilms p={p} x={x} /> : <FinalVideo v={x.video || {}} poster={p.finalImage || p.hero} tone={p.tone} />}
+        <StoryFilms p={p} x={x} />
 
         {x.spreads ? <p style={{textAlign:'center',fontFamily:'var(--serif)',fontStyle:'italic',fontSize:'clamp(22px,3vw,32px)',lineHeight:1.5,maxWidth:780,margin:'24px auto 44px'}}>{x.closing}</p> : <ClosingNote text={x.closing} title={p.title} />}
       </div>
