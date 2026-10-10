@@ -53,7 +53,7 @@ function App() {
   else if (route.name === 'work')    page = <WorkPage />;
   else if (route.name === 'about')   page = <AboutPage />;
   else if (route.name === 'contact') page = <ContactPage />;
-  else if (route.name === 'case')    page = <CasePage slug={route.slug} />;
+  else if (route.name === 'case')    page = <CasePage key={route.slug} slug={route.slug} />;
   else page = <HomePage />;
 
   const enterSite = React.useCallback(() => {
@@ -70,6 +70,7 @@ function App() {
           <>
             <Nav />
             {page}
+            <StyleLab />
           </>
         )}
       </CursorCtx.Provider>

@@ -22,7 +22,7 @@ function BioSection() {
     <div style={{ padding: 'clamp(32px,6vw,48px) var(--pad) clamp(48px,9vw,70px)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(64px, 10vw, 136px)', lineHeight: 0.92, letterSpacing: -3, fontWeight: 300 }}>
-          Hi, I&apos;m <span style={{ fontStyle: 'italic', color: '#C1663B' }}>Kiran.</span>
+          Hi, I&apos;m <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>Kiran.</span>
         </div>
       </Reveal>
 
@@ -35,7 +35,7 @@ function BioSection() {
         </Reveal>
         <Reveal delay={160}>
           <div style={{ fontSize: 'clamp(24px, 2.6vw, 36px)', lineHeight: 1.4, letterSpacing: -0.3, fontWeight: 300, marginBottom: 36 }}>
-            It started as a kid glued to fantasy epics — big, impossible worlds I wanted to <span style={{ fontStyle: 'italic', color: '#C1663B' }}>walk into.</span> Now I build them.
+            It started as a kid glued to fantasy epics — big, impossible worlds I wanted to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>walk into.</span> Now I build them.
           </div>
           <div style={{ fontFamily: 'var(--sans)', fontSize: 17, lineHeight: 1.95, color: 'var(--dim)', maxWidth: 660, fontWeight: 300 }}>
             Long before I knew what a render engine was, I was the kid rewinding the same scenes — the ones where the camera just kept pulling back to reveal more world. Temples, ruins, forests that felt like places you could actually stand in. I didn&apos;t want to watch those worlds. I wanted to build one.
@@ -116,7 +116,7 @@ function RotatingRole() {
           16%  { transform: translate(5px,-2px) skewX(4deg); color: #e8b48a; }
           24%  { transform: translate(-3px,2px) skewX(0deg); color: #73c2fb; opacity: 0.7; }
           32%  { transform: translate(0,0); color: var(--accent); opacity: 1; }
-          40%  { transform: translate(4px,-1px) skewX(5deg); color: #C1663B; }
+          40%  { transform: translate(4px,-1px) skewX(5deg); color: var(--lab-primary,#C1663B); }
           48%  { transform: translate(-5px,0) skewX(-3deg); opacity: 0.5; }
           56%  { transform: translate(2px,1px); color: #e8b48a; opacity: 1; }
           64%  { transform: translate(0,0) skewX(0deg); color: var(--accent); }
@@ -152,7 +152,7 @@ function EducationSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Where I learned to <span style={{ fontStyle: 'italic', color: '#C1663B' }}>build worlds.</span>
+          Where I learned to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>build worlds.</span>
         </div>
       </Reveal>
       {items.map((e, i) => (
@@ -210,7 +210,7 @@ function ExperienceSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Where I&apos;ve been <span style={{ fontStyle: 'italic', color: '#C1663B' }}>building.</span>
+          Where I&apos;ve been <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>building.</span>
         </div>
       </Reveal>
       {EXPERIENCE.map((e, i) => (
@@ -283,7 +283,7 @@ function SkillsSection() {
 
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          What I <span style={{ fontStyle: 'italic', color: '#C1663B' }}>reach for.</span>
+          What I <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>reach for.</span>
         </div>
       </Reveal>
 
@@ -342,7 +342,7 @@ function CertificatesSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Pieces of paper I&apos;ve <span style={{ fontStyle: 'italic', color: '#C1663B' }}>earned.</span>
+          Pieces of paper I&apos;ve <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>earned.</span>
         </div>
       </Reveal>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 18 }}>
@@ -390,7 +390,7 @@ function HobbiesSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          When I&apos;m not <span style={{ fontStyle: 'italic' }}>building worlds,</span> I&apos;m usually <span style={{ fontStyle: 'italic', color: '#C1663B' }}>staring at them.</span>
+          When I&apos;m not <span style={{ fontStyle: 'italic' }}>building worlds,</span> I&apos;m usually <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>staring at them.</span>
         </div>
       </Reveal>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
@@ -495,7 +495,7 @@ function HobbyPopup({ stack, cursorX, cursorY, title }) {
             <div key={i} style={{
               position: 'absolute',
               width: 150, height: 188,
-              background: '#f2ede3',
+              background: 'var(--lab-ink,#f2ede3)',
               padding: 10, paddingBottom: 28,
               transform: `translate(${offsetX}px, ${offsetY}px) rotate(${rot}deg) scale(${scale})`,
               transformOrigin: 'center center',
@@ -518,7 +518,7 @@ function HobbyPopup({ stack, cursorX, cursorY, title }) {
               </div>
               <div style={{
                 position: 'absolute', left: 0, right: 0, bottom: 6, textAlign: 'center',
-                fontFamily: 'var(--mono)', fontSize: 8, letterSpacing: 1.5,
+                fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: 1.5,
                 color: 'rgba(20,18,16,0.6)', textTransform: 'uppercase',
               }}>· {tone} · 0{i + 1}</div>
             </div>
@@ -556,7 +556,7 @@ function PhotoCollection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 40, maxWidth: 1100 }}>
-          Stills from <span style={{ fontStyle: 'italic', color: '#C1663B' }}>worlds</span> <span style={{ fontStyle: 'italic' }}>I&apos;ve walked through.</span>
+          Stills from <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> <span style={{ fontStyle: 'italic' }}>I&apos;ve walked through.</span>
         </div>
       </Reveal>
 
@@ -595,7 +595,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{
         position: 'relative',
-        background: '#f2ede3',
+        background: 'var(--lab-ink,#f2ede3)',
         padding: 14,
         paddingBottom: hero ? 56 : 42,
         boxShadow: hov
@@ -669,7 +669,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
         </span>
         <span style={{
           fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 1.5, textTransform: 'uppercase',
-          color: hov ? '#C1663B' : 'rgba(20,18,16,0.45)', transition: 'color .25s',
+          color: hov ? 'var(--lab-primary,#C1663B)' : 'rgba(20,18,16,0.45)', transition: 'color .25s',
         }}>{hov ? '▸ open' : '·'}</span>
       </div>
     </div>
@@ -686,7 +686,7 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
       flexDirection: 'column', gap: 24, padding: 40, cursor: 'none',
     }}>
       <div onClick={(e) => e.stopPropagation()} style={{
-        background: '#f2ede3', padding: 24, paddingBottom: 64, position: 'relative',
+        background: 'var(--lab-ink,#f2ede3)', padding: 24, paddingBottom: 64, position: 'relative',
         boxShadow: '0 48px 120px rgba(0,0,0,0.7)',
         animation: 'pickup .45s cubic-bezier(.2,.8,.2,1)',
       }}>
@@ -716,11 +716,11 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
       </div>
 
       <div onClick={(e) => { e.stopPropagation(); setIdx((i) => (i - 1 + N) % N); }}
-        style={{ position: 'fixed', left: 24, top: '50%', transform: 'translateY(-50%)', width: 56, height: 56, border: `1px solid rgba(242,237,227,0.18)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f2ede3', cursor: 'none', fontFamily: 'var(--serif)', fontSize: 24 }}>←</div>
+        style={{ position: 'fixed', left: 24, top: '50%', transform: 'translateY(-50%)', width: 56, height: 56, border: `1px solid rgba(242,237,227,0.18)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--lab-ink,#f2ede3)', cursor: 'none', fontFamily: 'var(--serif)', fontSize: 24 }}>←</div>
       <div onClick={(e) => { e.stopPropagation(); setIdx((i) => (i + 1) % N); }}
-        style={{ position: 'fixed', right: 24, top: '50%', transform: 'translateY(-50%)', width: 56, height: 56, border: `1px solid rgba(242,237,227,0.18)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f2ede3', cursor: 'none', fontFamily: 'var(--serif)', fontSize: 24 }}>→</div>
+        style={{ position: 'fixed', right: 24, top: '50%', transform: 'translateY(-50%)', width: 56, height: 56, border: `1px solid rgba(242,237,227,0.18)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--lab-ink,#f2ede3)', cursor: 'none', fontFamily: 'var(--serif)', fontSize: 24 }}>→</div>
       <div onClick={(e) => { e.stopPropagation(); close(); }}
-        style={{ position: 'fixed', top: 24, right: 24, fontFamily: 'var(--mono)', fontSize: 14, color: '#f2ede3', letterSpacing: 1, textTransform: 'uppercase', cursor: 'none' }}>put back ✕</div>
+        style={{ position: 'fixed', top: 24, right: 24, fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--lab-ink,#f2ede3)', letterSpacing: 1, textTransform: 'uppercase', cursor: 'none' }}>put back ✕</div>
 
       <style>{`@keyframes pickup { 0% { transform: scale(.85) rotate(-3deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }`}</style>
     </div>
@@ -734,7 +734,7 @@ function MoviesSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1200 }}>
-          Films that <span style={{ fontStyle: 'italic', color: '#C1663B' }}>inspired</span> my world-building.
+          Films that <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>inspired</span> my world-building.
         </div>
       </Reveal>
       <div style={{ display: 'flex', flexDirection: 'column' }}>

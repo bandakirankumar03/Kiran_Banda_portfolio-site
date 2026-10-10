@@ -91,7 +91,7 @@ function Cursor() {
         borderRadius: '50%', border: `1.5px solid var(--accent)`,
         pointerEvents: 'none', zIndex: 9999, transition: 'width .25s, height .25s',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--accent)',
+        fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--accent)',
         letterSpacing: 1, textTransform: 'uppercase', whiteSpace: 'nowrap',
         backdropFilter: mode !== 'default' ? 'blur(4px)' : 'none',
         background: mode !== 'default' ? 'rgba(217,162,74,0.08)' : 'transparent',
@@ -180,21 +180,44 @@ function Scene({ tone = 'dusk', cap, tag, children, style = {}, interactive = fa
 }
 
 // ─── Scroll-triggered reveal ───────────────────────────────
-function Reveal({ children, delay = 0, y = 30, as: Tag = 'div', style = {} }) {
+function Reveal({ children, delay = 0, y = 30, as: Tag = 'div', className, style = {} }) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
+  const [reduced,setReduced]=useState(false);
   useEffect(() => {
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } });
-    }, { threshold: 0.12 });
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
+    const element=ref.current;
+    const isCase=!!element?.closest('.case-cinematic');
+    const motion=matchMedia('(prefers-reduced-motion: reduce)');
+    let animation=null,speed=0;
+    const accelerate=e=>{
+      speed=e.detail.speed;
+      if(animation?.playState==='running')animation.updatePlaybackRate(1+Math.min(2,speed/2));
+    };
+    const preference=()=>{setReduced(motion.matches);if(motion.matches){animation?.finish();setShown(true);}};
+    preference();
+    motion.addEventListener('change',preference);
+    if(isCase)window.addEventListener('case-scroll-motion',accelerate);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        if(isCase && !motion.matches && element.animate){
+          animation=element.animate([
+            {opacity:0,transform:`translateY(${Math.min(y,36)}px)`},
+            {opacity:1,transform:'translateY(0)'}
+          ],{duration:1200,delay:speed>1?0:Math.min(delay,150),easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});
+          animation.updatePlaybackRate(1+Math.min(2,speed/2));
+        }
+        setShown(true);io.disconnect();
+      });
+    },{threshold:isCase?0:.12,rootMargin:isCase?'0px 0px -24px 0px':'0px'});
+    if(element)io.observe(element);
+    return ()=>{io.disconnect();animation?.cancel();motion.removeEventListener('change',preference);window.removeEventListener('case-scroll-motion',accelerate);};
   }, []);
   return (
-    <Tag ref={ref} style={{
-      opacity: shown ? 1 : 0,
-      transform: shown ? 'translateY(0)' : `translateY(${y}px)`,
-      transition: `opacity .9s ${delay}ms ease, transform .9s ${delay}ms cubic-bezier(.2,.7,.2,1)`,
+    <Tag ref={ref} className={className} data-reveal={shown?'shown':'pending'} style={{
+      opacity:shown?1:0,
+      transform:shown?'translateY(0)':`translateY(${y}px)`,
+      transition: reduced?'none':`opacity .9s ${delay}ms ease, transform .9s ${delay}ms cubic-bezier(.2,.7,.2,1)`,
       ...style,
     }}>{children}</Tag>
   );
@@ -225,10 +248,10 @@ function Nav() {
   ];
   return (
     <React.Fragment>
-    <div style={{
+    <div className="site-nav" style={{
       display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', flexWrap: 'nowrap',
       padding: bp === 'mobile' ? '6px 16px' : 'clamp(6px,1.5vw,8px) var(--pad)',
-      fontFamily: 'var(--mono)', fontSize: bp === 'mobile' ? 11 : 14, letterSpacing: bp === 'mobile' ? 0.8 : 1.5,
+      fontFamily: 'var(--mono)', fontSize: bp === 'mobile' ? 13 : 14, letterSpacing: bp === 'mobile' ? 0.8 : 1.5,
       height: bp === 'mobile' ? 56 : 'clamp(64px, 11vw, 93px)',
       textTransform: 'uppercase', color: 'var(--dim)',
       position: onHome ? 'fixed' : 'relative',
@@ -253,14 +276,14 @@ function Nav() {
       <div style={{ display: 'flex', gap: bp === 'mobile' ? 10 : 'clamp(10px, 2.2vw, 28px)', borderRadius: 175, flexShrink: 0 }}>
         {items.map((i) => (
           <NavLink key={i.k} onClick={() => go({ name: i.k })}
-            style={{ color: route.name === i.k ? 'var(--accent)' : '#f2ede3',
+            style={{ color: route.name === i.k ? 'var(--accent)' : 'var(--lab-ink,#f2ede3)',
               borderBottom: route.name === i.k ? `1px solid var(--accent)` : 'none', paddingBottom: 2, whiteSpace: 'nowrap' }}>
             {i.l}
           </NavLink>
         ))}
       </div>
       {bp !== 'mobile' ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 16, color: '#f2ede3' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 16, color: 'var(--lab-ink,#f2ede3)' }}>
           <span className="online-text" style={{ display: 'inline-flex', alignItems: 'center' }}><span className="online-dot" />open</span>
         </div>
       ) : <div />}

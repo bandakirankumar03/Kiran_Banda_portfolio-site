@@ -124,7 +124,7 @@ function ReelHero() {
       {/* tiny scroll cue only */}
       <div style={{
         position: 'absolute', bottom: 36, left: 0, right: 0, textAlign: 'center',
-        fontFamily: 'var(--mono)', fontSize: 12, color: 'rgba(242,237,227,0.55)',
+        fontFamily: 'var(--mono)', fontSize: 14, color: 'rgba(242,237,227,0.55)',
         letterSpacing: 3, textTransform: 'uppercase', zIndex: 5, opacity: fgOpacity,
       }}>
         <div style={{ fontSize: 18, color: 'var(--accent)', marginBottom: 8, animation: 'bobY 1.8s infinite' }}>↓</div>
@@ -167,7 +167,7 @@ function HomeIntro() {
         </Reveal>
         <Reveal delay={120}>
           <div style={{ fontSize: 'clamp(56px, 8vw, 120px)', lineHeight: 0.98, letterSpacing: -3, fontWeight: 300, maxWidth: 1300 }}>
-            I build the <span style={{ fontStyle: 'italic', color: '#C1663B' }}>worlds</span> I imagine,<br/>
+            I build the <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> I imagine,<br/>
             rendered in real time.
           </div>
         </Reveal>
@@ -255,8 +255,8 @@ function ProjectCarousel({ onOpen }) {
       `}</style>
       <Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'baseline', padding: '0 var(--pad)', marginBottom: 48, fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)' }}>
-          <span style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: '#f2ede3', fontWeight: 300 }}>
-            worlds,&nbsp;<span style={{ fontStyle: 'italic', color: '#C1663B' }}>so far</span>
+          <span style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: 'var(--lab-ink,#f2ede3)', fontWeight: 300 }}>
+            worlds,&nbsp;<span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>so far</span>
           </span>
           <div className="work-carousel-actions"><NavLink onClick={() => window.__go__({ name: 'work' })} style={{ color: 'var(--accent)' }}>
             full index &nbsp;→
@@ -390,7 +390,7 @@ function InterestsSection() {
     <div style={{ borderTop: `1px solid var(--hair)`, padding: 'clamp(60px,10vw,120px) var(--pad)' }}>
       <Reveal delay={120}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, maxWidth: 1100, marginBottom: 'clamp(36px,6vw,60px)' }}>
-          New <span style={{ fontStyle: 'italic', color: '#C1663B' }}>tools, rooms,</span> <span style={{ fontStyle: 'italic' }}>and ideas</span> changing the way I make worlds.
+          New <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>tools, rooms,</span> <span style={{ fontStyle: 'italic' }}>and ideas</span> changing the way I make worlds.
         </div>
       </Reveal>
       <div style={{ display: 'flex', flexDirection: 'column', borderTop: `1px solid var(--hair)` }}>

@@ -162,7 +162,7 @@ function Intro({ onEnter }) {
           display: 'flex', alignItems: 'center', gap: 22, minWidth: 520, justifyContent: 'space-between',
         }}>
           <span style={{ color: 'rgba(242,237,227,0.4)' }}>render</span>
-          <div style={{ display: 'flex', gap: 12, fontSize: 10 }}>
+          <div style={{ display: 'flex', gap: 12, fontSize: 12 }}>
             {['wire', 'solid', 'texture', 'lit'].map((s, i) => (
               <span key={s} style={{ color: stage === i + 1 ? '#C1663B' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
                 {String(i + 1).padStart(2, '0')} · {s}
@@ -202,7 +202,7 @@ function Intro({ onEnter }) {
       {/* skip hint */}
       <div style={{
         position: 'absolute', bottom: 28, right: 32,
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: 'rgba(242,237,227,0.4)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.4)',
         letterSpacing: 2, textTransform: 'uppercase',
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
@@ -212,7 +212,7 @@ function Intro({ onEnter }) {
       {/* corner timestamps */}
       <div style={{
         position: 'absolute', top: 24, left: 28,
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: 'rgba(242,237,227,0.45)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
@@ -222,7 +222,7 @@ function Intro({ onEnter }) {
       </div>
       <div style={{
         position: 'absolute', top: 24, right: 28, textAlign: 'right',
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: 'rgba(242,237,227,0.45)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>

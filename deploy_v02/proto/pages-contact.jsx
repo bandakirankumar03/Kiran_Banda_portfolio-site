@@ -17,7 +17,7 @@ function ContactPage() {
 
   const field = (k, label, lines = 1) => (
     <div style={{ borderBottom: `1px solid var(--hair)`, paddingBottom: 12, fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase' }}>
-      <div style={{ marginBottom: 8, fontSize: 10 }}>{label}</div>
+      <div style={{ marginBottom: 8, fontSize: 12 }}>{label}</div>
       {lines === 1 ? (
         <input value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })}
           style={{ background: 'transparent', border: 'none', outline: 'none', color: 'var(--ink)', fontFamily: 'var(--mono)', fontSize: 15, width: '100%', padding: 0 }} />
@@ -33,7 +33,7 @@ function ContactPage() {
       <div style={{ padding: 'clamp(28px,6vw,40px) var(--pad) clamp(48px,9vw,80px)' }}>
         <Reveal delay={80}>
           <div style={{ fontSize: 'clamp(80px, 13vw, 184px)', lineHeight: 0.92, letterSpacing: -4, fontWeight: 300, marginBottom: 60 }}>
-            <span style={{ fontStyle: 'italic', color: '#C1663B' }}>say</span> <span style={{ color: 'var(--accent)' }}>hello.</span>
+            <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>say</span> <span style={{ color: 'var(--accent)' }}>hello.</span>
           </div>
         </Reveal>
 
@@ -49,7 +49,7 @@ function ContactPage() {
 
             {/* Resume slot */}
             <div id="resume" style={{ border: `1px solid var(--accent)`, padding: 22, marginBottom: 24 }}>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 10 }}>résumé · pdf · 2026</div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 10 }}>résumé · pdf · 2026</div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ fontSize: 22, fontWeight: 300, fontStyle: 'italic', letterSpacing: -0.3 }}>kiran-banda · cv.pdf</div>
                 <a href="#" {...useCursorLabel('download', 'link')}
@@ -57,7 +57,7 @@ function ContactPage() {
                   download ↓
                 </a>
               </div>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--dim)', letterSpacing: 1, marginTop: 12, textTransform: 'uppercase' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--dim)', letterSpacing: 1, marginTop: 12, textTransform: 'uppercase' }}>
                 ↳ replace this link with your real resume URL
               </div>
             </div>

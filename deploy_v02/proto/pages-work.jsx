@@ -21,7 +21,7 @@ function WorkPage() {
         </Reveal>
         <Reveal delay={100}>
           <div style={{ fontSize: 'clamp(64px, 10vw, 136px)', lineHeight: 0.92, letterSpacing: -3, fontWeight: 300 }}>
-            The <span style={{ fontStyle: 'italic', color: '#C1663B' }}>shot list.</span>
+            The <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>shot list.</span>
           </div>
         </Reveal>
         <Reveal delay={200}>

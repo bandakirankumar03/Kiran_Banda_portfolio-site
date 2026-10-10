@@ -7,46 +7,46 @@ function NYCCasePage({p,x,prev,next,go}) {
   const photo=(file,alt,cls='')=><StoryImage media={media(file,alt)} className={cls} onInspect={setSelected}/>;
   const jump=()=>document.getElementById('nyc-film').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   const cast=['114801','114804','114807','114812'];
-  return <article className="nyc-case">
+  return <article className="nyc-case case-cinematic">
     <style>{`
-      .nyc-case { --nyc-muted:#b5b3ad; }
+      .nyc-case { --nyc-muted:var(--lab-muted,#b5b3ad); }
       .nyc-cover { height:80svh; min-height:590px; max-height:850px; position:relative; display:flex; align-items:flex-end; padding:110px var(--pad) 42px; isolation:isolate; }
       .nyc-cover>img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; }
       .nyc-cover:after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,#080a1040,transparent 20%,#090b1088 55%,#0b0b0c 100%); }
       .nyc-cover-inner { max-width:1280px; margin:0 auto; width:100%; }
-      .nyc-eyebrow { display:block; font:10px/1.5 var(--mono); color:var(--accent); letter-spacing:2px; text-transform:uppercase; }
+      .nyc-eyebrow { display:block; font:12px/1.5 var(--mono); color:var(--accent); letter-spacing:2px; text-transform:uppercase; }
       .nyc-cover h1 { font:400 clamp(58px,8vw,110px)/1.02 var(--serif); letter-spacing:-4px; margin:21px 0; max-width:10ch; }
-      .nyc-case em { color:#C1663B; font-weight:400; }
+      .nyc-case em { color:var(--lab-primary,#C1663B); font-weight:400; }
       .nyc-cover-bottom { display:flex; justify-content:space-between; align-items:end; gap:24px; }
       .nyc-cover-bottom p { margin:0; max-width:43ch; font:15px/1.7 Arial,sans-serif; color:#d7d3cd; }
-      .nyc-action { color:var(--accent); background:none; border:0; border-bottom:1px solid var(--hair); padding:13px 0; font:11px var(--mono); cursor:pointer; white-space:nowrap; }
+      .nyc-action { color:var(--accent); background:none; border:0; border-bottom:1px solid var(--hair); padding:13px 0; font:13px var(--mono); cursor:pointer; white-space:nowrap; }
       .nyc-main { max-width:none; padding:0 var(--pad) 70px; margin:auto; }
       .nyc-brief { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:28px; padding:28px 0 34px; border-bottom:1px solid var(--hair); margin-bottom:54px; }
-      .nyc-brief dt { font:9px var(--mono); text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:10px; }
+      .nyc-brief dt { font:12px var(--mono); text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:10px; }
       .nyc-brief dd { margin:0; font:13px/1.75 Arial,sans-serif; color:var(--nyc-muted); }
       .nyc-flow { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:34px 26px; align-items:center; }
       .nyc-flow>* { min-width:0; }
       .nyc-copy h2 { font:400 clamp(30px,3.6vw,48px)/1.17 var(--serif); letter-spacing:-1.4px; margin:14px 0 18px; }
       .nyc-copy p { color:var(--nyc-muted); font:15px/1.8 Arial,sans-serif; margin:0; max-width:49ch; }
-      .nyc-caption { font:10px/1.6 var(--mono); color:var(--dim); margin:10px 0 0; }
+      .nyc-caption { font:12px/1.6 var(--mono); color:var(--dim); margin:10px 0 0; }
       .nyc-intro { grid-column:1/6; }
       .nyc-aerial { grid-column:7/13; }
       .nyc-wide { grid-column:1/-1; }
       .nyc-comparison { position:relative; aspect-ratio:4048/1712; overflow:hidden; background:#151619; }
       .nyc-comparison img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-      .nyc-compare-label { position:absolute; top:16px; padding:6px 10px; background:#08090bd9; color:#eae5dd; font:10px var(--mono); }
+      .nyc-compare-label { position:absolute; top:16px; padding:6px 10px; background:#08090bd9; color:#eae5dd; font:12px var(--mono); }
       .nyc-compare-bar { position:absolute; inset:0 auto 0 0; border-right:1px solid #fff9; pointer-events:none; }
       .nyc-compare-bar span { position:absolute; top:50%; right:-21px; width:42px; height:42px; display:grid; place-items:center; background:#101216; border:1px solid #fff8; border-radius:50%; color:#fff; font:16px Arial; }
       .nyc-comparison input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; touch-action:pan-y; }
       .nyc-comparison:focus-within { outline:2px solid var(--accent); outline-offset:4px; }
       .nyc-comparison-caption { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
-      .nyc-comparison-caption button { font:10px var(--mono); }
+      .nyc-comparison-caption button { font:12px var(--mono); }
       .nyc-facade { grid-column:1/5; }
       .nyc-facade .xr-photo { aspect-ratio:1/1; }
       .nyc-build { grid-column:6/13; }
       .nyc-steps { display:flex; gap:16px; padding:22px 0 0; margin:0; list-style:none; }
-      .nyc-steps li { flex:1; border-top:1px solid var(--hair); padding-top:12px; font:12px/1.7 Arial,sans-serif; color:var(--nyc-muted); }
-      .nyc-steps b { display:block; font:10px var(--mono); color:var(--accent); margin-bottom:8px; font-weight:400; }
+      .nyc-steps li { flex:1; border-top:1px solid var(--hair); padding-top:12px; font:14px/1.7 Arial,sans-serif; color:var(--nyc-muted); }
+      .nyc-steps b { display:block; font:12px var(--mono); color:var(--accent); margin-bottom:8px; font-weight:400; }
       .nyc-assets { grid-column:6/13; display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:-15px; }
       .nyc-assets .xr-photo { aspect-ratio:3/1; }
       .nyc-cast-copy { grid-column:1/7; padding-top:24px; }
@@ -56,7 +56,7 @@ function NYCCasePage({p,x,prev,next,go}) {
       .nyc-cast .xr-photo img { object-fit:cover; }
       .nyc-case .nyc-cast .nyc-reference img { object-fit:contain; background:#242522; }
       .nyc-cast .nyc-last img { object-position:left center; }
-      .nyc-cast .nyc-caption { font-size:9px; }
+      .nyc-cast .nyc-caption { font-size:12px; }
       .nyc-capture { grid-column:1/7; }
       .nyc-capture .xr-photo { aspect-ratio:16/9; }
       .nyc-capture-copy { grid-column:8/13; }
@@ -133,11 +133,11 @@ function NYCCasePage({p,x,prev,next,go}) {
         .nyc-flow .nyc-aerial { grid-column:2/7; }.nyc-flow .nyc-facade { grid-column:1/5; }
         .nyc-cast { grid-template-columns:repeat(2,minmax(0,1fr)); }.nyc-cast .xr-photo { aspect-ratio:3/4; }
         .nyc-cast-note { margin-top:-12px; }.nyc-assets { margin-top:0; }
-        .nyc-steps { gap:12px; }.nyc-steps li { font-size:11px; }
-        .nyc-comparison { aspect-ratio:16/9; }.nyc-comparison img { object-fit:contain; }.nyc-compare-label { font-size:8px; top:6px; }
+        .nyc-steps { gap:12px; }.nyc-steps li { font-size:13px; }
+        .nyc-comparison { aspect-ratio:16/9; }.nyc-comparison img { object-fit:contain; }.nyc-compare-label { font-size:12px; top:6px; }
         .nyc-comparison-caption { flex-wrap:wrap; gap:0; }.nyc-comparison-caption p { max-width:32ch; }
         .nyc-flow .nyc-props { grid-column:2/7; }.nyc-bts-heading { align-items:baseline; }.nyc-bts h2 { font-size:30px; }
-        .nyc-character-pair { gap:10px; }.nyc-character-pair .nyc-caption { font-size:9px; }.nyc-check-grid { grid-template-columns:1fr; gap:18px; }.nyc-asset-group { gap:12px; }.nyc-asset-group .xr-photo { aspect-ratio:2; }
+        .nyc-character-pair { gap:10px; }.nyc-character-pair .nyc-caption { font-size:12px; }.nyc-check-grid { grid-template-columns:1fr; gap:18px; }.nyc-asset-group { gap:12px; }.nyc-asset-group .xr-photo { aspect-ratio:2; }
         .nyc-result p { font-size:24px; }.nyc-copy h2 { font-size:32px; }
       }
       @media(prefers-reduced-motion:reduce) { .nyc-case [style*="opacity"] { transition:none!important; } }
@@ -148,23 +148,23 @@ function NYCCasePage({p,x,prev,next,go}) {
       <div className="nyc-flow">
         <div className="nyc-intro nyc-copy"><Reveal><span className="nyc-eyebrow">Image → geometry</span><h2>Start with an image.<br/><em>Build only the depth.</em></h2><p>Gemini-generated building images became façades in Blender. I mapped each image to a plane and extruded selected faces to bring windows, ledges, and rooflines forward—then assembled the street in Unreal.</p><ol className="nyc-steps"><li><b>Generate</b>Façade imagery</li><li><b>Shape</b>Selective extrusion</li><li><b>Assemble</b>Light and compose</li></ol></Reveal></div>
         <div className="nyc-aerial"><Reveal>{photo('gemini-lucas.webp','Gemini-generated Lucas Theatre façade reference')}<p className="nyc-caption">Gemini / the source image</p></Reveal></div>
-        <div className="nyc-asset-process"><div>{photo('blender-projection.webp','Gray Lucas Theatre geometry built in Blender')}<p className="nyc-caption"><b>Blender / Model</b>Selective extrusion creates depth.</p></div><div>{photo('blender-model.webp','Gemini image projected onto the Lucas Theatre model in Blender')}<p className="nyc-caption"><b>Blender / Project</b>The source image becomes the surface.</p></div><div>{photo('screenshot-2026-10-06-115029.webp','Lucas Theatre asset imported into Unreal','nyc-unreal-asset')}<p className="nyc-caption"><b>Unreal / Assemble</b>The asset is ready for the street.</p></div></div>
-        <div className="nyc-assets nyc-asset-group"><div>{photo('screenshot-2026-10-06-115146.webp','Building and façade assets in the Unreal content browser')}<p className="nyc-caption">Architecture library</p></div><div>{photo('screenshot-2026-10-06-115125.webp','Props and set dressing assets in the Unreal content browser')}<p className="nyc-caption">Props and set dressing</p></div></div>
+        <Reveal className="nyc-asset-process"><div>{photo('blender-projection.webp','Gray Lucas Theatre geometry built in Blender')}<p className="nyc-caption"><b>Blender / Model</b>Selective extrusion creates depth.</p></div><div>{photo('blender-model.webp','Gemini image projected onto the Lucas Theatre model in Blender')}<p className="nyc-caption"><b>Blender / Project</b>The source image becomes the surface.</p></div><div>{photo('screenshot-2026-10-06-115029.webp','Lucas Theatre asset imported into Unreal','nyc-unreal-asset')}<p className="nyc-caption"><b>Unreal / Assemble</b>The asset is ready for the street.</p></div></Reveal>
+        <Reveal className="nyc-assets nyc-asset-group"><div>{photo('screenshot-2026-10-06-115146.webp','Building and façade assets in the Unreal content browser')}<p className="nyc-caption">Architecture library</p></div><div>{photo('screenshot-2026-10-06-115125.webp','Props and set dressing assets in the Unreal content browser')}<p className="nyc-caption">Props and set dressing</p></div></Reveal>
         <div className="nyc-scene-copy nyc-copy"><Reveal><span className="nyc-eyebrow">Assembling the scene</span><h2>A street with<br/><em>a story to tell.</em></h2><p>Inspired by 1890s industrial New York, I built a cinematic street for a confrontation between two rival gangs, with depth, atmosphere, and room for live-action performance. I developed the full Unreal environment, from blockout to stage adaptation.</p></Reveal></div>
         <div className="nyc-scene-image"><Reveal>{photo('highresscreenshot00008.webp','Lucas façade integrated into the lit street environment')}<p className="nyc-caption">From the façade asset to its place in the street.</p></Reveal></div>
         <div className="nyc-wide"><Reveal><div className="nyc-comparison" role="group" aria-label="Compare neutral shading and the lit environment"><img src={base+'highresscreenshot00000.webp'} alt="Final lit industrial street" loading="lazy"/><img src={base+'highresscreenshot00001.webp'} alt="Neutral shading of the same street composition" loading="lazy" style={{clipPath:`inset(0 ${100-reveal}% 0 0)`}}/><span className="nyc-compare-label" style={{left:12}}>Neutral shading</span><span className="nyc-compare-label" style={{right:12}}>Lit environment</span><div className="nyc-compare-bar" style={{width:reveal+'%'}}><span>↔</span></div><input type="range" min="0" max="100" value={reveal} onChange={e=>setReveal(Number(e.target.value))} aria-label="Reveal neutral shading" aria-valuetext={`${reveal}% neutral shading`}/></div><div className="nyc-comparison-caption"><p className="nyc-caption">Drag to compare / the same composition, two render views</p><button className="nyc-action" onClick={()=>setSelected(media('highresscreenshot00000.webp','Final lit industrial street'))}>Inspect final image ↗</button></div></Reveal></div>
         <div className="nyc-overhead"><Reveal>{photo('highresscreenshot00009.webp','Top view of the complete Unreal street environment')}<p className="nyc-caption">The complete layout / arranging the façades, street, and set dressing.</p></Reveal></div>
-        <div className="nyc-checks"><div><span className="nyc-eyebrow">Scene checks / Before the stage</span><p className="nyc-caption">Geometry, lighting, and render views / inspect each image for detail.</p></div><div className="nyc-check-grid"><div>{photo('highresscreenshot00005.webp','Unreal geometry diagnostic views around the final street render')}<p className="nyc-caption">Geometry diagnostics</p></div><div>{photo('highresscreenshot00002.webp','Unreal lighting and render buffer overview')}<p className="nyc-caption">Lighting / render buffers</p></div></div></div>
+        <Reveal className="nyc-checks"><div><span className="nyc-eyebrow">Scene checks / Before the stage</span><p className="nyc-caption">Geometry, lighting, and render views / inspect each image for detail.</p></div><div className="nyc-check-grid"><div>{photo('highresscreenshot00005.webp','Unreal geometry diagnostic views around the final street render')}<p className="nyc-caption">Geometry diagnostics</p></div><div>{photo('highresscreenshot00002.webp','Unreal lighting and render buffer overview')}<p className="nyc-caption">Lighting / render buffers</p></div></div></Reveal>
         <div className="nyc-cast-copy nyc-copy"><Reveal><span className="nyc-eyebrow">AI character development</span><h2>From an image<br/><em>to a performance.</em></h2><p>We generated the character reference in Gemini, then used Meshyfy 3D to create a rigged 3D character. Sony mocopi capture supplied the movement for the animation workflow in Unreal.</p></Reveal></div>
-        <div className="nyc-cast-note"><p className="nyc-caption">Gemini image → Meshyfy 3D character → mocopi motion.<br/>Select any image to inspect it.</p></div>
-        <div className="nyc-character-pair"><div>{photo('character-reference.webp','Gemini-generated dark-coat character reference','nyc-reference')}<p className="nyc-caption"><b>Gemini</b>Generated character reference</p></div><div>{photo('screenshot-2026-10-06-114820.webp','Matching dark-coat 3D character generated in Meshyfy 3D and imported into Unreal','nyc-model')}<p className="nyc-caption"><b>Meshyfy 3D</b>Generated 3D character / Unreal viewport</p></div></div>
-        <div className="nyc-cast"><span className="nyc-eyebrow">More generated characters</span>{cast.map((id,i)=><div key={id}>{photo(`screenshot-2026-10-06-${id}.webp`,`AI-generated 3D character ${i+1} in Unreal`)}<p className="nyc-caption">Generated character</p></div>)}</div>
+        <Reveal className="nyc-cast-note"><p className="nyc-caption">Gemini image → Meshyfy 3D character → mocopi motion.<br/>Select any image to inspect it.</p></Reveal>
+        <Reveal className="nyc-character-pair"><div>{photo('character-reference.webp','Gemini-generated dark-coat character reference','nyc-reference')}<p className="nyc-caption"><b>Gemini</b>Generated character reference</p></div><div>{photo('screenshot-2026-10-06-114820.webp','Matching dark-coat 3D character generated in Meshyfy 3D and imported into Unreal','nyc-model')}<p className="nyc-caption"><b>Meshyfy 3D</b>Generated 3D character / Unreal viewport</p></div></Reveal>
+        <Reveal className="nyc-cast"><span className="nyc-eyebrow">More generated characters</span>{cast.map((id,i)=><div key={id}>{photo(`screenshot-2026-10-06-${id}.webp`,`AI-generated 3D character ${i+1} in Unreal`)}<p className="nyc-caption">Generated character</p></div>)}</Reveal>
         <div className="nyc-capture"><Reveal><div className="nyc-capture-pair">{photo('mocopi-session.webp','Motion-capture recording in XYN software')}{photo('mocopi-performer.webp','Performer wearing Sony mocopi sensors during the capture session')}</div><p className="nyc-caption">Sony mocopi / capturing movement and recording in XYN</p></Reveal></div>
         <div className="nyc-capture-copy nyc-copy"><Reveal><span className="nyc-eyebrow">Performance capture</span><h2>Small sensors.<br/><em>Real movement.</em></h2><p>I set up Sony mocopi sensors and operated capture sessions in XYN. I recorded and exported the motion, made small adjustments, and incorporated the performance into the character workflow.</p></Reveal></div>
         <div className="nyc-stage-title nyc-copy"><Reveal><span className="nyc-eyebrow">On the XR stage</span><h2>Digital depth.<br/><em>Physical presence.</em></h2></Reveal></div>
         <div className="nyc-stage"><Reveal>{photo('photo-feb-17-2026-2-41-15-pm.webp','Crew dressing the physical set in front of the industrial street on the LED wall')}<p className="nyc-caption">Practical props meet the digital street extension.</p></Reveal></div>
-        <div className="nyc-props">{photo('photo-feb-13-2026-10-44-59-am.webp','Barrels transported for the physical set')}{photo('photo-feb-16-2026-10-28-49-am.webp','Wooden pallets transported for the physical set')}<p className="nyc-caption">Working with production design, we brought rented props onto the stage and matched them to the environment.</p></div>
-        <div className="nyc-set-more"><div>{photo('photo-feb-17-2026-3-10-30-pm.webp','Unreal workstations and monitoring at the XR stage')}<p className="nyc-caption">Monitoring the digital set</p></div><div>{photo('photo-feb-18-2026-12-47-50-pm.webp','Cast and crew preparing the scene on the XR stage')}<p className="nyc-caption">Cast and crew / preparing the take</p></div></div>
+        <Reveal className="nyc-props">{photo('photo-feb-13-2026-10-44-59-am.webp','Barrels transported for the physical set')}{photo('photo-feb-16-2026-10-28-49-am.webp','Wooden pallets transported for the physical set')}<p className="nyc-caption">Working with production design, we brought rented props onto the stage and matched them to the environment.</p></Reveal>
+        <Reveal className="nyc-set-more"><div>{photo('photo-feb-17-2026-3-10-30-pm.webp','Unreal workstations and monitoring at the XR stage')}<p className="nyc-caption">Monitoring the digital set</p></div><div>{photo('photo-feb-18-2026-12-47-50-pm.webp','Cast and crew preparing the scene on the XR stage')}<p className="nyc-caption">Cast and crew / preparing the take</p></div></Reveal>
         <div className="nyc-decision nyc-copy"><Reveal><span className="nyc-eyebrow">A production decision</span><h3>The effect that stayed out.</h3><p>We tested an AI-generated explosion and compressed its data, but the XR system could not play it reliably. We removed it from the shoot and prioritized a stable scene, refining texture use, lighting, and scene complexity.</p></Reveal></div>
         <div className="nyc-team"><Reveal>{photo('team.webp','The Parley team together on the virtual production stage')}<p className="nyc-caption">The Parley / the team behind the film</p></Reveal></div>
         <div className="nyc-result"><Reveal><span className="nyc-eyebrow">What I took forward</span><p>AI sped up exploration. Capture brought in performance. <em>Stage testing shaped what we could actually film.</em></p></Reveal></div>
