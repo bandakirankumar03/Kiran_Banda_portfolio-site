@@ -89,9 +89,7 @@ const PROJECTS = [
 
   },
 
-  {slug: 'golden-rain', title: 'Golden Rain', role: 'Environment Artist', kind: 'Environment', kindShort: 'ENV', tone: 'forest', tags:['Unreal Engine'], mediaBase:'media/projects/Golden_Rain/web/', hero:'media/projects/Golden_Rain/web/view-1.jpg', finalVideo:'media/projects/Golden_Rain/web/environment.mp4', tagline:'An Unreal environment study of a lakeside house surrounded by trees and water.', blurb:'An Unreal environment study of a lakeside house surrounded by trees and water.', breakdown:[]},
-  {slug: 'hidden-realm', title: 'Hidden Realm', role: 'Environment Artist', kind: 'Environment', kindShort: 'ENV', tone: 'forest', tags:['Unreal Engine'], mediaBase:'media/projects/Hidden_Realm/web/', hero:'media/projects/Hidden_Realm/web/view-1.jpg', finalVideo:'media/projects/Hidden_Realm/web/environment.mp4', tagline:'An Unreal environment study of a secluded forest setting, shaped by mist, foliage, and light.', blurb:'An Unreal environment study of a secluded forest setting, shaped by mist, foliage, and light.', breakdown:[]},
-  {slug:'ranasthala', title:'Ranasthala', role:'Environment Artist', kind:'Environment', kindShort:'ENV', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', tagline:'A circular stone arena developed as an Unreal environment.', blurb:'An Unreal environment study of a stone arena and its architectural details.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', client:'Master’s final project · In progress', tagline:'An arena built from my photogrammetry captures across India. Master’s final project — in progress.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi, Rajasthan, and Warangal. Assets complete; filming is underway.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
@@ -104,18 +102,18 @@ const PROJECTS = [
 
   },
 
+  {slug:'unreal-environment-studies',title:'Unreal Environment Studies',role:'Environment Artist',kind:'Environment',kindShort:'ENV',tone:'forest',tags:['Unreal Engine','Cinematics','Materials'],hero:'media/projects/Golden_Rain/web/view-1.jpg',tagline:'Golden Rain & Hidden Realm — studies in atmosphere, materials, and cinematic cameras.',blurb:'Two environments exploring how lighting, materials, and camera movement shape a scene in Unreal Engine.',breakdown:[]},
   // ── VFX Demo Reel (1) ──────────────────────────────────────
-  {slug:'vfx-compositing-works', title:'VFX Compositing Works', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
+  {slug:'vfx-compositing-works', title:'VFX Compositing Demo Reel', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
     hero:'https://i.vimeocdn.com/video/2213338051-a8295a7e0a7fa1ba75fb7b2a7d02dafb353a488261673f106269e9404349fc15-d_295x166?region=us',
     tagline:'Selected compositing work from my undergraduate years.',
-    blurb:'I began working in VFX compositing during my undergraduate studies. This reel brings together a selection of my compositing work from that period.', breakdown:[]},
+    blurb:'Before moving into Unreal Engine, I developed my foundation in VFX compositing during my undergraduate studies. This reel brings together selected work from that period.', breakdown:[]},
 ];
 
 // ongoing / current work
 const ONGOING = [
-  { title: 'XR03 · in-progress', pct: 48, eta: 'Q3 2026', note: 'A new XR-stage environment in early lookdev. Modular kit, period-accurate, currently arguing with reflection captures.' },
-  { title: 'Photogrammetry · 2026 captures', pct: 30, eta: 'rolling', note: 'New scan trips planned. Aiming for ten production-ready hero assets by summer.' },
-  { title: 'Lighting · personal study', pct: 70, eta: 'next month', note: 'A short cinematic focused entirely on golden-hour interiors. Volumetrics, dust motes, the works.' },
+  { title: 'Ranasthala', pct: 60, status: 'Filming', note: 'Assets complete. Filming is now underway on the virtual production stage for my master’s final VFX project.' },
+  { title: 'Photogrammetry assets', pct: 30, status: 'Processing', note: 'Capture is complete. The scans are now being processed into usable 3D assets.' },
 ];
 
 // interests: tech + events the artist follows

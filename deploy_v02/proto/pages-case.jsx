@@ -845,13 +845,15 @@ function CasePage({ slug }) {
     return ()=>window.removeEventListener('scroll',track);
   },[slug]);
   const { go } = React.useContext(RouteCtx);
-  const idx = PROJECTS.findIndex((p) => p.slug === slug);
+  const resolvedSlug = ['golden-rain','hidden-realm'].includes(slug) ? 'unreal-environment-studies' : slug;
+  const idx = PROJECTS.findIndex((p) => p.slug === resolvedSlug);
   if (idx < 0) return <WorkPage/>;
   const p = PROJECTS[idx];
   const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(idx + 1) % PROJECTS.length];
   const x = (window.CASE_EXTRAS || {})[p.slug] || {};
-  if (['golden-rain','hidden-realm','vfx-compositing-works'].includes(p.slug)) return <VideoProjectPage p={p} prev={prev} next={next} go={go}/>;
+  if(p.slug==='unreal-environment-studies') return <UnrealStudiesPage p={p} prev={prev} next={next} go={go}/>;
+  if (p.slug==='vfx-compositing-works') return <VideoProjectPage p={p} prev={prev} next={next} go={go}/>;
   if (p.slug === 'ranasthala') return <RanasthalaCasePage p={p} prev={prev} next={next} go={go}/>;
   if (p.slug === 'photogrammetry-archive') return <PhotogrammetryCasePage p={p} prev={prev} next={next} go={go}/>;
   if (p.slug === 'rainy-forest') return <MonsoonCasePage p={p} prev={prev} next={next} go={go}/>;
@@ -904,10 +906,10 @@ function CaseImageInteraction({routeKey}) {
   let pointerStart=null;
   const remember=e=>{pointerStart={x:e.clientX,y:e.clientY};};
   const open=e=>{if(e.type==='click'&&pointerStart&&Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>12)return;const img=e.target.matches('.project-cover,.pc-image,.pc-image-drift,.pc-image-lens,.pc-atmosphere,.pc-grain')?e.target.closest('.project-cover')?.querySelector('.pc-image img'):e.target;if(!eligible(img))return;if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;e.preventDefault();e.stopPropagation();setSelected({image:img.currentSrc||img.src,alt:img.alt});};
-  const decorate=()=>document.querySelectorAll('.case-cinematic img').forEach(img=>{if(eligible(img)&&!img.closest('button,a')){img.tabIndex=0;img.setAttribute('role','button');img.style.cursor='pointer';}});
+  const decorate=()=>document.querySelectorAll('#root img').forEach(img=>{if(!img.closest('dialog') && img.getAttribute('aria-hidden')!=='true' && !/logo|icon/i.test(img.alt || '') && (img.naturalWidth>240 || img.width>180))img.classList.add('portfolio-photo');if(eligible(img)&&!img.closest('button,a')){img.tabIndex=0;img.setAttribute('role','button');img.style.cursor='pointer';}});
   decorate();const observer=new MutationObserver(decorate);observer.observe(document.getElementById('root'),{childList:true,subtree:true});
-  document.addEventListener('pointerdown',remember,true);document.addEventListener('click',open,true);document.addEventListener('keydown',open,true);
-  return()=>{observer.disconnect();document.removeEventListener('pointerdown',remember,true);document.removeEventListener('click',open,true);document.removeEventListener('keydown',open,true);};
+  document.addEventListener('load',decorate,true);document.addEventListener('pointerdown',remember,true);document.addEventListener('click',open,true);document.addEventListener('keydown',open,true);
+  return()=>{observer.disconnect();document.removeEventListener('load',decorate,true);document.removeEventListener('pointerdown',remember,true);document.removeEventListener('click',open,true);document.removeEventListener('keydown',open,true);};
  },[routeKey]);
  return selected?<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>:null;
 }

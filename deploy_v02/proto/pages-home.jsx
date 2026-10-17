@@ -28,11 +28,11 @@ function ReelHero() {
   // To use a LOCAL mp4 for the main page:
   //   ① Drop the file at:   media/pages/home/reel.mp4
   //   ② (Optional) Drop a still poster at:   media/pages/home/reel-poster.jpg
-  //   ③ Set HERO_VIDEO below to 'media/pages/home/reel.mp4'
+  //   ③ Set HERO_VIDEO below to 'media/pages/home/reel-environments-v3.mp4'
   // ──────────────────────────────────────────────────────────────
   const HERO_VIMEO  = '';                              // e.g. 'https://vimeo.com/123456789'
-  const HERO_VIDEO  = '';                              // set to 'media/pages/home/reel.mp4' AFTER uploading the file
-  const HERO_POSTER = '';                              // set to 'media/pages/home/reel-poster.jpg' AFTER uploading (optional)
+  const HERO_VIDEO  = 'media/pages/home/reel-environments-v3.mp4';                              // set to 'media/pages/home/reel-environments-v3.mp4' AFTER uploading the file
+  const HERO_POSTER = 'media/pages/home/reel-environments-v3.jpg';                              // set to 'media/pages/home/reel-environments-v3.jpg' AFTER uploading (optional)
 
   const heroVimeoId = (() => {
     if (!HERO_VIMEO) return null;
@@ -95,7 +95,7 @@ function ReelHero() {
                   pointerEvents: 'none',
                 }} />
             ) : (
-              <video src={HERO_VIDEO} autoPlay loop muted playsInline
+              <video src={HERO_VIDEO} autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches} loop muted playsInline
                 poster={(HERO_POSTER && !posterFailed) ? HERO_POSTER : undefined}
                 onError={() => setMediaFailed(true)}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
@@ -187,8 +187,8 @@ function HomeIntro() {
 function ProjectCarousel({ onOpen }) {
   const trackRef = React.useRef(null);
   const posRef = React.useRef(0);
-  const speedRef = React.useRef(0.5);
-  const dispRef = React.useRef(0.5);
+  const speedRef = React.useRef(1.1);
+  const dispRef = React.useRef(1.1);
   const cursorXRef = React.useRef(null);
   const manualRef = React.useRef(0);
   const pauseUntilRef = React.useRef(0);
@@ -208,9 +208,10 @@ function ProjectCarousel({ onOpen }) {
       cursorXRef.current = (e.clientY >= r.top - 40 && e.clientY <= r.bottom + 40) ? e.clientX : null;
     };
     window.addEventListener('mousemove', onMove);
-    let raf;
-    const loopFn = () => {
-      let target = 0.5;
+    let raf, previousTime;
+    const loopFn = (time=performance.now()) => {
+      const delta=Math.min(2,(time-(previousTime ?? time-16.667))/16.667); previousTime=time;
+      let target = 1.1;
       if (cursorXRef.current !== null) {
         const cards = track.querySelectorAll('[data-card]');
         let min = Infinity;
@@ -221,7 +222,7 @@ function ProjectCarousel({ onOpen }) {
           if (d < min) min = d;
         });
         const k = Math.min(1, Math.max(0, min / 400));
-        target = 0.05 + k * 0.45;
+        target = 0.05 + k * 1.05;
       }
       speedRef.current = target;
       dispRef.current += (speedRef.current - dispRef.current) * 0.08;
@@ -230,7 +231,7 @@ function ProjectCarousel({ onOpen }) {
         posRef.current += step;
         manualRef.current -= step;
       } else if (performance.now() > pauseUntilRef.current) {
-        posRef.current -= dispRef.current;
+        if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) posRef.current -= dispRef.current * delta;
       }
       const cards = track.querySelectorAll('[data-card]');
       const half = cards[PROJECTS.length].offsetLeft - cards[0].offsetLeft;
@@ -365,7 +366,7 @@ function OngoingCard({ o }) {
       }} />
       <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', gap: 16, whiteSpace: 'nowrap', fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)', marginBottom: 20 }}>
         <span>in progress</span>
-        <span style={{ color: 'var(--accent)' }}>ETA · {o.eta}</span>
+        <span style={{ color: 'var(--accent)' }}>{o.status || o.eta}</span>
       </div>
       <div style={{ position: 'relative', fontSize: 30, fontWeight: 300, letterSpacing: -0.6, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 16,
         transform: 'translate(calc(var(--mxn, 0) * 3px), calc(var(--myn, 0) * 2px))' }}>

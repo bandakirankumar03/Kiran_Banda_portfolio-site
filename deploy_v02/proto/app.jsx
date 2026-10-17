@@ -70,7 +70,7 @@ function App() {
           <>
             <Nav />
             {page}
-            {route.name==='case' && <CaseImageInteraction routeKey={route.slug}/>}
+            <CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
             <StyleLab />
           </>
         )}
