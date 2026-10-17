@@ -73,38 +73,8 @@ const PROJECTS = [
   },
 
   // ── Unreal Environment Projects (4) ────────────────────────
-  {
-    slug: 'hollow-forest', n: '03', title: 'The Hollow Forest', role: 'Solo · Personal',
-    kind: 'Environment', kindShort: 'ENV', year: '2025', tone: 'forest',
-    tags: ['UE5', 'Lumen', 'SpeedTree', 'Megascans'],
-    tagline: 'An overgrown shrine in a dying wood at the hour before rain.',
-    blurb: 'A personal cinematic — overgrown shrine in a dying wood, captured at the hour before rain. A study in decay, mushrooms, and volumetric light.',
-    client: 'Self', duration: '4 weeks', plates: 6, assets: 42,
-    breakdown: [
-      { tone: 'forest', label: '01 · scatter',   meta: 'PCG · density' },
-      { tone: 'studio', label: '02 · hero tree', meta: 'sculpt / retopo' },
-      { tone: 'ember',  label: '03 · lookdev',   meta: 'moss shader' },
-      { tone: 'forest', label: '04 · lighting',  meta: 'volumetric' },
-    ],
-    problem: 'I wanted the forest to feel like it had been quiet for a thousand years. Most stock forests feel brand new.',
-    approach: 'Built a weathering layer that runs on every asset via world-position noise — moss, rot, dust, chips. One seed feeds the whole forest.',
-  },
-  {
-    slug: 'the-cave', n: '04', title: 'The Cave', role: 'Solo · Personal',
-    kind: 'Environment', kindShort: 'ENV', year: '2025', tone: 'canyon',
-    tags: ['UE5', 'Nanite', 'Lumen', 'Megascans'],
-    tagline: 'A collapsed limestone cavern lit by a single shaft of daylight.',
-    blurb: 'A deep-cave study — water-carved limestone, bioluminescent moss, and one shaft of light finding its way to the floor. Built to test Nanite tessellation on hero rock.',
-    client: 'Self', duration: '3 weeks', plates: 5, assets: 28,
-    breakdown: [
-      { tone: 'canyon', label: '01 · blockout',  meta: 'cave geo' },
-      { tone: 'studio', label: '02 · sculpt',    meta: 'nanite rock' },
-      { tone: 'forest', label: '03 · lookdev',   meta: 'moss / damp' },
-      { tone: 'dusk',   label: '04 · lighting',  meta: 'god rays' },
-    ],
-    problem: 'Hero rock at this scale usually reads as either too clean or too noisy once the camera gets close.',
-    approach: 'Used Nanite tessellation to push real displacement into the rock instead of faking it with normal maps, then let one shaft of volumetric light carry the whole mood.',
-  },
+
+
   {
     slug: 'rainy-forest', n: '05', title: 'Monsoon Station', role: 'Solo · Environment Artist',
     kind: 'Environment', kindShort: 'ENV', year: '2025', tone: 'forest',
@@ -119,6 +89,9 @@ const PROJECTS = [
 
   },
 
+  {slug: 'golden-rain', title: 'Golden Rain', role: 'Environment Artist', kind: 'Environment', kindShort: 'ENV', tone: 'forest', tags:['Unreal Engine'], mediaBase:'media/projects/Golden_Rain/web/', hero:'media/projects/Golden_Rain/web/view-1.jpg', finalVideo:'media/projects/Golden_Rain/web/environment.mp4', tagline:'An Unreal environment study of a lakeside house surrounded by trees and water.', blurb:'An Unreal environment study of a lakeside house surrounded by trees and water.', breakdown:[]},
+  {slug: 'hidden-realm', title: 'Hidden Realm', role: 'Environment Artist', kind: 'Environment', kindShort: 'ENV', tone: 'forest', tags:['Unreal Engine'], mediaBase:'media/projects/Hidden_Realm/web/', hero:'media/projects/Hidden_Realm/web/view-1.jpg', finalVideo:'media/projects/Hidden_Realm/web/environment.mp4', tagline:'An Unreal environment study of a secluded forest setting, shaped by mist, foliage, and light.', blurb:'An Unreal environment study of a secluded forest setting, shaped by mist, foliage, and light.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Environment Artist', kind:'Environment', kindShort:'ENV', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', tagline:'A circular stone arena developed as an Unreal environment.', blurb:'An Unreal environment study of a stone arena and its architectural details.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
@@ -132,23 +105,10 @@ const PROJECTS = [
   },
 
   // ── VFX Demo Reel (1) ──────────────────────────────────────
-  {
-    slug: 'vfx-compositing-works', n: '07', title: 'VFX Compositing Works', role: 'Unreal · Compositing',
-    kind: 'VFX Reel', kindShort: 'REEL', year: '2024', tone: 'dusk',
-    tags: ['Maya', 'Nuke', 'Lighting', 'Compositing'],
-    heroVimeo: 'https://vimeo.com/1195867612',
-    tagline: 'Selected compositing shots from internships and personal pieces.',
-    blurb: 'A short reel of selected compositing shots from my VFX internships and personal work — production-ready lighting setups from Booth Bandhuk (Green Gold Animation), prep & face-track work in Nuke from Studio Raaga, and a handful of personal lighting studies.',
-    client: 'Various', duration: '90 seconds', plates: 18, assets: 18,
-    breakdown: [
-      { tone: 'studio', label: '01 · lighting rigs', meta: 'maya / arnold' },
-      { tone: 'ember',  label: '02 · AOV passes',    meta: 'comp-ready' },
-      { tone: 'rain',   label: '03 · prep / track',  meta: 'nuke' },
-      { tone: 'dusk',   label: '04 · final',         meta: 'reel cut' },
-    ],
-    problem: 'Production lighting and on-set compositing are two very different muscles. The reel needed to show both without feeling stitched together.',
-    approach: 'Cut to a single tempo, colour-graded across all shots in DaVinci Resolve, and let the breakdowns do the talking instead of voiceover.',
-  },
+  {slug:'vfx-compositing-works', title:'VFX Compositing Works', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
+    hero:'https://i.vimeocdn.com/video/2213338051-a8295a7e0a7fa1ba75fb7b2a7d02dafb353a488261673f106269e9404349fc15-d_295x166?region=us',
+    tagline:'Selected compositing work from my undergraduate years.',
+    blurb:'I began working in VFX compositing during my undergraduate studies. This reel brings together a selection of my compositing work from that period.', breakdown:[]},
 ];
 
 // ongoing / current work
@@ -381,33 +341,8 @@ const CASE_EXTRAS = {
       {label:'Behind the scenes',src:'media/projects/xr02-1920s-nyc/web/xr02-bts-30s-mocopi-xyn.mp4',poster:'media/projects/xr02-1920s-nyc/web/xr02-bts-poster.jpg',cap:'Sony mocopi capture, crew, and the XR stage / 30 seconds'}
     ],
   },
-  'hollow-forest': {
-    software: ['Unreal Engine 5','SpeedTree','Megascans','Substance 3D'],
-    stage: 'Personal · finished',
-    layout: 'mosaic',
-    video: { vimeo: '', src: '', cap: 'The Hollow Forest · cinematic' },
-    process: [
-      { tone: 'forest', title: 'Location reference', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'dusk', title: 'Canopy scatter', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'forest', title: 'Shrine blockout', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'canyon', title: 'Moss & decay', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'forest', title: 'Volumetrics', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-    ],
-    closing: 'I kept adding rot until it felt alive. Decay, it turns out, is mostly detail.',
-  },
-  'the-cave': {
-    software: ['Unreal Engine 5','ZBrush','Megascans','Substance 3D'],
-    stage: 'Personal · finished',
-    layout: 'column',
-    video: { vimeo: '', src: '', cap: 'The Cave · cinematic' },
-    process: [
-      { tone: 'canyon', title: 'Cave blockout', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'dusk', title: 'Nanite tests', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'canyon', title: 'Bioluminescence', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-      { tone: 'studio', title: 'One shaft of light', cap: 'Placeholder — a paragraph of the story here. Keep it running: what stage the project was at, what you were solving, and what changed by the end of it.' },
-    ],
-    closing: 'One light source. Everything else was just deciding what deserved to be seen.',
-  },
+
+
   'rainy-forest': {
     software: ['Unreal Engine 5','Niagara','SpeedTree','Megascans'],
     stage: 'Personal · finished',

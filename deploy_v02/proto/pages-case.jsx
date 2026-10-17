@@ -846,10 +846,13 @@ function CasePage({ slug }) {
   },[slug]);
   const { go } = React.useContext(RouteCtx);
   const idx = PROJECTS.findIndex((p) => p.slug === slug);
-  const p = PROJECTS[idx] || PROJECTS[0];
+  if (idx < 0) return <WorkPage/>;
+  const p = PROJECTS[idx];
   const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(idx + 1) % PROJECTS.length];
   const x = (window.CASE_EXTRAS || {})[p.slug] || {};
+  if (['golden-rain','hidden-realm','vfx-compositing-works'].includes(p.slug)) return <VideoProjectPage p={p} prev={prev} next={next} go={go}/>;
+  if (p.slug === 'ranasthala') return <RanasthalaCasePage p={p} prev={prev} next={next} go={go}/>;
   if (p.slug === 'photogrammetry-archive') return <PhotogrammetryCasePage p={p} prev={prev} next={next} go={go}/>;
   if (p.slug === 'rainy-forest') return <MonsoonCasePage p={p} prev={prev} next={next} go={go}/>;
   if (x.layout === 'nyc') return <NYCCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
@@ -897,7 +900,7 @@ function CaseImageInteraction({routeKey}) {
  const [selected,setSelected]=React.useState(null);
  React.useEffect(()=>{
   setSelected(null);
-  const eligible=img=>img instanceof HTMLImageElement && img.closest('.case-cinematic') && !img.closest('dialog, .shared-films, #monsoon-environment, .pg-render') && !img.closest('button[aria-label^="Play "]') && img.getAttribute('aria-hidden')!=='true';
+  const eligible=img=>img instanceof HTMLImageElement && img.closest('.case-cinematic') && !img.closest('[data-image-navigation], dialog, .shared-films, #monsoon-environment, .pg-render') && !img.closest('button[aria-label^="Play "]') && img.getAttribute('aria-hidden')!=='true';
   let pointerStart=null;
   const remember=e=>{pointerStart={x:e.clientX,y:e.clientY};};
   const open=e=>{if(e.type==='click'&&pointerStart&&Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>12)return;const img=e.target.matches('.project-cover,.pc-image,.pc-image-drift,.pc-image-lens,.pc-atmosphere,.pc-grain')?e.target.closest('.project-cover')?.querySelector('.pc-image img'):e.target;if(!eligible(img))return;if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;e.preventDefault();e.stopPropagation();setSelected({image:img.currentSrc||img.src,alt:img.alt});};
