@@ -106,38 +106,29 @@ const PROJECTS = [
     approach: 'Used Nanite tessellation to push real displacement into the rock instead of faking it with normal maps, then let one shaft of volumetric light carry the whole mood.',
   },
   {
-    slug: 'rainy-forest', n: '05', title: 'Rainy Forest', role: 'Solo · Personal',
+    slug: 'rainy-forest', n: '05', title: 'Monsoon Station', role: 'Solo · Environment Artist',
     kind: 'Environment', kindShort: 'ENV', year: '2025', tone: 'forest',
-    tags: ['UE5', 'Niagara', 'SpeedTree', 'Lumen'],
-    tagline: 'A dense forest canopy under steady rainfall, camera pushing low.',
-    blurb: 'A wet-weather forest study — heavy canopy, low camera, and rain finding its way through the leaves. A companion piece to the drier forest work, built for a denser, greener mood.',
-    client: 'Self', duration: '3 weeks', plates: 6, assets: 34,
-    breakdown: [
-      { tone: 'forest', label: '01 · scatter',   meta: 'canopy density' },
-      { tone: 'rain',   label: '02 · rainfall',  meta: 'niagara fx' },
-      { tone: 'forest', label: '03 · lookdev',   meta: 'wet foliage' },
-      { tone: 'dusk',   label: '04 · final',     meta: 'lumen mood' },
-    ],
-    problem: 'Rain through dense foliage either looks like a flat overlay or costs too much to simulate per-leaf.',
-    approach: 'Layered a cheap screen-space rain pass with a handful of Niagara drip emitters on hero branches only, so the eye reads full coverage for a fraction of the cost.',
+    hero: 'media/projects/monsoon-station/web/highresscreenshot00008.webp',
+    tags: ['Unreal Engine', 'Gaea', 'PCG', 'Splines'],
+    tagline: 'A mountain railway imagined in a dream, built in Unreal.',
+    blurb: 'A personal environment exploring terrain creation, procedural placement and spline-controlled railway workflows.',
+    client: 'Personal project', duration: '2 years',
+    breakdown: [],
+    problem: 'Developing a mountain railway while retaining control over the route and environment.',
+    approach: 'Gaea terrain, PCG and spline workflows, with scene assembly and lighting in Unreal.',
+
   },
 
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
-    slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry',
-    kind: 'Photogrammetry', kindShort: 'SCAN', year: '2024', tone: 'canyon',
-    tags: ['Reality Capture', 'A7R IV', 'Pipeline', 'PBR'],
-    tagline: 'On-site captures of carved stone, bark, and weathered surfaces.',
-    blurb: 'A growing archive of on-site photogrammetry — temple pillars, granite steps, bark, weathered surfaces. Captured, processed in Reality Capture, retopologised, and baked down to clean 8K PBR sets ready for Unreal.',
-    client: 'Self + open archive', duration: 'ongoing', plates: 60, assets: 60,
-    breakdown: [
-      { tone: 'dusk',   label: '01 · capture',   meta: 'on-site grids' },
-      { tone: 'studio', label: '02 · alignment', meta: 'RC solve' },
-      { tone: 'canyon', label: '03 · retopo',    meta: 'ZB + Maya' },
-      { tone: 'ember',  label: '04 · bakedown',  meta: '8K PBR' },
-    ],
-    problem: 'Field captures rarely come out production-ready. Bad light, awkward access, vendors sleeping against the pillars.',
-    approach: 'Disciplined capture grids, cross-polarized when possible, and a retopo macro in ZBrush that turns 14M-poly raw meshes into hero assets overnight.',
+    slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
+    kind: 'Photogrammetry', kindShort: 'SCAN', tone: 'studio',
+    hero: 'media/projects/photogrammetry-archive/web/sundial-studio.webp',
+    tags: ['Photogrammetry', 'Polycam', '3D Capture'],
+    tagline: 'Captured objects, studio presentations, and interactive 3D studies.',
+    blurb: 'A collection of photogrammetry object studies and interactive captures, including a sundial and a dog sculpture.',
+    client: 'Personal collection', duration: 'Ongoing', breakdown: [],
+
   },
 
   // ── VFX Demo Reel (1) ──────────────────────────────────────

@@ -64,6 +64,17 @@
   html:not([data-style-lab]) .pc-role, html:not([data-style-lab]) .pc-top span,
   html:not([data-style-lab]) .nyc-eyebrow, html:not([data-style-lab]) .nyc-brief dt,
   html:not([data-style-lab]) .nyc-action, html:not([data-style-lab]) .nyc-steps b { color:#9698FF; }
+        .xr-image-dialog { position:fixed; inset:0; margin:0; padding:0; border:0; border-radius:0; background:transparent; width:100vw; height:100dvh; max-width:none; max-height:none; overflow:hidden; cursor:default!important; }
+        .xr-image-dialog::backdrop { background:rgba(0,0,0,.92); }
+        .xr-image-canvas { width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; touch-action:none; cursor:zoom-in!important; }
+        .xr-image-canvas[data-zoomed=true] { cursor:grab!important; }
+        .xr-image-canvas[data-dragging=true] { cursor:grabbing!important; }
+        .xr-image-canvas img { display:block; max-width:94vw; max-height:90dvh; width:auto; height:auto; object-fit:contain; user-select:none; pointer-events:none; transform-origin:center; }
+        .xr-image-close { position:absolute; z-index:2; top:16px; right:16px; width:44px; height:44px; display:grid; place-items:center; padding:0; border:0; background:rgba(0,0,0,.35); border-radius:50%; color:#fff; cursor:pointer!important; }
+        .xr-image-close svg { pointer-events:none; }
+        .xr-image-close:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+
+ .case-cinematic .xr-expand{display:none!important;} .case-cinematic .xr-photo,.case-cinematic .pg-photo button,.case-cinematic img[role=button]{cursor:pointer!important;} .case-cinematic img[role=button]:focus-visible{outline:2px solid var(--lab-accent);outline-offset:3px;} .case-cinematic .pc-image{cursor:pointer;}
 </style>
 </head>
 <body>
@@ -74,16 +85,18 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="proto/data.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/ui.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/intro.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-home.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-work.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-xr02.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-case.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-about.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/pages-contact.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/style-lab.jsx?v=20261009-neon-readable1"></script>
-<script type="text/babel" src="proto/app.jsx?v=20261009-neon-readable1"></script>
+<script type="text/babel" src="proto/data.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/ui.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/intro.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-home.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-work.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-xr02.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-monsoon.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-photogrammetry.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-case.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-about.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/pages-contact.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/style-lab.jsx?v=20261017-clean-captions5"></script>
+<script type="text/babel" src="proto/app.jsx?v=20261017-clean-captions5"></script>
 </body>
 </html>

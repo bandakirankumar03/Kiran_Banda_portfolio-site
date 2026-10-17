@@ -397,7 +397,7 @@ function StoryImage({ media, className = '', onInspect }) {
   };
   return <button type="button" aria-label={`Expand image: ${media.alt}`} onClick={()=>onInspect(media)} className={`xr-photo ${className}`} onPointerMove={move} onPointerLeave={reset} onPointerCancel={reset}>
     <img src={media.image} alt={media.alt} width={media.width} height={media.height} loading="lazy" decoding="async" />
-    <span className="xr-expand" aria-hidden="true">⤢</span>
+
   </button>;
 }
 
@@ -416,7 +416,7 @@ function RenderComparison({ media, onInspect }) {
         {media.map((item,i)=><img key={item.image} src={item.image} alt={item.alt} aria-hidden={i!==active} width={2400} height={1350} loading="lazy" decoding="async" draggable={false}/>)}
       </div>
     </div>
-    <button type="button" className="xr-view-button" onClick={()=>onInspect(media[active])}>⤢ Expand current image</button>
+
     <div className="xr-comparison-controls">
       <button type="button" onClick={()=>change(-1)} aria-label="Previous render view">←</button>
       <div className="xr-comparison-options">{labels.map((label,i)=><button type="button" key={label} aria-pressed={i===active} onClick={()=>setActive(i)}>{label}</button>)}</div>
@@ -446,7 +446,9 @@ function ProjectImageViewer({ media, onClose }) {
   React.useEffect(()=>{
     const element=dialog.current, surface=canvas.current;
     const overflow=document.body.style.overflow;
-    element.showModal(); document.body.style.overflow='hidden';
+    element.showModal();
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){element.animate([{opacity:0},{opacity:1}],{duration:380,easing:'ease-out'});surface.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:480,easing:'cubic-bezier(.22,1,.36,1)'});}
+    document.body.style.overflow='hidden';
     const wheel=event=>{
       event.preventDefault();
       const box=surface.getBoundingClientRect();
@@ -457,8 +459,10 @@ function ProjectImageViewer({ media, onClose }) {
     surface.addEventListener('wheel',wheel,{passive:false}); window.addEventListener('resize',resize);
     return ()=>{surface.removeEventListener('wheel',wheel); window.removeEventListener('resize',resize); element.close(); document.body.style.overflow=overflow;};
   },[]);
+  const closing=React.useRef(false);
+  const close=()=>{if(closing.current)return;closing.current=true;if(matchMedia('(prefers-reduced-motion: reduce)').matches){onClose();return;}const a=dialog.current.animate([{opacity:1},{opacity:0}],{duration:220,easing:'ease-out',fill:'forwards'});a.onfinish=onClose;};
   const endDrag=()=>{drag.current=null;setDragging(false);};
-  return <dialog ref={dialog} className="xr-image-dialog" aria-label="Expanded project image" onCancel={onClose}
+  return <dialog ref={dialog} className="xr-image-dialog" aria-label="Expanded project image" onCancel={e=>{e.preventDefault();close();}}
     onKeyDown={event=>{
       if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) {
         event.preventDefault();
@@ -475,7 +479,7 @@ function ProjectImageViewer({ media, onClose }) {
       onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={endDrag}>
       <img ref={image} src={media.image} alt={media.alt} draggable={false} style={{transform:`translate(${state.x}px,${state.y}px) scale(${state.scale})`}}/>
     </div>
-    <button type="button" className="xr-image-close" aria-label="Close image" autoFocus onClick={onClose}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button type="button" className="xr-image-close" aria-label="Close image" autoFocus onClick={close}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </dialog>;
 }
 
@@ -846,6 +850,8 @@ function CasePage({ slug }) {
   const prev = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(idx + 1) % PROJECTS.length];
   const x = (window.CASE_EXTRAS || {})[p.slug] || {};
+  if (p.slug === 'photogrammetry-archive') return <PhotogrammetryCasePage p={p} prev={prev} next={next} go={go}/>;
+  if (p.slug === 'rainy-forest') return <MonsoonCasePage p={p} prev={prev} next={next} go={go}/>;
   if (x.layout === 'nyc') return <NYCCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
   if (x.spreads) return <XRCasePage p={p} x={x} prev={prev} next={next} go={go}/>;
 
@@ -886,3 +892,19 @@ function CasePage({ slug }) {
 }
 
 Object.assign(window, { CasePage });
+
+function CaseImageInteraction({routeKey}) {
+ const [selected,setSelected]=React.useState(null);
+ React.useEffect(()=>{
+  setSelected(null);
+  const eligible=img=>img instanceof HTMLImageElement && img.closest('.case-cinematic') && !img.closest('dialog, .shared-films, #monsoon-environment, .pg-render') && !img.closest('button[aria-label^="Play "]') && img.getAttribute('aria-hidden')!=='true';
+  let pointerStart=null;
+  const remember=e=>{pointerStart={x:e.clientX,y:e.clientY};};
+  const open=e=>{if(e.type==='click'&&pointerStart&&Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>12)return;const img=e.target.matches('.project-cover,.pc-image,.pc-image-drift,.pc-image-lens,.pc-atmosphere,.pc-grain')?e.target.closest('.project-cover')?.querySelector('.pc-image img'):e.target;if(!eligible(img))return;if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;e.preventDefault();e.stopPropagation();setSelected({image:img.currentSrc||img.src,alt:img.alt});};
+  const decorate=()=>document.querySelectorAll('.case-cinematic img').forEach(img=>{if(eligible(img)&&!img.closest('button,a')){img.tabIndex=0;img.setAttribute('role','button');img.style.cursor='pointer';}});
+  decorate();const observer=new MutationObserver(decorate);observer.observe(document.getElementById('root'),{childList:true,subtree:true});
+  document.addEventListener('pointerdown',remember,true);document.addEventListener('click',open,true);document.addEventListener('keydown',open,true);
+  return()=>{observer.disconnect();document.removeEventListener('pointerdown',remember,true);document.removeEventListener('click',open,true);document.removeEventListener('keydown',open,true);};
+ },[routeKey]);
+ return selected?<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>:null;
+}
