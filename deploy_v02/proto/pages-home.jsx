@@ -68,12 +68,12 @@ function ReelHero() {
   const bp = useBP();
   const isMobile = bp === 'mobile';
   // on mobile, keep the reel a landscape strip instead of a full-height portrait crop
-  const outerHeight = isMobile ? '78vh' : '165vh';
-  const innerHeight = isMobile ? 'min(56vh, 100vw * 0.75)' : '100vh';
+  const outerHeight = isMobile ? 'auto' : '165vh';
+  const innerHeight = isMobile ? '56.25vw' : '100vh';
 
   return (
-    <div style={{ height: outerHeight, position: 'relative', zIndex: 1, background: '#0b0b0c' }}>
-    <div style={{ position: 'sticky', top: 0, height: innerHeight, overflow: 'hidden', background: '#0b0b0c',
+    <div className="home-reel" style={{ height: outerHeight, position: 'relative', zIndex: 1, background: '#0b0b0c' }}>
+    <div style={{ position: isMobile ? 'relative' : 'sticky', top: 0, height: innerHeight, overflow: 'hidden', background: '#0b0b0c',
       }}>
       <div style={{ position: 'absolute', inset: 0 }}>
         {hasReelMediaResolved ? (
@@ -103,7 +103,7 @@ function ReelHero() {
             <div style={{ position: 'absolute', inset: 0,
               background: 'repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 4px)' }} />
             <div style={{ position: 'absolute', inset: 0,
-              boxShadow: 'inset 0 -160px 260px rgba(0,0,0,0.7), inset 0 120px 220px rgba(0,0,0,0.45)' }} />
+              boxShadow: isMobile ? 'inset 0 -40px 65px rgba(0,0,0,.35)' : 'inset 0 -160px 260px rgba(0,0,0,0.7), inset 0 120px 220px rgba(0,0,0,0.45)' }} />
           </>
         ) : (
           tones.map((tone, ix) => (
@@ -115,7 +115,7 @@ function ReelHero() {
               <div style={{ position: 'absolute', inset: 0,
                 background: 'repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 4px)' }} />
               <div style={{ position: 'absolute', inset: 0,
-                boxShadow: 'inset 0 -160px 260px rgba(0,0,0,0.7), inset 0 120px 220px rgba(0,0,0,0.45)' }} />
+                boxShadow: isMobile ? 'inset 0 -40px 65px rgba(0,0,0,.35)' : 'inset 0 -160px 260px rgba(0,0,0,0.7), inset 0 120px 220px rgba(0,0,0,0.45)' }} />
             </div>
           ))
         )}
@@ -123,8 +123,8 @@ function ReelHero() {
 
       {/* tiny scroll cue only */}
       <div style={{
-        position: 'absolute', bottom: 36, left: 0, right: 0, textAlign: 'center',
-        fontFamily: 'var(--mono)', fontSize: 14, color: 'rgba(242,237,227,0.55)',
+        position: 'absolute', bottom: isMobile ? 12 : 36, left: 0, right: 0, textAlign: 'center',
+        fontFamily: 'var(--mono)', fontSize: isMobile ? 10 : 14, color: 'rgba(242,237,227,0.75)',
         letterSpacing: 3, textTransform: 'uppercase', zIndex: 5, opacity: fgOpacity,
       }}>
         <div style={{ fontSize: 18, color: 'var(--accent)', marginBottom: 8, animation: 'bobY 1.8s infinite' }}>↓</div>
@@ -158,7 +158,7 @@ function RotatingHello() {
 function HomeIntro() {
   const bp = useBP();
   return (
-    <div style={{ minHeight: bp === 'mobile' ? 'auto' : '85vh', display: 'flex', alignItems: 'center', padding: bp === 'mobile' ? '48px var(--pad) 40px' : 'clamp(90px,20vw,140px) var(--pad) clamp(48px,10vw,80px)', borderTop: `1px solid var(--hair)`, gap: 80, position: 'relative', overflow: 'hidden' }}>
+    <div className="home-intro" style={{ minHeight: bp === 'mobile' ? 'auto' : '85vh', display: 'flex', alignItems: 'center', padding: bp === 'mobile' ? '48px var(--pad) 40px' : 'clamp(90px,20vw,140px) var(--pad) clamp(48px,10vw,80px)', borderTop: `1px solid var(--hair)`, gap: 80, position: 'relative', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1300, width: '100%', flex: '1 1 auto' }}>
         <Reveal>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 23, lineHeight: 1, letterSpacing: 3, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 32, height: 23, paddingLeft: 3 }}>
@@ -166,14 +166,14 @@ function HomeIntro() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <div style={{ fontSize: 'clamp(56px, 8vw, 120px)', lineHeight: 0.98, letterSpacing: -3, fontWeight: 300, maxWidth: 1300 }}>
+          <div style={{ fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 300, maxWidth: 1300 }}>
             I build the <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> I imagine,<br/>
             rendered in real time.
           </div>
         </Reveal>
         <Reveal delay={260} y={20}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(32px,6vw,80px)', marginTop: 'clamp(36px,6vw,60px)', maxWidth: 1100 }}>
-            <div style={{ fontFamily: 'var(--sans)', fontSize: 20, lineHeight: 1.7, color: 'var(--dim)', fontWeight: 300 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 'clamp(32px,6vw,80px)', marginTop: 'clamp(36px,6vw,60px)', maxWidth: 1100 }}>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: bp === 'mobile' ? 17 : 20, lineHeight: 1.7, color: 'var(--dim)', fontWeight: 300 }}>
               I build real-time worlds for virtual production and cinematic storytelling — and I like them epic. Places that used to stand, places that never did, built with the same care either way.
             </div>
           </div>

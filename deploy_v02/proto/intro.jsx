@@ -43,7 +43,7 @@ function Intro({ onEnter }) {
   const stages = ['', 'wire', 'solid', 'texture', 'lit', 'final'];
 
   return (
-    <div style={{
+    <div className="site-intro" style={{
       position: 'fixed', inset: 0, zIndex: 1000,
       background: '#0b0b0c',
       opacity: stage >= 6 ? 0 : 1, transition: 'opacity .8s ease',
@@ -80,7 +80,7 @@ function Intro({ onEnter }) {
         flexDirection: 'column', gap: 36,
       }}>
         <div style={{
-          position: 'relative', width: 480, height: 280,
+          position: 'relative', width: 'min(480px, calc(100vw - 64px))', height: 'auto', aspectRatio: '12 / 7',
           transform: stage >= 5 ? 'scale(0.42) translateY(-18vh)' : 'scale(1)',
           transition: 'transform 1.1s cubic-bezier(.6,.0,.2,1)',
         }}>
@@ -155,14 +155,14 @@ function Intro({ onEnter }) {
         </div>
 
         {/* stage label + progress bar */}
-        <div style={{
+        <div className="intro-progress-labels" style={{
           fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: 3,
           textTransform: 'uppercase', color: 'rgba(242,237,227,0.7)',
           opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
           display: 'flex', alignItems: 'center', gap: 22, minWidth: 520, justifyContent: 'space-between',
         }}>
           <span style={{ color: 'rgba(242,237,227,0.4)' }}>render</span>
-          <div style={{ display: 'flex', gap: 12, fontSize: 12 }}>
+          <div className="intro-stages" style={{ display: 'flex', gap: 12, fontSize: 12 }}>
             {['wire', 'solid', 'texture', 'lit'].map((s, i) => (
               <span key={s} style={{ color: stage === i + 1 ? '#C1663B' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
                 {String(i + 1).padStart(2, '0')} · {s}
@@ -175,7 +175,7 @@ function Intro({ onEnter }) {
         </div>
 
         {/* under-progress bar */}
-        <div style={{
+        <div className="intro-progress-track" style={{
           width: 520, height: 1, background: 'rgba(242,237,227,0.12)', position: 'relative',
           opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s', marginTop: -22,
         }}>
@@ -189,7 +189,7 @@ function Intro({ onEnter }) {
         </div>
 
         {/* final wordmark line — appears at LIT */}
-        <div style={{
+        <div className="intro-wordmark" style={{
           fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: 4,
           textTransform: 'uppercase', color: 'rgba(242,237,227,0.6)',
           opacity: stage >= 4 && stage < 5 ? 1 : 0, transition: 'opacity .6s',
@@ -206,7 +206,7 @@ function Intro({ onEnter }) {
         letterSpacing: 2, textTransform: 'uppercase',
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
-        click or press any key to skip
+        tap or press Enter to skip
       </div>
 
       {/* corner timestamps */}
@@ -232,7 +232,13 @@ function Intro({ onEnter }) {
       </div>
 
       <style>{`
-        @keyframes scanSweep { 0% { background-position: 0 -100%; } 100% { background-position: 0 200%; } }
+        @media(max-width:680px){
+ .intro-progress-labels{width:calc(100% - 40px);min-width:0!important;gap:10px!important;font-size:10px!important;letter-spacing:1px!important;flex-wrap:wrap}
+ .intro-progress-labels>span:first-child{order:0}.intro-progress-labels>span:last-child{order:1;margin-left:auto}.intro-stages{order:2;width:100%;justify-content:space-between;gap:6px!important;font-size:9px!important}
+ .intro-progress-track{width:calc(100% - 40px)!important;margin-top:-18px!important}
+ .intro-wordmark{max-width:calc(100% - 40px);font-size:10px!important;letter-spacing:1.5px!important;text-align:center;line-height:1.8}
+ }
+ @keyframes scanSweep { 0% { background-position: 0 -100%; } 100% { background-position: 0 200%; } }
       `}</style>
     </div>
   );
