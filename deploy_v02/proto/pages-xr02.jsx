@@ -144,7 +144,7 @@ function NYCCasePage({p,x,prev,next,go}) {
     `}</style>
     <ProjectCover p={p} description="Two rival gangs. One digital street. A student virtual production film inspired by 1890s industrial New York." actionLabel="Watch the film" onAction={jump}/>
     <main className="nyc-main">
-      <dl className="nyc-brief"><div><dt>My contribution</dt><dd>Unreal environment development<br/>Sony mocopi capture / XYN workflow</dd></div><div><dt>Core tools</dt><dd>Unreal Engine / Blender<br/>Gemini / Meshyfy 3D / Claude<br/>Sony mocopi / XYN</dd></div><div><dt>Production focus</dt><dd>Image-based architecture<br/>Character motion / XR-stage performance</dd></div></dl>
+
       <div className="nyc-flow">
         <div className="nyc-intro nyc-copy"><Reveal><span className="nyc-eyebrow">Image → geometry</span><h2>Start with an image.<br/><em>Build only the depth.</em></h2><p>Gemini-generated building images became façades in Blender. I mapped each image to a plane and extruded selected faces to bring windows, ledges, and rooflines forward—then assembled the street in Unreal.</p><ol className="nyc-steps"><li><b>Generate</b>Façade imagery</li><li><b>Shape</b>Selective extrusion</li><li><b>Assemble</b>Light and compose</li></ol></Reveal></div>
         <div className="nyc-aerial"><Reveal>{photo('gemini-lucas.webp','Gemini-generated Lucas Theatre façade reference')}<p className="nyc-caption">Gemini / the source image</p></Reveal></div>

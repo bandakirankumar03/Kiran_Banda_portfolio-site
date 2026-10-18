@@ -31,7 +31,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
   },[p.slug]);
   const words=p.title.split(' '), last=words.pop();
   const move=e=>{if(!matchMedia('(hover:hover) and (prefers-reduced-motion:no-preference)').matches)return;const r=e.currentTarget.getBoundingClientRect();ref.current.style.setProperty('--cx',`${(e.clientX-r.left-r.width/2)*.012}px`);ref.current.style.setProperty('--cy',`${(e.clientY-r.top-r.height/2)*.012}px`);ref.current.style.setProperty('--lx',`${(e.clientX-r.left)/r.width*100}%`);};
-  return <header className="project-cover" ref={ref} onPointerMove={move} onPointerLeave={()=>{ref.current.style.setProperty('--cx','0px');ref.current.style.setProperty('--cy','0px');}}>
+  return <><header className="project-cover" ref={ref} onPointerMove={move} onPointerLeave={()=>{ref.current.style.setProperty('--cx','0px');ref.current.style.setProperty('--cy','0px');}}>
     <style>{`
       .project-cover {--accent:#73c2fb;position:relative;isolation:isolate;overflow:hidden;min-height:660px;height:92svh;max-height:1080px;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:125px var(--pad) 28px;}
       .project-cover .pc-image {position:absolute;inset:0;z-index:-3;overflow:hidden;}
@@ -64,7 +64,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
     <div className="pc-story"><div className="pc-role">{p.role}</div><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
     <div className="pc-foot"><span>{p.client || 'Selected project'}</span><span className="pc-scroll">Scroll into the process</span></div>
-  </header>;
+  </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}</>;
 }
 
 // proto/pages-case.jsx — project page: hero + metadata, editorial process book, film, closing, prev/next.
@@ -912,4 +912,16 @@ function CaseImageInteraction({routeKey}) {
   return()=>{observer.disconnect();document.removeEventListener('load',decorate,true);document.removeEventListener('pointerdown',remember,true);document.removeEventListener('click',open,true);document.removeEventListener('keydown',open,true);};
  },[routeKey]);
  return selected?<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>:null;
+}
+
+function ProjectBrief({p}){
+ const details={
+ 'ranasthala':['Director · Writer · Producer · Cinematographer · Photographer · Environment artist','Unreal Engine / Lightroom / RealityScan / PCG / Claude','Photogrammetry-led arena / Virtual production filming'],
+ 'xr02-1920s-nyc':['Environment artist / Motion capture','Unreal Engine / Blender / Sony mocopi / XYN','Digital environment / Character capture / Stage integration'],
+ 'rainy-forest':['Solo environment artist','Unreal Engine / Gaea / PCG / Splines / Ultra Dynamic Sky','Terrain / Procedural railway / Atmosphere'],
+ 'photogrammetry-archive':['Photography / Photogrammetry / Asset presentation','Photogrammetry / Polycam','Surface capture / 3D reconstruction / Interactive assets'],
+ 'unreal-environment-studies':['Environment composition / Lighting / Cameras','Unreal Engine / Ultra Dynamic Sky / Fab / Sketchfab','Materials / Weather / Cinematic rendering'],
+ 'vfx-compositing-works':['VFX compositing / Undergraduate work','Compositing workflow','Selected compositing shots / Demo reel']};
+ const d=details[p.slug]||[p.role,(p.tags||[]).join(' / '),p.focus||p.kind];
+ return <div className="shared-project-brief"><style>{`.shared-project-brief{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:35px;margin:0 var(--pad);padding:32px 0;border-bottom:1px solid var(--hair)}.shared-project-brief span{font:12px var(--mono);color:var(--lab-primary);text-transform:uppercase;letter-spacing:1.2px}.shared-project-brief p{font:14px/1.75 Arial,sans-serif;color:var(--dim);margin:12px 0 0;max-width:50ch}@media(max-width:700px){.shared-project-brief{grid-template-columns:1fr;gap:24px}}`}</style>{['My contribution','Toolset','Production focus'].map((label,i)=><div key={label}><span>{label}</span><p>{d[i]}</p></div>)}</div>;
 }
