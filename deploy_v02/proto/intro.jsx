@@ -6,8 +6,8 @@ function Intro({ onEnter }) {
   //  0 = pre (black)
   //  1 = wireframe (logo line-art, scanlines, grid)
   //  2 = solid (filled silhouette in mid-grey)
-  //  3 = texture (warm albedo + grain)
-  //  4 = lit (gold accent + soft halo)
+  //  3 = texture (lavender albedo + grain)
+  //  4 = lit (white accent + soft halo)
   //  5 = pull-back / fade (logo shrinks, viewfinder corners pull in, fade)
   const [stage, setStage] = React.useState(0);
 
@@ -54,8 +54,8 @@ function Intro({ onEnter }) {
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `
-          linear-gradient(rgba(217,162,74,0.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(217,162,74,0.06) 1px, transparent 1px)
+          linear-gradient(rgba(180,170,255,0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(180,170,255,0.06) 1px, transparent 1px)
         `,
         backgroundSize: '64px 64px',
         opacity: stage === 1 ? 1 : stage >= 2 && stage < 5 ? 0.25 : 0,
@@ -68,7 +68,7 @@ function Intro({ onEnter }) {
       {stage === 1 && (
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'linear-gradient(180deg, transparent 0%, rgba(217,162,74,0.18) 50%, transparent 100%)',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(180,170,255,0.18) 50%, transparent 100%)',
           backgroundSize: '100% 220px',
           animation: 'scanSweep 1s linear',
         }} />
@@ -94,10 +94,10 @@ function Intro({ onEnter }) {
             return (
               <div key={i} style={{
                 position: 'absolute', ...c, width: 38, height: 38,
-                borderTop: isTop ? '1.5px solid #C1663B' : 'none',
-                borderBottom: !isTop ? '1.5px solid #C1663B' : 'none',
-                borderLeft: isLeft ? '1.5px solid #C1663B' : 'none',
-                borderRight: !isLeft ? '1.5px solid #C1663B' : 'none',
+                borderTop: isTop ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
+                borderBottom: !isTop ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
+                borderLeft: isLeft ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
+                borderRight: !isLeft ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
                 opacity: stage >= 1 && stage < 5 ? 1 : 0,
                 transform: `translate(${isLeft ? '-6px' : '6px'}, ${isTop ? '-6px' : '6px'}) ` +
                            (stage >= 1 ? 'translate(0,0)' : ''),
@@ -111,7 +111,7 @@ function Intro({ onEnter }) {
             position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
             objectFit: 'contain',
             opacity: stage === 1 ? 1 : 0,
-            filter: 'invert(45%) sepia(48%) saturate(980%) hue-rotate(340deg) brightness(0.98) drop-shadow(0 0 0 #C1663B)',
+            filter: 'brightness(0) invert(1)',
             mixBlendMode: 'screen',
             // emulate "wireframe" look: high-contrast edges via outline trick + dotted overlay
             maskImage: 'repeating-linear-gradient(45deg, black 0 1.5px, transparent 1.5px 4px)',
@@ -128,12 +128,12 @@ function Intro({ onEnter }) {
             transition: 'opacity .35s ease',
           }} />
 
-          {/* TEXTURE: warm albedo, no light yet */}
+          {/* TEXTURE: lavender albedo, no light yet */}
           <img src="proto/logo.png" alt="" style={{
             position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
             objectFit: 'contain',
             opacity: stage === 3 ? 1 : 0,
-            filter: 'invert(70%) sepia(35%) saturate(220%) hue-rotate(355deg) brightness(0.88)',
+            filter: 'brightness(0) saturate(100%) invert(76%) sepia(18%) saturate(900%) hue-rotate(202deg)',
             transition: 'opacity .35s ease',
           }} />
           {stage === 3 && (
@@ -144,12 +144,12 @@ function Intro({ onEnter }) {
             }} />
           )}
 
-          {/* LIT: gold accent + soft glow */}
+          {/* LIT: white accent + soft glow */}
           <img src="proto/logo.png" alt="Kiran Banda" style={{
             position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
             objectFit: 'contain',
             opacity: stage >= 4 ? 1 : 0,
-            filter: 'invert(80%) sepia(40%) saturate(440%) hue-rotate(0deg) brightness(1.12) drop-shadow(0 0 24px rgba(217,162,74,0.4))',
+            filter: 'brightness(0) invert(1) drop-shadow(0 0 20px rgba(180,170,255,0.25))',
             transition: 'opacity .5s ease',
           }} />
         </div>
@@ -164,12 +164,12 @@ function Intro({ onEnter }) {
           <span style={{ color: 'rgba(242,237,227,0.4)' }}>render</span>
           <div className="intro-stages" style={{ display: 'flex', gap: 12, fontSize: 12 }}>
             {['wire', 'solid', 'texture', 'lit'].map((s, i) => (
-              <span key={s} style={{ color: stage === i + 1 ? '#C1663B' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
+              <span key={s} style={{ color: stage === i + 1 ? 'var(--lab-primary,#F32E35)' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
                 {String(i + 1).padStart(2, '0')} · {s}
               </span>
             ))}
           </div>
-          <span style={{ color: '#C1663B', minWidth: 40, textAlign: 'right' }}>
+          <span style={{ color: 'var(--lab-primary,#F32E35)', minWidth: 40, textAlign: 'right' }}>
             {stage <= 0 ? '00%' : stage === 1 ? '25%' : stage === 2 ? '50%' : stage === 3 ? '75%' : '100%'}
           </span>
         </div>
@@ -181,10 +181,10 @@ function Intro({ onEnter }) {
         }}>
           <div style={{
             position: 'absolute', left: 0, top: -0.5, height: 2,
-            background: '#C1663B',
+            background: 'var(--lab-primary,#F32E35)',
             width: `${stage <= 0 ? 0 : Math.min(100, stage * 25)}%`,
             transition: 'width .8s cubic-bezier(.2,.7,.2,1)',
-            boxShadow: '0 0 12px rgba(217,162,74,0.6)',
+            boxShadow: '0 0 12px rgba(180,170,255,0.6)',
           }} />
         </div>
 
@@ -195,7 +195,7 @@ function Intro({ onEnter }) {
           opacity: stage >= 4 && stage < 5 ? 1 : 0, transition: 'opacity .6s',
           marginTop: -4,
         }}>
-          <span style={{ color: '#C1663B' }}>kiran banda</span> &nbsp;·&nbsp; environment artist
+          <span style={{ color: 'var(--lab-primary,#F32E35)' }}>kiran banda</span> &nbsp;·&nbsp; environment artist
         </div>
       </div>
 

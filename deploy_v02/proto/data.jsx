@@ -132,7 +132,7 @@ const SKILLS = [
   { group: 'Tools',      items: ['Unreal Engine 5', 'Maya', 'Blender', 'SpeedTree', 'Gaea', 'RealityCapture', 'Houdini', 'EmberGen', 'Substance Painter', 'Photoshop', 'After Effects', 'Premiere Pro', 'DaVinci Resolve', 'Nuke'] },
   { group: 'Core',       items: ['Environment Art', 'Unreal Environment Design', 'Modular Asset Creation', 'Photogrammetry', 'Level Dressing', 'Real-Time Lighting (Lumen)', 'Cinematic Composition', 'Mocap', 'Virtual Production', 'XR Stage Fundamentals'] },
   { group: 'Technical',  items: ['PBR Texturing', 'Material Creation', 'Scene Optimization', 'Performance Testing', 'Procedural Set Dressing', 'nDisplay', 'Brain Operation'] },
-  { group: 'Workflows',  items: ['AI Concept Art', 'AI Model Generation', 'AI-Assisted Animations', 'Retopology', 'Texture Baking', 'AOV Passes', 'Face Tracking'] },
+  { group: 'Workflows',  items: ['AI Workflows · Across Production', 'Retopology', 'Texture Baking', 'AOV Passes', 'Face Tracking'] },
 ];
 
 // hobbies — each has a stack of photo placeholders that reveal on hover
