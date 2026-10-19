@@ -7,6 +7,8 @@ function AboutPage() {
       <EducationSection />
       <ExperienceSection />
       <SkillsSection />
+      <CertificatesSection />
+      <HobbiesSection />
       <PhotoCollection />
       <MoviesSection />
       <Footer />
@@ -33,12 +35,16 @@ function BioSection() {
         </Reveal>
         <Reveal delay={160}>
           <div style={{ fontSize: 'clamp(24px, 2.6vw, 36px)', lineHeight: 1.4, letterSpacing: -0.3, fontWeight: 300, marginBottom: 36 }}>
-            Unreal worlds.<br/><span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>A VFX eye.</span>
+            It started as a kid glued to fantasy epics — big, impossible worlds I wanted to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>walk into.</span> Now I build them.
           </div>
           <div style={{ fontFamily: 'var(--sans)', fontSize: 17, lineHeight: 1.95, color: 'var(--dim)', maxWidth: 660, fontWeight: 300 }}>
-            I’m an Unreal and VFX artist with a background in compositing. I build cinematic environments, capture real places through photogrammetry, and work on virtual production stages.
+            Long before I knew what a render engine was, I was the kid rewinding the same scenes — the ones where the camera just kept pulling back to reveal more world. Temples, ruins, forests that felt like places you could actually stand in. I didn&apos;t want to watch those worlds. I wanted to build one.
             <br/><br/>
-            Currently pursuing my M.A. in Visual Effects at SCAD, after internships at Green Gold Animation and Studio Raaga. I use AI-assisted workflows throughout production.
+            That pull is what put me on this path. I started in VFX compositing — learning, shot by shot, how a frame actually comes together. It taught me to see in layers, but I kept wanting to build the world in front of the camera, not just finish it behind one. So I moved into Unreal environment art, where I could shape the whole place myself: the light, the weather, the dust in the air.
+            <br/><br/>
+            Since then it&apos;s been internships at Green Gold Animation and Studio Raaga, and now a Master&apos;s candidacy in Visual Effects at <span style={{ color: 'var(--ink)' }}>SCAD</span>, where I build environments and run the brain on XR-stage shorts. Most of what I do is photogrammetry-driven and modular — capturing real surfaces, rebuilding them in Unreal, dressing scenes that hold up under a moving camera at 24fps. Lately I&apos;m folding AI into the earliest stages of asset work, where it earns its place fastest.
+            <br/><br/>
+            Photogrammetry is still my favourite part of the job — there&apos;s nothing like turning a real wall or a real stone into something a camera can move through.
           </div>
         </Reveal>
       </div>
@@ -46,7 +52,7 @@ function BioSection() {
   );
 }
 
-const ROLES = ['Unreal Artist', 'VFX Artist', 'Virtual Production'];
+const ROLES = ['Environment Artist', 'VFX Compositor', 'Editor', 'Photogrammetry Artist', 'Virtual Art Department', 'Traveler', 'Dreamer'];
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%*+=-';
 function RotatingRole() {
   const [i, setI] = React.useState(0);
@@ -146,7 +152,7 @@ function EducationSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Education.
+          Where I learned to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>build worlds.</span>
         </div>
       </Reveal>
       {items.map((e, i) => (
@@ -204,7 +210,7 @@ function ExperienceSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Experience.
+          Where I&apos;ve been <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>building.</span>
         </div>
       </Reveal>
       {EXPERIENCE.map((e, i) => (
@@ -277,7 +283,7 @@ function SkillsSection() {
 
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Toolset.
+          What I <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>reach for.</span>
         </div>
       </Reveal>
 
@@ -550,7 +556,7 @@ function PhotoCollection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 40, maxWidth: 1100 }}>
-          Through my lens.
+          Stills from <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> <span style={{ fontStyle: 'italic' }}>I&apos;ve walked through.</span>
         </div>
       </Reveal>
 
@@ -728,7 +734,7 @@ function MoviesSection() {
     <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1200 }}>
-          Film inspirations.
+          Films that <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>inspired</span> my world-building.
         </div>
       </Reveal>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -742,6 +748,49 @@ function MoviesSection() {
   );
 }
 
-function MovieRow({m,last}){return <div style={{display:'flex',justifyContent:'space-between',gap:20,padding:'18px 0',borderTop:'1px solid var(--hair)',borderBottom:last?'1px solid var(--hair)':'none'}}><span style={{font:'24px var(--serif)'}}>{m.title}</span><span style={{font:'13px var(--mono)',color:'var(--dim)'}}>{m.year}</span></div>;}
+function MovieRow({ m, active, onEnter, onLeave, last }) {
+  const ref = useMagneticRow();
+  const bp = useBP();
+  const hover = useCursorLabel('★ ' + m.rating + '/10', 'link');
+  return (
+    <div ref={ref} {...hover} onMouseEnter={onEnter} onMouseLeave={onLeave}
+      style={{ position: 'relative', overflow: 'hidden',
+        display: 'grid', gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '50px 1fr 140px' : '60px 1fr 180px 220px 120px', gap: 'clamp(10px,2.5vw,24px)', alignItems: bp === 'mobile' ? 'flex-start' : 'center',
+        borderTop: `1px solid var(--hair)`, borderBottom: last ? `1px solid var(--hair)` : 'none',
+        padding: '24px 24px', cursor: 'none', transition: 'padding .35s',
+        paddingLeft: active ? 40 : 24 }}>
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(280px 200px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.10), transparent 70%)',
+        opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
+      }} />
+      <div aria-hidden style={{
+        position: 'absolute', left: 0, right: 0, bottom: -1, height: 1,
+        background: `linear-gradient(90deg, transparent 0%, var(--accent) var(--mx, -10%), transparent calc(var(--mx, -10%) + 18%))`,
+        opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
+      }} />
+      <span style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1,
+        transform: 'translateX(calc(var(--mxn, 0) * -2px))' }}>{m.year}</span>
+      <span style={{ position: 'relative', fontSize: 'clamp(24px, 2.6vw, 40px)', fontWeight: 400, letterSpacing: -0.5, fontStyle: 'italic',
+        color: active ? 'var(--accent)' : 'var(--ink)', transition: 'color .3s',
+        transform: 'translateX(calc(var(--mxn, 0) * 3px))' }}>
+        {m.title}
+      </span>
+      <span style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1,
+        transform: 'translateX(calc(var(--mxn, 0) * 4px))' }}>
+        <span>dir · {m.dir}</span>
+        <span>vfx sup · {m.vfx}</span>
+      </span>
+      <span style={{ position: 'relative', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--dim)', fontWeight: 300, lineHeight: 1.4, fontStyle: 'italic',
+        transform: 'translateX(calc(var(--mxn, 0) * 5px))' }}>
+        {m.note}
+      </span>
+      <div style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 1, textAlign: 'right',
+        transform: 'translateX(calc(var(--mxn, 0) * 6px))' }}>
+        {'★'.repeat(Math.round(m.rating / 2))}{'☆'.repeat(5 - Math.round(m.rating / 2))} <span style={{ color: 'var(--ink)', marginLeft: 8 }}>{m.rating}/10</span>
+      </div>
+    </div>
+  );
+}
 
 Object.assign(window, { AboutPage });

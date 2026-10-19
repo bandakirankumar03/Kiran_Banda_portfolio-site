@@ -40,11 +40,26 @@ function ContactPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(36px,6vw,80px)' }}>
           <Reveal>
             <div style={{ fontFamily: 'var(--sans)', fontSize: 16, lineHeight: 1.8, color: 'var(--dim)', fontWeight: 300, maxWidth: 420, marginBottom: 40 }}>
-              Have a film, environment, or VFX project? Let’s talk.
+              Whether it&apos;s a VP shoot, a cinematic piece, or just a conversation about moss and displacement maps — I&apos;d love to hear about it. I reply within a day. Twice on weekends.
             </div>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 14, lineHeight: 1.9, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 32 }}>
               <div><span style={{ color: 'var(--dim)' }}>email&nbsp;&nbsp;</span><span style={{ color: 'var(--ink)' }}>bandakirankumar03@gmail.com</span></div>
               <div><span style={{ color: 'var(--dim)' }}>based&nbsp;&nbsp;</span><span style={{ color: 'var(--ink)' }}>Savannah, GA · USA</span></div>
+            </div>
+
+            {/* Resume slot */}
+            <div id="resume" style={{ border: `1px solid var(--accent)`, padding: 22, marginBottom: 24 }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 10 }}>résumé · pdf · 2026</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: 22, fontWeight: 300, fontStyle: 'italic', letterSpacing: -0.3 }}>kiran-banda · cv.pdf</div>
+                <a href="#" {...useCursorLabel('download', 'link')}
+                  style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase', cursor: 'none', borderBottom: '1px solid var(--accent)', paddingBottom: 2 }}>
+                  download ↓
+                </a>
+              </div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--dim)', letterSpacing: 1, marginTop: 12, textTransform: 'uppercase' }}>
+                ↳ replace this link with your real resume URL
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -57,19 +72,19 @@ function ContactPage() {
           <Reveal delay={120}>
             {sent ? (
               <div style={{ border: `1px solid var(--accent)`, padding: 40, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 320 }}>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 20 }}>Message sent</div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 20 }}>◉ transmission sent</div>
                 <div style={{ fontSize: 40, fontStyle: 'italic', fontWeight: 300, letterSpacing: -0.5 }}>Talk soon, {form.name.split(' ')[0] || 'friend'}.</div>
-                <div style={{ marginTop: 20, fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase' }}>I’ll reply to {form.email}.</div>
+                <div style={{ marginTop: 20, fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase' }}>I&apos;ll reply to {form.email} within a day.</div>
               </div>
             ) : (
               <form onSubmit={submit} name="contact" data-netlify="true" style={{ display: 'grid', gridTemplateColumns: bp === 'mobile' ? '1fr' : '1fr 1fr', gap: 20 }}>
                 <input type="hidden" name="form-name" value="contact" />
-                {field('name', 'Name')}
-                {field('email', 'Email')}
-                <div style={{ gridColumn: '1 / -1' }}>{field('project', 'Project', 4)}</div>
+                {field('name', '01 · name')}
+                {field('email', '02 · your email')}
+                <div style={{ gridColumn: 'span 2' }}>{field('project', '03 · the project', 4)}</div>
                 <button type="submit" {...sendCursor}
-                  style={{ gridColumn: '1 / -1', background: 'var(--accent)', color: '#0b0b0c', border: 'none', padding: '20px 28px', fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', cursor: 'none', textAlign: 'left', marginTop: 8 }}>
-                  Send message &nbsp;&nbsp;→
+                  style={{ gridColumn: 'span 2', background: 'var(--accent)', color: '#0b0b0c', border: 'none', padding: '20px 28px', fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', cursor: 'none', textAlign: 'left', marginTop: 8 }}>
+                  Send the transmission &nbsp;&nbsp;→
                 </button>
               </form>
             )}

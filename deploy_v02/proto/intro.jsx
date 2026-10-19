@@ -154,6 +154,26 @@ function Intro({ onEnter }) {
           }} />
         </div>
 
+        {/* stage label + progress bar */}
+        <div className="intro-progress-labels" style={{
+          fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: 3,
+          textTransform: 'uppercase', color: 'rgba(242,237,227,0.7)',
+          opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
+          display: 'flex', alignItems: 'center', gap: 22, minWidth: 520, justifyContent: 'space-between',
+        }}>
+          <span style={{ color: 'rgba(242,237,227,0.4)' }}>render</span>
+          <div className="intro-stages" style={{ display: 'flex', gap: 12, fontSize: 12 }}>
+            {['wire', 'solid', 'texture', 'lit'].map((s, i) => (
+              <span key={s} style={{ color: stage === i + 1 ? 'var(--lab-primary,#F32E35)' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
+                {String(i + 1).padStart(2, '0')} · {s}
+              </span>
+            ))}
+          </div>
+          <span style={{ color: 'var(--lab-primary,#F32E35)', minWidth: 40, textAlign: 'right' }}>
+            {stage <= 0 ? '00%' : stage === 1 ? '25%' : stage === 2 ? '50%' : stage === 3 ? '75%' : '100%'}
+          </span>
+        </div>
+
         {/* under-progress bar */}
         <div className="intro-progress-track" style={{
           width: 520, height: 1, background: 'rgba(242,237,227,0.12)', position: 'relative',
@@ -175,7 +195,7 @@ function Intro({ onEnter }) {
           opacity: stage >= 4 && stage < 5 ? 1 : 0, transition: 'opacity .6s',
           marginTop: -4,
         }}>
-          <span style={{ color: 'var(--lab-primary,#F32E35)' }}>kiran banda</span> &nbsp;·&nbsp; Unreal &amp; VFX artist
+          <span style={{ color: 'var(--lab-primary,#F32E35)' }}>kiran banda</span> &nbsp;·&nbsp; environment artist
         </div>
       </div>
 
@@ -186,7 +206,29 @@ function Intro({ onEnter }) {
         letterSpacing: 2, textTransform: 'uppercase',
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
-        Tap to skip
+        tap or press Enter to skip
+      </div>
+
+      {/* corner timestamps */}
+      <div style={{
+        position: 'absolute', top: 24, left: 28,
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
+        letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
+        opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
+      }}>
+        ◉ booting<br/>
+        scene · 01<br/>
+        {new Date().getFullYear()}
+      </div>
+      <div style={{
+        position: 'absolute', top: 24, right: 28, textAlign: 'right',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
+        letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
+        opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
+      }}>
+        v / 2.6.0<br/>
+        ue · 5.4<br/>
+        4k · 24fps
       </div>
 
       <style>{`

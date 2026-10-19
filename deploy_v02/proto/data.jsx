@@ -42,8 +42,8 @@ const PROJECTS = [
     kind: 'Virtual Production', kindShort: 'VP', year: '2025', tone: 'ember',
     tags: ['UE5', 'Gaea', 'LED Volume', 'On-set'],
     hero: 'media/projects/xr01-chinese-temple/web/unreal-bd-3.webp',
-    tagline: 'A temple environment built for the XR stage.',
-    blurb: 'Unreal environment creation and on-stage optimization for a SCAD film.',
+    tagline: 'Unreal environment development and on-stage foliage optimization for a student virtual production film.',
+    blurb: 'A SCAD student film. I developed the Unreal environment and adapted it for the XR stage, from terrain and scene composition to on-set foliage optimization.',
     client: 'SCAD · Student film', focus: 'Environment · XR adaptation',
     breakdown: [
       { tone: 'studio', label: '01 · terrain', meta: 'Gaea', image: 'media/projects/xr01-chinese-temple/web/gaea-wf.webp' },
@@ -59,8 +59,8 @@ const PROJECTS = [
     kind: 'Virtual Production', kindShort: 'VP', year: '2026', tone: 'rain',
     hero: 'media/projects/xr02-1920s-nyc/web/highresscreenshot00000.webp',
     tags: ['Unreal Engine', 'Blender', 'AI Workflow', 'Sony mocopi'],
-    tagline: 'An industrial New York street for virtual production.',
-    blurb: 'Unreal environment development and Sony mocopi capture for a period film.',
+    tagline: 'An environment inspired by 1890s industrial New York, built for a student virtual production film.',
+    blurb: 'My second virtual production film: a setting inspired by 1890s industrial New York for a confrontation between two rival gangs. I developed the Unreal environment and operated Sony mocopi capture sessions using XYN, while our team explored AI-assisted assets and practical set integration.',
     client: 'SCAD · Student film', focus: 'Environment · Motion capture',
     breakdown: [
       { tone: 'rain', label: '01 · environment', meta: 'Unreal Engine', image: 'media/projects/xr02-1920s-nyc/web/highresscreenshot00000.webp' },
@@ -89,7 +89,7 @@ const PROJECTS = [
 
   },
 
-  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', client:'Master’s final project', tagline:'Indian stonework reimagined as a virtual production arena.', blurb:'My master’s film, built from scans captured across India. Filming underway.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Assets complete; filming is underway.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
@@ -97,23 +97,23 @@ const PROJECTS = [
     hero: 'media/projects/photogrammetry-archive/web/sundial-studio.webp',
     tags: ['Photogrammetry', 'Polycam', '3D Capture'],
     tagline: 'Captured objects, studio presentations, and interactive 3D studies.',
-    blurb: 'Object scans, studio renders, and interactive 3D captures.',
+    blurb: 'A collection of photogrammetry object studies and interactive captures, including a sundial and a dog sculpture.',
     client: 'Personal collection', duration: 'Ongoing', breakdown: [],
 
   },
 
-  {slug:'unreal-environment-studies',title:'Unreal Environment Studies',role:'Environment Artist',kind:'Environment',kindShort:'ENV',tone:'forest',tags:['Unreal Engine','Cinematics','Materials'],hero:'media/projects/Golden_Rain/web/view-1.jpg',tagline:'Two Unreal studies in light, materials, and atmosphere.',blurb:'Two environments exploring how lighting, materials, and camera movement shape a scene in Unreal Engine.',breakdown:[]},
+  {slug:'unreal-environment-studies',title:'Unreal Environment Studies',role:'Environment Artist',kind:'Environment',kindShort:'ENV',tone:'forest',tags:['Unreal Engine','Cinematics','Materials'],hero:'media/projects/Golden_Rain/web/view-1.jpg',tagline:'Golden Rain & Hidden Realm — studies in atmosphere, materials, and cinematic cameras.',blurb:'Two environments exploring how lighting, materials, and camera movement shape a scene in Unreal Engine.',breakdown:[]},
   // ── VFX Demo Reel (1) ──────────────────────────────────────
   {slug:'vfx-compositing-works', title:'VFX Compositing Demo Reel', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
     hero:'https://i.vimeocdn.com/video/2213338051-a8295a7e0a7fa1ba75fb7b2a7d02dafb353a488261673f106269e9404349fc15-d_295x166?region=us',
     tagline:'Selected compositing work from my undergraduate years.',
-    blurb:'Selected undergraduate VFX compositing work.', breakdown:[]},
+    blurb:'Before moving into Unreal Engine, I developed my foundation in VFX compositing during my undergraduate studies. This reel brings together selected work from that period.', breakdown:[]},
 ];
 
 // ongoing / current work
 const ONGOING = [
-  { title: 'Ranasthala', pct: 60, status: 'Filming', note: 'On the virtual production stage.' },
-  { title: 'Photogrammetry assets', pct: 30, status: 'Processing', note: 'Turning field captures into 3D assets.' },
+  { title: 'Ranasthala', pct: 60, status: 'Filming', note: 'Assets complete. Filming is now underway on the virtual production stage for my master’s final VFX project.' },
+  { title: 'Photogrammetry assets', pct: 30, status: 'Processing', note: 'Capture is complete. The scans are now being processed into usable 3D assets.' },
 ];
 
 // interests: tech + events the artist follows
@@ -130,8 +130,8 @@ const INTERESTS = [
 // SKILLS — extracted from resume, organized for the dynamic cursor section
 const SKILLS = [
   { group: 'Tools',      items: ['Unreal Engine 5', 'Maya', 'Blender', 'SpeedTree', 'Gaea', 'RealityCapture', 'Houdini', 'EmberGen', 'Substance Painter', 'Photoshop', 'After Effects', 'Premiere Pro', 'DaVinci Resolve', 'Nuke'] },
-  { group: 'Core',       items: ['Environment Art', 'VFX Compositing', 'Photogrammetry', 'Lighting', 'Motion Capture', 'Virtual Production'] },
-  { group: 'Technical',  items: ['Materials', 'Scene Optimization', 'PCG', 'nDisplay', 'VP Operation'] },
+  { group: 'Core',       items: ['Environment Art', 'Unreal Environment Design', 'Modular Asset Creation', 'Photogrammetry', 'Level Dressing', 'Real-Time Lighting (Lumen)', 'Cinematic Composition', 'Mocap', 'Virtual Production', 'XR Stage Fundamentals'] },
+  { group: 'Technical',  items: ['PBR Texturing', 'Material Creation', 'Scene Optimization', 'Performance Testing', 'Procedural Set Dressing', 'nDisplay', 'Brain Operation'] },
   { group: 'Workflows',  items: ['AI Workflows · Across Production', 'Retopology', 'Texture Baking', 'AOV Passes', 'Face Tracking'] },
 ];
 
@@ -165,8 +165,9 @@ const MOVIES = [
 
 // EDUCATION — straight from resume
 const EDUCATION = [
-  { yr: '2025 — 2026', org: 'M.A. · Visual Effects',           where: 'Savannah College of Art and Design (SCAD) · Savannah, GA', note: 'Virtual production and XR workflows.' },
-  { yr: '2020 — 2024', org: 'B.A. (Hons) · Multimedia',         where: 'International Academy of Computer Graphics · Hyderabad, India', note: 'Modeling, lighting, and compositing.' },
+  { yr: '2025 — 2026', org: 'M.A. · Visual Effects',           where: 'Savannah College of Art and Design (SCAD) · Savannah, GA', note: 'Currently focused on virtual production and XR-stage workflows. Two XR-stage shorts shipped this year.' },
+  { yr: '2020 — 2024', org: 'B.A. (Hons) · Multimedia',         where: 'International Academy of Computer Graphics · Hyderabad, India', note: 'Foundation across modeling, lighting, compositing, and motion. Where I figured out environments were the thing.' },
+  { yr: 'before all this', org: 'Curious about VFX', where: 'YouTube + a birthday camera', note: 'Learning every trick online and immediately testing it on the camera my dad got me for my birthday. Mostly explosions in the backyard. He has not been credited.' },
 ];
 
 // EXPERIENCE — straight from resume + current student VP roles
@@ -215,8 +216,8 @@ const CASE_EXTRAS = {
     stage: 'Completed · class film',
     spreads: [
       { id: 'build', title: 'Environment development for the XR stage', label: '01 / Build', layout: 'build', chapters: ['terrain', 'layout'], paragraphs: [
-        'My first environment built for virtual production.',
-        'Gaea terrain and Fab assets, assembled and lit in Unreal. AI-assisted asset exploration.'
+        'My first virtual production project combined environment art with the practical demands of an XR stage.',
+        'I built the mountain backdrop in Gaea and assembled Fab assets in Unreal, composing the gate, temple, and path for camera. I also explored AI-assisted asset creation.'
       ] },
       { id: 'environment', title: 'From blockout to a living environment', label: '02 / Look development', layout: 'inspect', chapters: ['look', 'breakdown'], paragraphs: [
         'Layered foliage framed the temple; wind, lighting, and atmosphere brought the environment to life.',
@@ -227,7 +228,7 @@ const CASE_EXTRAS = {
         'I replaced PCG foliage with manual placement in camera-visible areas and substituted selected tree meshes with image cards retaining subtle motion—reducing complexity while preserving the composition.'
       ] },
       { id: 'production', title: 'A small crew. A first film.', label: '04 / Production & reflection', layout: 'crew', chapters: ['shoot', 'learning', 'crew'], paragraphs: [
-        'I adapted the environment to the camera, lighting, and physical set.',
+        'On set, I learned how camera framing and practical lighting shape environment decisions, alongside call sheets and crew coordination.',
         'Our small crew completed the film using the adapted environment. I gained hands-on experience balancing visual quality, real-time constraints, and production needs.'
       ] }
     ],
