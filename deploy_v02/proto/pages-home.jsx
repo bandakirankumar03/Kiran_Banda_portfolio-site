@@ -9,7 +9,6 @@ function HomePage() {
         <HomeIntro />
         <ProjectCarousel onOpen={(slug) => go({ name: 'case', slug })} />
         <OngoingSection />
-        <InterestsSection />
         <ContactTeaser go={go} />
         <Footer />
       </div>
@@ -160,21 +159,16 @@ function HomeIntro() {
   return (
     <div className="home-intro" style={{ minHeight: bp === 'mobile' ? 'auto' : '85vh', display: 'flex', alignItems: 'center', padding: bp === 'mobile' ? '48px var(--pad) 40px' : 'clamp(90px,20vw,140px) var(--pad) clamp(48px,10vw,80px)', borderTop: `1px solid var(--hair)`, gap: 80, position: 'relative', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1300, width: '100%', flex: '1 1 auto' }}>
-        <Reveal>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 23, lineHeight: 1, letterSpacing: 3, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 32, height: 23, paddingLeft: 3 }}>
-            <RotatingHello />
-          </div>
-        </Reveal>
+
         <Reveal delay={120}>
           <div style={{ fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 300, maxWidth: 1300 }}>
-            I build the <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> I imagine,<br/>
-            rendered in real time.
+            Unreal &amp;<br/><span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>VFX artist.</span>
           </div>
         </Reveal>
         <Reveal delay={260} y={20}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 'clamp(32px,6vw,80px)', marginTop: 'clamp(36px,6vw,60px)', maxWidth: 1100 }}>
             <div style={{ fontFamily: 'var(--sans)', fontSize: bp === 'mobile' ? 17 : 20, lineHeight: 1.7, color: 'var(--dim)', fontWeight: 300 }}>
-              I build real-time worlds for virtual production and cinematic storytelling — and I like them epic. Places that used to stand, places that never did, built with the same care either way.
+              I’m Kiran. I create cinematic worlds for film and virtual production.
             </div>
           </div>
         </Reveal>
@@ -257,10 +251,10 @@ function ProjectCarousel({ onOpen }) {
       <Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'baseline', padding: '0 var(--pad)', marginBottom: 48, fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)' }}>
           <span style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: 'var(--lab-ink,#f2ede3)', fontWeight: 300 }}>
-            worlds,&nbsp;<span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>so far</span>
+            Selected <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>work.</span>
           </span>
           <div className="work-carousel-actions"><NavLink onClick={() => window.__go__({ name: 'work' })} style={{ color: 'var(--accent)' }}>
-            full index &nbsp;→
+            All work &nbsp;→
           </NavLink>
           <div className="work-carousel-arrows" role="group" aria-label="Browse projects">
             <button type="button" aria-label="Previous projects" onClick={()=>moveByCard(-1)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg></button>
@@ -295,14 +289,14 @@ function CarouselCard({ p, onOpen }) {
           transition: 'background .4s ease',
         }}>
           <span style={{ border: '1px solid rgba(242,237,227,0.4)', padding: '4px 10px' }}>{p.kindShort}</span>
-          <span style={{ opacity: 0.75 }}>{p.year}</span>
+
         </div>
       </div>
       <div style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <div style={{ fontSize: 30, fontWeight: 400, letterSpacing: -0.8, fontStyle: 'italic', color: h ? 'var(--accent)' : 'var(--ink)', transition: 'color .3s' }}>
           {p.title}
         </div>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1 }}>{p.role}</div>
+
       </div>
     </div>
   );
@@ -335,11 +329,9 @@ function OngoingSection() {
       <Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 48 }}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase' }}>
-            <NowTicker />
+            In progress
           </div>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1 }}>
-            ◉ updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).toLowerCase()}
-          </div>
+
         </div>
       </Reveal>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 'clamp(16px,3vw,28px)' }}>
@@ -365,22 +357,17 @@ function OngoingCard({ o }) {
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
       <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', gap: 16, whiteSpace: 'nowrap', fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)', marginBottom: 20 }}>
-        <span>in progress</span>
+
         <span style={{ color: 'var(--accent)' }}>{o.status || o.eta}</span>
       </div>
       <div style={{ position: 'relative', fontSize: 30, fontWeight: 300, letterSpacing: -0.6, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 16,
         transform: 'translate(calc(var(--mxn, 0) * 3px), calc(var(--myn, 0) * 2px))' }}>
         {o.title}
       </div>
-      <div style={{ position: 'relative', fontFamily: 'var(--sans)', fontSize: 14, lineHeight: 1.6, color: 'var(--dim)', fontWeight: 300, minHeight: 100, marginBottom: 22 }}>
+      <div style={{ position: 'relative', fontFamily: 'var(--sans)', fontSize: 14, lineHeight: 1.6, color: 'var(--dim)', fontWeight: 300, minHeight: 0, marginBottom: 0 }}>
         {o.note}
       </div>
-      <div style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 1, color: 'var(--dim)', display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase', marginBottom: 8 }}>
-        <span>progress</span><span style={{ color: 'var(--accent)' }}>{o.pct}%</span>
-      </div>
-      <div style={{ position: 'relative', height: 2, background: 'var(--hair)' }}>
-        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${o.pct}%`, background: 'var(--accent)', transition: 'width 1s ease' }} />
-      </div>
+
     </div>
   );
 }
@@ -469,10 +456,7 @@ function ContactTeaser({ go }) {
             style={{ display: 'inline-block', padding: '18px 40px', border: `1px solid var(--accent)`, color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase' }}>
             contact me &nbsp;→
           </NavLink>
-          <a href="#resume" {...useCursorLabel('download', 'link')}
-            style={{ display: 'inline-block', padding: '18px 40px', border: `1px solid var(--hair)`, color: 'var(--ink)', fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', cursor: 'none' }}>
-            résumé · pdf &nbsp;↓
-          </a>
+
         </div>
       </Reveal>
     </div>

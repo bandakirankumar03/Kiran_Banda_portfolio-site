@@ -16,12 +16,12 @@ function WorkPage() {
       <div style={{ padding: 'clamp(28px,6vw,40px) var(--pad) 20px' }}>
         <Reveal>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 14 }}>
-            selected work
+            Unreal / VFX / Virtual production
           </div>
         </Reveal>
         <Reveal delay={100}>
           <div style={{ fontSize: 'clamp(64px, 10vw, 136px)', lineHeight: 0.92, letterSpacing: -3, fontWeight: 300 }}>
-            The <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>shot list.</span>
+            Selected <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>work.</span>
           </div>
         </Reveal>
         <Reveal delay={200}>
@@ -35,7 +35,7 @@ function WorkPage() {
                 </NavLink>
               ))}
             </div>
-            <span>showing {list.length} of {PROJECTS.length}</span>
+
           </div>
         </Reveal>
       </div>
