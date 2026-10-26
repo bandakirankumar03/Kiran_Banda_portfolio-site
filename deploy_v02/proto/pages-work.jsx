@@ -57,25 +57,26 @@ function WorkPage() {
 }
 
 function WorkRow({ p, hovered, setHovered, onOpen, last }) {
+  const bp = useBP();
   const isH = hovered === p.slug;
   const cur = useCursorLabel('open project →', 'link');
   return (
-    <div {...cur}
+    <div className="work-index-row" {...cur}
       onMouseEnter={(e) => { cur.onMouseEnter && cur.onMouseEnter(e); setHovered(p.slug); }}
       onMouseLeave={(e) => { cur.onMouseLeave && cur.onMouseLeave(e); setHovered(null); }}
       onClick={onOpen}
       style={{
-        display: 'grid', gridTemplateColumns: 'clamp(96px,26vw,220px) 1fr clamp(24px,6vw,40px)',
-        alignItems: 'center', padding: '28px 0', borderTop: `1px solid var(--hair)`,
-        borderBottom: last ? `1px solid var(--hair)` : 'none', gap: 'clamp(14px,3vw,28px)',
+        display: 'grid', gridTemplateColumns: bp === 'mobile' ? 'minmax(0,1fr) 24px' : 'clamp(96px,26vw,220px) minmax(0,1fr) clamp(24px,6vw,40px)',
+        alignItems: 'center', padding: '28px 0', borderTop: 'none',
+        borderBottom: 'none', gap: 'clamp(14px,3vw,28px)',
         cursor: 'none', transition: 'padding .45s cubic-bezier(.2,.8,.2,1), transform .45s cubic-bezier(.2,.8,.2,1), background .45s',
-        paddingLeft: isH ? 40 : 0, paddingRight: isH ? 12 : 0,
-        transform: isH ? 'translateX(18px)' : 'translateX(0)',
+        paddingLeft: isH && bp !== 'mobile' ? 40 : 0, paddingRight: isH && bp !== 'mobile' ? 12 : 0,
+        transform: isH && bp !== 'mobile' ? 'translateX(18px)' : 'translateX(0)',
         background: isH ? 'linear-gradient(90deg, rgba(115,194,251,0.07), rgba(115,194,251,0))' : 'transparent',
       }}>
       <Scene tone={p.tone} image={p.hero} video={p.heroVideo} vimeo={p.heroVimeo} poster={p.hero}
         style={{
-          width: '100%', aspectRatio: '4 / 3', overflow: 'hidden',
+          gridColumn: bp === 'mobile' ? '1 / -1' : 'auto', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden',
           transform: isH ? 'scale(1.06) translateX(6px)' : 'scale(1)',
           filter: isH ? 'saturate(1.1) brightness(1.06)' : 'saturate(0.85) brightness(0.92)',
           boxShadow: isH ? '0 24px 50px -30px rgba(115,194,251,0.7)' : 'none',

@@ -30,7 +30,7 @@ function BioSection() {
         <Reveal delay={200}>
           {/* Portrait — drop your photo at: media/pages/about/portrait.jpg
               If the file is missing, the gradient placeholder will show. */}
-          <Scene tone="studio" image="media/pages/about/portrait.jpg" style={{ aspectRatio: '3 / 4', filter: 'grayscale(1) contrast(1.35) brightness(0.96)' }} />
+          <img className="about-portrait" src="media/pages/about/portrait.jpg" alt="Kiran Banda" width="1536" height="1024"/>
           <RotatingRole />
         </Reveal>
         <Reveal delay={160}>
@@ -92,7 +92,7 @@ function RotatingRole() {
     <div style={{ marginTop: 26, minHeight: 32 }}>
       <span data-text={text} className={active ? 'role-glitch is-active' : 'role-glitch'} style={{
         position: 'relative', display: 'inline-block', fontFamily: 'var(--serif)', fontStyle: 'italic', fontWeight: 500, fontSize: 32, letterSpacing: -0.3,
-        color: 'var(--accent)', whiteSpace: 'nowrap',
+        color: 'var(--accent)', whiteSpace: 'normal', overflowWrap: 'anywhere', maxWidth: '100%',
       }}>{text}</span>
       <style>{`
         .role-glitch.is-active { animation: roleGlitchJump .13s steps(1, end) infinite; }
@@ -175,9 +175,9 @@ function EducationRow({ e }) {
       style={{
         position: 'relative', overflow: 'hidden',
         display: 'grid',
-        gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '140px 1fr 1fr' : '180px 1.4fr 1fr 1.6fr',
+        gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '140px 1fr 1fr' : '150px minmax(0,1.4fr) minmax(0,1fr)',
         gap: 'clamp(10px,2.5vw,24px)',
-        padding: '28px 24px', borderTop: `1px solid var(--hair)`, alignItems: bp === 'mobile' ? 'flex-start' : 'baseline',
+        padding: '28px 24px', borderTop: 'none', alignItems: bp === 'mobile' ? 'flex-start' : 'baseline',
         cursor: 'none', transition: 'padding .35s, background .3s',
         paddingLeft: h ? 36 : 24,
       }}>
@@ -186,11 +186,7 @@ function EducationRow({ e }) {
         background: 'radial-gradient(260px 220px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
-      <div aria-hidden style={{
-        position: 'absolute', left: 0, right: 0, bottom: -1, height: 1,
-        background: `linear-gradient(90deg, transparent 0%, var(--accent) var(--mx, -10%), transparent calc(var(--mx, -10%) + 18%))`,
-        opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
-      }} />
+
       <span style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase',
         transform: 'translateX(calc(var(--mxn, 0) * -2px))' }}>{e.yr}</span>
       <span style={{ position: 'relative', fontSize: 26, fontWeight: 300, letterSpacing: -0.4, fontStyle: 'italic',
@@ -198,8 +194,7 @@ function EducationRow({ e }) {
         transform: 'translateX(calc(var(--mxn, 0) * 3px))' }}>{e.org}</span>
       <span style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--ink)', letterSpacing: 1, textTransform: 'uppercase',
         transform: 'translateX(calc(var(--mxn, 0) * 4px))' }}>{e.where}</span>
-      <span style={{ position: 'relative', fontFamily: 'var(--sans)', fontSize: 15, lineHeight: 1.7, color: 'var(--dim)', fontWeight: 300, textWrap: 'pretty',
-        transform: 'translateX(calc(var(--mxn, 0) * 5px))' }}>{e.note}</span>
+
     </div>
   );
 }
@@ -231,9 +226,9 @@ function ExperienceRow({ e, last }) {
     <div ref={ref} {...hover} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{ position: 'relative', overflow: 'hidden',
         display: 'grid',
-        gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '140px 1fr 1fr' : '180px 1.4fr 1fr 1.6fr',
+        gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '140px 1fr 1fr' : '150px minmax(0,1.4fr) minmax(0,1fr)',
         gap: 'clamp(10px,2.5vw,24px)',
-        padding: '32px 24px', borderTop: `1px solid var(--hair)`, borderBottom: last ? `1px solid var(--hair)` : 'none',
+        padding: '32px 24px', borderTop: 'none', borderBottom: 'none',
         alignItems: bp === 'mobile' ? 'flex-start' : 'baseline', cursor: 'none', transition: 'padding .35s',
         paddingLeft: h ? 36 : 24 }}>
       <div aria-hidden style={{
@@ -241,11 +236,7 @@ function ExperienceRow({ e, last }) {
         background: 'radial-gradient(280px 240px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.12), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
-      <div aria-hidden style={{
-        position: 'absolute', left: 0, right: 0, bottom: -1, height: 1,
-        background: `linear-gradient(90deg, transparent 0%, var(--accent) var(--mx, -10%), transparent calc(var(--mx, -10%) + 18%))`,
-        opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
-      }} />
+
       <span style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase',
         transform: 'translateX(calc(var(--mxn, 0) * -2px))' }}>{e.yr}</span>
       <span style={{ position: 'relative', fontSize: 28, fontWeight: 300, letterSpacing: -0.5, fontStyle: 'italic',
@@ -667,10 +658,6 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {hero ? `“${p.cap}”` : `· ${p.cap}`}
         </span>
-        <span style={{
-          fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 1.5, textTransform: 'uppercase',
-          color: hov ? 'var(--lab-primary,#C1663B)' : 'rgba(20,18,16,0.45)', transition: 'color .25s',
-        }}>{hov ? '▸ open' : '·'}</span>
       </div>
     </div>
   );
@@ -755,8 +742,8 @@ function MovieRow({ m, active, onEnter, onLeave, last }) {
   return (
     <div ref={ref} {...hover} onMouseEnter={onEnter} onMouseLeave={onLeave}
       style={{ position: 'relative', overflow: 'hidden',
-        display: 'grid', gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '50px 1fr 140px' : '60px 1fr 180px 220px 120px', gap: 'clamp(10px,2.5vw,24px)', alignItems: bp === 'mobile' ? 'flex-start' : 'center',
-        borderTop: `1px solid var(--hair)`, borderBottom: last ? `1px solid var(--hair)` : 'none',
+        display: 'grid', gridTemplateColumns: bp === 'mobile' ? '1fr' : bp === 'tablet' ? '50px 1fr 140px' : '60px minmax(0,1fr) 180px 120px', gap: 'clamp(10px,2.5vw,24px)', alignItems: bp === 'mobile' ? 'flex-start' : 'center',
+        borderTop: 'none', borderBottom: 'none',
         padding: '24px 24px', cursor: 'none', transition: 'padding .35s',
         paddingLeft: active ? 40 : 24 }}>
       <div aria-hidden style={{
@@ -764,11 +751,7 @@ function MovieRow({ m, active, onEnter, onLeave, last }) {
         background: 'radial-gradient(280px 200px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
-      <div aria-hidden style={{
-        position: 'absolute', left: 0, right: 0, bottom: -1, height: 1,
-        background: `linear-gradient(90deg, transparent 0%, var(--accent) var(--mx, -10%), transparent calc(var(--mx, -10%) + 18%))`,
-        opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
-      }} />
+
       <span style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1,
         transform: 'translateX(calc(var(--mxn, 0) * -2px))' }}>{m.year}</span>
       <span style={{ position: 'relative', fontSize: 'clamp(24px, 2.6vw, 40px)', fontWeight: 400, letterSpacing: -0.5, fontStyle: 'italic',
@@ -781,10 +764,7 @@ function MovieRow({ m, active, onEnter, onLeave, last }) {
         <span>dir · {m.dir}</span>
         <span>vfx sup · {m.vfx}</span>
       </span>
-      <span style={{ position: 'relative', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--dim)', fontWeight: 300, lineHeight: 1.4, fontStyle: 'italic',
-        transform: 'translateX(calc(var(--mxn, 0) * 5px))' }}>
-        {m.note}
-      </span>
+
       <div style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 1, textAlign: 'right',
         transform: 'translateX(calc(var(--mxn, 0) * 6px))' }}>
         {'★'.repeat(Math.round(m.rating / 2))}{'☆'.repeat(5 - Math.round(m.rating / 2))} <span style={{ color: 'var(--ink)', marginLeft: 8 }}>{m.rating}/10</span>

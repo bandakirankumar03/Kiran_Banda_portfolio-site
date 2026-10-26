@@ -47,24 +47,21 @@ function ContactPage() {
               <div><span style={{ color: 'var(--dim)' }}>based&nbsp;&nbsp;</span><span style={{ color: 'var(--ink)' }}>Savannah, GA · USA</span></div>
             </div>
 
-            {/* Resume slot */}
+            {/* Updated résumé download */}
             <div id="resume" style={{ border: `1px solid var(--accent)`, padding: 22, marginBottom: 24 }}>
               <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 10 }}>résumé · pdf · 2026</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 300, fontStyle: 'italic', letterSpacing: -0.3 }}>kiran-banda · cv.pdf</div>
-                <a href="#" {...useCursorLabel('download', 'link')}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+                <div style={{ fontSize: 22, fontWeight: 300, fontStyle: 'italic', letterSpacing: -0.3 }}>Kiran Banda · Résumé</div>
+                <a href="documents/Kiran_Banda_Resume_2026.pdf" download="Kiran_Banda_Resume_2026.pdf" {...useCursorLabel('download', 'link')}
                   style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase', cursor: 'none', borderBottom: '1px solid var(--accent)', paddingBottom: 2 }}>
                   download ↓
                 </a>
               </div>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--dim)', letterSpacing: 1, marginTop: 12, textTransform: 'uppercase' }}>
-                ↳ replace this link with your real resume URL
-              </div>
             </div>
 
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {['LinkedIn', 'Polycam', 'Instagram'].map((s) => (
-                <NavLink key={s} style={{ fontFamily: 'var(--mono)', fontSize: 13, border: `1px solid var(--hair)`, padding: '7px 14px', letterSpacing: 1, textTransform: 'uppercase', color: 'var(--ink)' }}>{s} →</NavLink>
+              {['LinkedIn', 'Polycam'].map((s) => (
+                <NavLink key={s} href={s === 'LinkedIn' ? 'https://www.linkedin.com/in/kiran-kumar-banda' : s === 'Polycam' ? 'https://poly.cam/@kiranBanda03' : undefined} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--mono)', fontSize: 13, border: `1px solid var(--hair)`, padding: '7px 14px', letterSpacing: 1, textTransform: 'uppercase', color: 'var(--ink)' }}>{s} →</NavLink>
               ))}
             </div>
           </Reveal>

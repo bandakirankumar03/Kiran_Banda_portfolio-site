@@ -8,7 +8,7 @@ const CursorCtx = createContext({ label: '', mode: 'default', setLabel: () => {}
 function useCursorLabel(label, mode = 'default') {
   const { setLabel, setMode } = useContext(CursorCtx);
   return {
-    onMouseEnter: () => { setLabel(label); setMode(mode); },
+    onMouseEnter: () => { setLabel(/^(open|hover|view)(\s|→|$)/i.test(label || '') ? '' : label); setMode(mode); },
     onMouseLeave: () => { setLabel(''); setMode('default'); },
   };
 }
@@ -152,7 +152,7 @@ function Scene({ tone = 'dusk', cap, tag, children, style = {}, interactive = fa
         </>
       )}
       {!vid && showVideo && (
-        <video src={video} autoPlay loop muted playsInline onError={() => setVidFailed(true)}
+        <TapVideo title={cap || 'Environment preview'} src={video} autoPlay loop muted playsInline onError={() => setVidFailed(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       )}
       {!vid && !showVideo && showImage && (
@@ -263,7 +263,7 @@ function Nav() {
       zIndex: 50,
       background: 'linear-gradient(180deg, rgba(30,44,58,0.72) 0%, rgba(16,22,30,0.62) 55%, rgba(10,12,15,0.5) 100%)',
       backdropFilter: 'blur(18px) saturate(140%)', WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-      borderBottom: '1px solid rgba(115,194,251,0.18)',
+      borderBottom: 'none',
       boxShadow: '0 1px 0 rgba(115,194,251,0.06) inset, 0 18px 40px -28px rgba(115,194,251,0.5)',
     }}>
       <div {...useCursorLabel('home', 'link')} onClick={() => go({ name: 'home' })}
@@ -292,9 +292,10 @@ function Nav() {
   );
 }
 
-function NavLink({ children, onClick, style = {}, cursorLabel }) {
+function NavLink({ children, onClick, style = {}, cursorLabel, href, target, rel }) {
   const text = typeof children === 'string' ? children : '';
   const hover = useCursorLabel(cursorLabel ?? text, 'link');
+  if (href) return <a {...hover} href={href} target={target} rel={rel} onClick={onClick} style={{ cursor: 'none', color: 'inherit', textDecoration: 'none', ...style }}>{children}</a>;
   return (
     <span {...hover} onClick={onClick} style={{ cursor: 'none', ...style }}>{children}</span>
   );
@@ -313,7 +314,7 @@ function Footer() {
     <div style={{
       fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase',
     }}>
-      <div style={{ display: 'flex', gap: 'clamp(14px,3vw,32px)', justifyContent: 'center', flexWrap: 'wrap', padding: 'clamp(16px,3vw,22px) var(--pad)', borderBottom: `1px solid var(--hair)` }}>
+      <div style={{ display: 'flex', gap: 'clamp(14px,3vw,32px)', justifyContent: 'center', flexWrap: 'wrap', padding: 'clamp(16px,3vw,22px) var(--pad)', borderBottom: 'none' }}>
         {pages.map((p) => (
           <NavLink key={p.k} onClick={() => go({ name: p.k })}
             style={{ color: route.name === p.k ? 'var(--accent)' : 'var(--dim)',
@@ -330,8 +331,8 @@ function Footer() {
         <span>Kiran Banda · © 2026</span>
         <NavLink style={{ textAlign: 'center', display: 'block' }}>bandakirankumar03@gmail.com</NavLink>
         <div style={{ display: 'flex', gap: 'clamp(12px,3vw,22px)', justifyContent: useBP() === 'mobile' ? 'center' : 'flex-end', flexWrap: 'wrap' }}>
-          {['LinkedIn', 'Polycam', 'Instagram'].map((s) => (
-            <NavLink key={s}>{s}</NavLink>
+          {['LinkedIn', 'Polycam'].map((s) => (
+            <NavLink key={s} href={s === 'LinkedIn' ? 'https://www.linkedin.com/in/kiran-kumar-banda' : s === 'Polycam' ? 'https://poly.cam/@kiranBanda03' : undefined} target="_blank" rel="noopener noreferrer">{s}</NavLink>
           ))}
         </div>
       </div>
@@ -342,3 +343,53 @@ function Footer() {
 Object.assign(window, {
   RouteCtx, CursorCtx, useCursorLabel, Cursor, Scene, Reveal, Nav, NavLink, Footer, vimeoIdFrom,
 });
+
+// Media surfaces are their own playback controls; no visible play/pause labels.
+function TapVideo({title='Video', onLoadedMetadata, style, ...props}) {
+  const ref=React.useRef(null), manual=React.useRef(false);
+  const [playing,setPlaying]=React.useState(false);
+  React.useEffect(()=>{
+    const video=ref.current;
+    const observer=new IntersectionObserver(([entry])=>{
+      if(entry.isIntersecting&&!manual.current&&!matchMedia('(prefers-reduced-motion: reduce)').matches) video.play().catch(()=>{});
+      else video.pause();
+    },{threshold:.25});
+    observer.observe(video);return()=>observer.disconnect();
+  },[props.src]);
+  const toggle=()=>{const video=ref.current;manual.current=!video.paused;if(video.paused)video.play().catch(()=>{});else video.pause();};
+  return <video {...props} ref={ref} muted loop playsInline preload="metadata" controls={false} role="button" tabIndex={0}
+    aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} onClick={e=>{e.stopPropagation();toggle();}}
+    onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();toggle();}}}
+    onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onLoadedMetadata={onLoadedMetadata} style={{...style,cursor:'pointer'}}/>;
+}
+
+let vimeoSdkPromise;
+function loadVimeoSdk(){
+  if(window.Vimeo?.Player)return Promise.resolve(window.Vimeo);
+  if(!vimeoSdkPromise)vimeoSdkPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://player.vimeo.com/api/player.js';script.onload=()=>resolve(window.Vimeo);script.onerror=()=>{vimeoSdkPromise=null;reject(new Error('Vimeo player unavailable'));};document.head.appendChild(script);});
+  return vimeoSdkPromise;
+}
+function TapVimeo({id,title='Film',style}){
+  const frame=React.useRef(null),surface=React.useRef(null),player=React.useRef(null),manual=React.useRef(false);
+  const [playing,setPlaying]=React.useState(false),[muted,setMuted]=React.useState(true),[failed,setFailed]=React.useState(false);
+  React.useEffect(()=>{
+    let disposed=false,observer;
+    loadVimeoSdk().then(Vimeo=>{if(disposed)return;const instance=new Vimeo.Player(frame.current);player.current=instance;
+      instance.on('play',()=>{if(manual.current){instance.pause().catch(()=>{});return;}setPlaying(true);});instance.on('pause',()=>setPlaying(false));
+      instance.ready().then(()=>{if(disposed)return;observer=new IntersectionObserver(([entry])=>{
+        if(entry.isIntersecting&&!manual.current&&!matchMedia('(prefers-reduced-motion: reduce)').matches)instance.play().catch(()=>{});else instance.pause().catch(()=>{});
+      },{threshold:.25});observer.observe(surface.current);}).catch(()=>{if(!disposed)setFailed(true);});
+    }).catch(()=>{if(!disposed)setFailed(true);});
+    return()=>{disposed=true;observer?.disconnect();if(player.current){player.current.off('play');player.current.off('pause');player.current=null;}};
+  },[id]);
+  const toggle=async()=>{const instance=player.current;if(!instance)return;manual.current=playing;try{await(playing?instance.pause():instance.play());}catch{setFailed(true);}};
+  const toggleSound=async()=>{try{await player.current.setMuted(!muted);setMuted(!muted);}catch{}};
+  return <div ref={surface} className="tap-vimeo" style={{position:'relative',width:'100%',height:'100%',...style}}>
+    <iframe ref={frame} src={`https://player.vimeo.com/video/${id}?controls=0&title=0&byline=0&portrait=0&playsinline=1&muted=1&loop=1`} title={title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen loading="lazy" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:0,pointerEvents:'none'}}/>
+    <button type="button" onClick={toggle} aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} style={{position:'absolute',inset:0,width:'100%',height:'100%',padding:0,border:0,background:'transparent',cursor:'pointer'}}/>
+    <button type="button" onClick={toggleSound} aria-label={muted?'Unmute film':'Mute film'} style={{position:'absolute',bottom:12,right:12,border:0,borderRadius:'50%',width:44,height:44,background:'#111b',color:'#fff',cursor:'pointer'}}>{muted?'🔇':'🔊'}</button>
+    {failed&&<a href={`https://vimeo.com/${id}`} target="_blank" rel="noopener noreferrer" style={{position:'absolute',bottom:16,left:16,color:'#fff'}}>Watch on Vimeo ↗</a>}
+  </div>;
+}
+
+Object.assign(window, { TapVideo, TapVimeo });

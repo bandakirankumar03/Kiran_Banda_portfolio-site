@@ -54,7 +54,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
       .pc-action {display:flex;align-items:center;gap:24px;border:0;background:transparent;color:var(--ink);padding:0;cursor:pointer;font:13px var(--mono);white-space:nowrap;}
       .pc-action span {display:grid;place-items:center;width:54px;height:54px;border:1px solid #f2ede360;border-radius:50%;font-size:21px;transition:background .25s,transform .25s;}
       .pc-action:hover span {background:var(--lab-primary,#C1663B);transform:rotate(45deg);}
-      .pc-foot {border-top:1px solid #f2ede335;padding-top:18px;font-size:12px;color:var(--dim);}
+      .pc-foot {padding-top:18px;font-size:12px;color:var(--dim);}
       .pc-scroll {display:flex;align-items:center;gap:14px;}.pc-scroll:after {content:'↓';font-size:17px;color:var(--accent);}
       .pc-title-line {display:block;}
       @media(max-width:760px) {.project-cover{min-height:640px;height:90svh;padding-top:100px;}.pc-top{font-size:12px;}.pc-story{margin-top:auto;margin-bottom:24px;}.pc-story h1{font-size:clamp(56px,12vw,88px);}.pc-role{font-size:12px;}.pc-bottom{display:block;}.pc-bottom p{font-size:13px;max-width:38ch;}.pc-action{margin-top:20px;gap:15px;}.pc-action span{width:40px;height:40px;}.pc-foot{font-size:12px;}}
@@ -625,7 +625,7 @@ function StoryBook({ p, x }) {
         .xr-tech-label { font:12px var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--lab-primary,#c88968); margin:0 0 8px; }
         .xr-tech-note { border-left:1px solid #c8896860; padding-left:18px; margin-bottom:25px; }
         .xr-tech-note p { margin:0; }
-        .xr-comparison-controls { border-bottom:1px solid var(--hair); padding-bottom:12px; }
+        .xr-comparison-controls {  padding-bottom:12px; }
         .xr-comparison-controls button { border:0; border-radius:0; }
         .xr-comparison-options button[aria-pressed=true] { color:var(--lab-primary,#e5b196); box-shadow:inset 0 -1px var(--lab-primary,#c88968); }
         .xr-view-button { color:var(--lab-primary,#c88968); }
@@ -690,23 +690,17 @@ function StoryFilms({p,x}) {
 
 function FinalVideo({ v, poster, tone }) {
   const vid = vimeoIdFrom(v.vimeo);
-  const [started,setStarted] = React.useState(!v.clickToPlay);
   const [nativeRatio,setNativeRatio]=React.useState(null);
   const ratio=nativeRatio || ({'1233905426':'16 / 9','1230103396':'426 / 178','1230103395':'16 / 9'}[vid]) || v.aspectRatio || '16 / 9';
   return (
     <div style={{ marginBottom: 96 }}>
-      <SectionLabel note={v.note || 'sound on'}>{v.label || 'the film'}</SectionLabel>
+      <SectionLabel note={v.note || ''}>{v.label || 'the film'}</SectionLabel>
       <Reveal>
         <div style={{ position: 'relative', width: '100%', aspectRatio: ratio, background: 'transparent', border: 0, overflow: 'hidden', borderRadius: 0 }}>
-          {vid && !started ? <button onClick={()=>setStarted(true)} aria-label={`Play ${v.label || 'video'}`} style={{position:'absolute',inset:0,width:'100%',height:'100%',padding:0,border:0,cursor:'pointer',background:'#101112',color:'#fff'}}><img src={poster} alt="" style={{width:'100%',height:'100%',objectFit:'cover',opacity:.65}}/><span style={{position:'absolute',inset:0,display:'grid',placeItems:'center',font:'18px var(--mono)'}}>▶ PLAY {v.label || 'FILM'}</span></button> : vid ? (
-            <iframe
-              src={`https://player.vimeo.com/video/${vid}?title=0&byline=0&portrait=0&playsinline=1${v.clickToPlay ? '&autoplay=1' : ''}`}
-              frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
-              title={v.cap || 'final film'}
-              loading="lazy"
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }} />
+          {vid ? (
+            <TapVimeo id={vid} title={v.cap || v.label || 'Film'} />
           ) : v.src ? (
-            <video src={v.src} poster={poster} controls playsInline preload="metadata" onLoadedMetadata={e=>{const el=e.currentTarget;if(el.videoWidth && el.videoHeight)setNativeRatio(`${el.videoWidth} / ${el.videoHeight}`);}}
+            <TapVideo title={v.label || 'Project video'} src={v.src} poster={poster} playsInline preload="metadata" onLoadedMetadata={e=>{const el=e.currentTarget;if(el.videoWidth && el.videoHeight)setNativeRatio(`${el.videoWidth} / ${el.videoHeight}`);}}
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', maxHeight:'none', aspectRatio:'auto', objectFit: 'contain', border:0, borderRadius:0 }} />
           ) : (
             <div style={{ position: 'absolute', inset: 0 }}>
@@ -794,11 +788,11 @@ function XRCasePage({p,x,prev,next,go}) {
       .xr-cover-links a { border-bottom:1px solid #d79a7b80; padding:12px 0; cursor:pointer; }
       .xr-cover-links a:hover { color:#d79a7b; }
       .xr-case-body { padding:0 var(--pad); max-width:none; margin:auto; }
-      .xr-brief { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:32px; padding:32px 0 40px; margin:0 auto 64px; max-width:none; border-bottom:1px solid var(--hair); }
+      .xr-brief { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:32px; padding:32px 0 40px; margin:0 auto 64px; max-width:none;  }
       .xr-brief span { display:block; font:12px var(--mono); text-transform:uppercase; letter-spacing:1.8px; color:var(--lab-primary,#c88968); margin-bottom:12px; }
       .xr-brief p { font:13px/1.8 Arial,sans-serif; margin:0; color:var(--lab-muted,#c7c2b9); }
       .xr-brief strong { color:var(--ink); font-weight:400; }
-      .xr-screening { max-width:none; margin:0 auto; scroll-margin-top:90px; border-top:1px solid var(--hair); padding-top:38px; }
+      .xr-screening { max-width:none; margin:0 auto; scroll-margin-top:90px;  padding-top:38px; }
       .xr-screening-heading { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; }
       .xr-screening h2 { font:400 clamp(32px,4vw,52px)/1.2 var(--serif); margin:0; letter-spacing:-1px; }
       .xr-screening .xr-films { max-width:none; }
@@ -876,7 +870,7 @@ function CasePage({ slug }) {
         <Reveal delay={180}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24, marginBottom: 'clamp(48px,8vw,90px)', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
             {[['Client', `${p.client} · ${p.year}`], ['Role', p.role], p.focus ? ['Focus', p.focus] : ['Duration', p.duration], ['Software', null]].map(([k, v]) => (
-              <div key={k} style={{ borderTop: `1px solid var(--hair)`, paddingTop: 14 }}>
+              <div key={k} style={{ borderTop: 'none', paddingTop: 14 }}>
                 <div>{k}</div>
                 {v ? <div style={{ color: 'var(--ink)', marginTop: 6 }}>{v}</div> : <SoftwareMarks list={x.software || []} />}
               </div>
@@ -923,5 +917,5 @@ function ProjectBrief({p}){
  'unreal-environment-studies':['Environment composition / Lighting / Cameras','Unreal Engine / Ultra Dynamic Sky / Fab / Sketchfab','Materials / Weather / Cinematic rendering'],
  'vfx-compositing-works':['VFX compositing / Undergraduate work','Compositing workflow','Selected compositing shots / Demo reel']};
  const d=details[p.slug]||[p.role,(p.tags||[]).join(' / '),p.focus||p.kind];
- return <div className="shared-project-brief"><style>{`.shared-project-brief{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:35px;margin:0 var(--pad);padding:32px 0;border-bottom:1px solid var(--hair)}.shared-project-brief span{font:12px var(--mono);color:var(--lab-primary);text-transform:uppercase;letter-spacing:1.2px}.shared-project-brief p{font:14px/1.75 Arial,sans-serif;color:var(--dim);margin:12px 0 0;max-width:50ch}@media(max-width:700px){.shared-project-brief{grid-template-columns:1fr;gap:24px}}`}</style>{['My contribution','Toolset','Production focus'].map((label,i)=><div key={label}><span>{label}</span><p>{d[i]}</p></div>)}</div>;
+ return <div className="shared-project-brief"><style>{`.shared-project-brief{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:35px;margin:0 var(--pad);padding:32px 0;}.shared-project-brief span{font:12px var(--mono);color:var(--lab-primary);text-transform:uppercase;letter-spacing:1.2px}.shared-project-brief p{font:14px/1.75 Arial,sans-serif;color:var(--dim);margin:12px 0 0;max-width:50ch}@media(max-width:700px){.shared-project-brief{grid-template-columns:1fr;gap:24px}}`}</style>{['My contribution','Toolset','Production focus'].map((label,i)=><div key={label}><span>{label}</span><p>{d[i]}</p></div>)}</div>;
 }
