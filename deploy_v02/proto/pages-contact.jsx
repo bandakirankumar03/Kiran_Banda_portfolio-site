@@ -29,15 +29,15 @@ function ContactPage() {
   );
 
   return (
-    <div>
-      <div style={{ padding: 'clamp(28px,6vw,40px) var(--pad) clamp(48px,9vw,80px)' }}>
+    <div className="contact-page">
+      <div className="contact-content" style={{ padding: 'clamp(28px,6vw,40px) var(--pad) clamp(48px,9vw,80px)' }}>
         <Reveal delay={80}>
           <div style={{ fontSize: 'clamp(80px, 13vw, 184px)', lineHeight: 0.92, letterSpacing: -4, fontWeight: 300, marginBottom: 60 }}>
             <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>say</span> <span style={{ color: 'var(--accent)' }}>hello.</span>
           </div>
         </Reveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(36px,6vw,80px)' }}>
+        <div className="contact-layout" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(36px,6vw,80px)' }}>
           <Reveal>
             <div style={{ fontFamily: 'var(--sans)', fontSize: 16, lineHeight: 1.8, color: 'var(--dim)', fontWeight: 300, maxWidth: 420, marginBottom: 40 }}>
               Whether it&apos;s a VP shoot, a cinematic piece, or just a conversation about moss and displacement maps — I&apos;d love to hear about it. I reply within a day. Twice on weekends.

@@ -747,7 +747,7 @@ function ClosingNote({ text, title }) {
 // prev / next with thumbnails
 function CaseFooterNav({ prev, next, go }) {
   const item = (label, pp, right) => (
-    <div {...useCursorLabel(pp.title.toLowerCase(), 'link')} onClick={() => go({ name: 'case', slug: pp.slug })}
+    <div className="case-footer-item" {...useCursorLabel(pp.title.toLowerCase(), 'link')} onClick={() => go({ name: 'case', slug: pp.slug })}
       style={{ display: 'flex', alignItems: 'center', gap: 22, cursor: 'none', flexDirection: right ? 'row-reverse' : 'row' }}>
       <span style={{
         width: 44, height: 44, borderRadius: '50%', border: '1px solid var(--hair)', flex: '0 0 auto',
@@ -764,7 +764,7 @@ function CaseFooterNav({ prev, next, go }) {
     </div>
   );
   return (
-    <div style={{ borderTop: '1px solid var(--hair)', padding: '32px var(--pad) clamp(48px,8vw,90px)', display: 'flex', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+    <div className="case-footer-nav" style={{ borderTop: '1px solid var(--hair)', padding: '32px var(--pad) clamp(48px,8vw,90px)', display: 'flex', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
       {item('previous', prev, false)}
       {item('next', next, true)}
     </div>

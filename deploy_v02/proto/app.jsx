@@ -69,7 +69,7 @@ function App() {
         {introDone && (
           <>
             <Nav />
-            {page}
+            <div className={'site-page site-page-' + route.name}>{page}</div>
             <CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
             <StyleLab />
           </>

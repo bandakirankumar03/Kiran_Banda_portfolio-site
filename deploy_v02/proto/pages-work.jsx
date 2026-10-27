@@ -12,7 +12,7 @@ function WorkPage() {
   const list = PROJECTS.filter((p) => filter === 'All' || p.kind === filter);
 
   return (
-    <div>
+    <div className="work-page">
       <div style={{ padding: 'clamp(28px,6vw,40px) var(--pad) 20px' }}>
         <Reveal>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 14 }}>

@@ -3,7 +3,7 @@
 function HomePage() {
   const { go } = React.useContext(RouteCtx);
   return (
-    <div>
+    <div className="home-page">
       <ReelHero />
       <div style={{ position: 'relative', zIndex: 2, background: 'var(--bg, #0b0b0c)' }}>
         <HomeIntro />
@@ -233,7 +233,7 @@ function HomeIntro() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <div style={{ fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 300, maxWidth: 1300 }}>
+          <div className="home-intro-title" style={{ fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 300, maxWidth: 1300 }}>
             I build the <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> I imagine,<br/>
             rendered in real time.
           </div>
@@ -305,7 +305,7 @@ function ProjectCarousel({ onOpen }) {
   }, []);
 
   return (
-    <div style={{ borderTop: 'none', padding: 'clamp(60px,12vw,100px) 0 clamp(60px,14vw,120px)', overflow: 'hidden' }}>
+    <div className="home-projects" style={{ borderTop: 'none', padding: 'clamp(60px,12vw,100px) 0 clamp(60px,14vw,120px)', overflow: 'hidden' }}>
       <style>{`
         .work-carousel-actions { display:flex; align-items:center; gap:24px; }
         .work-carousel-arrows { display:flex; gap:8px; }

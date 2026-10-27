@@ -2,7 +2,7 @@
 
 function AboutPage() {
   return (
-    <div>
+    <div className="about-page">
       <BioSection />
       <EducationSection />
       <ExperienceSection />
@@ -19,25 +19,25 @@ function AboutPage() {
 // ─── 01 — BIO ────────────────────────────────────────────────
 function BioSection() {
   return (
-    <div style={{ padding: 'clamp(32px,6vw,48px) var(--pad) clamp(48px,9vw,70px)' }}>
+    <div className="about-bio" style={{ padding: 'clamp(32px,6vw,48px) var(--pad) clamp(48px,9vw,70px)' }}>
       <Reveal delay={80}>
-        <div style={{ fontSize: 'clamp(64px, 10vw, 136px)', lineHeight: 0.92, letterSpacing: -3, fontWeight: 300 }}>
+        <div className="about-title" style={{ fontSize: 'clamp(64px, 10vw, 136px)', lineHeight: 0.92, letterSpacing: -3, fontWeight: 300 }}>
           Hi, I&apos;m <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>Kiran.</span>
         </div>
       </Reveal>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(32px,5vw,64px)', alignItems: 'start', marginTop: 56, position: 'relative' }}>
-        <Reveal delay={200}>
+      <div className="about-bio-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(32px,5vw,64px)', alignItems: 'start', marginTop: 56, position: 'relative' }}>
+        <Reveal className="about-portrait-column" delay={200}>
           {/* Portrait — drop your photo at: media/pages/about/portrait.jpg
               If the file is missing, the gradient placeholder will show. */}
           <img className="about-portrait" src="media/pages/about/portrait.jpg" alt="Kiran Banda" width="1536" height="1024"/>
           <RotatingRole />
         </Reveal>
-        <Reveal delay={160}>
-          <div style={{ fontSize: 'clamp(24px, 2.6vw, 36px)', lineHeight: 1.4, letterSpacing: -0.3, fontWeight: 300, marginBottom: 36 }}>
+        <Reveal className="about-bio-copy" delay={160}>
+          <div className="about-bio-lead" style={{ fontSize: 'clamp(24px, 2.6vw, 36px)', lineHeight: 1.4, letterSpacing: -0.3, fontWeight: 300, marginBottom: 36 }}>
             It started as a kid glued to fantasy epics — big, impossible worlds I wanted to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>walk into.</span> Now I build them.
           </div>
-          <div style={{ fontFamily: 'var(--sans)', fontSize: 17, lineHeight: 1.95, color: 'var(--dim)', maxWidth: 660, fontWeight: 300 }}>
+          <div className="about-bio-text" style={{ fontFamily: 'var(--sans)', fontSize: 17, lineHeight: 1.95, color: 'var(--dim)', maxWidth: 660, fontWeight: 300 }}>
             Long before I knew what a render engine was, I was the kid rewinding the same scenes — the ones where the camera just kept pulling back to reveal more world. Temples, ruins, forests that felt like places you could actually stand in. I didn&apos;t want to watch those worlds. I wanted to build one.
             <br/><br/>
             That pull is what put me on this path. I started in VFX compositing — learning, shot by shot, how a frame actually comes together. It taught me to see in layers, but I kept wanting to build the world in front of the camera, not just finish it behind one. So I moved into Unreal environment art, where I could shape the whole place myself: the light, the weather, the dust in the air.
