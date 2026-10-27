@@ -38,13 +38,13 @@ function BioSection() {
             It started as a kid glued to fantasy epics — big, impossible worlds I wanted to <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>walk into.</span> Now I build them.
           </div>
           <div className="about-bio-text" style={{ fontFamily: 'var(--sans)', fontSize: 17, lineHeight: 1.95, color: 'var(--dim)', maxWidth: 660, fontWeight: 300 }}>
-            Long before I knew what a render engine was, I was the kid rewinding the same scenes — the ones where the camera just kept pulling back to reveal more world. Temples, ruins, forests that felt like places you could actually stand in. I didn&apos;t want to watch those worlds. I wanted to build one.
+            Long before I knew what a render engine was, I was rewinding scenes that revealed impossible worlds — temples, ruins, forests that felt like places you could stand in. I wanted to build one.
             <br/><br/>
-            That pull is what put me on this path. I started in VFX compositing — learning, shot by shot, how a frame actually comes together. It taught me to see in layers, but I kept wanting to build the world in front of the camera, not just finish it behind one. So I moved into Unreal environment art, where I could shape the whole place myself: the light, the weather, the dust in the air.
+            I started in VFX compositing, learning how a frame comes together, layer by layer. But I kept wanting to shape the world in front of the camera: the light, the weather, the dust in the air. That led me to Unreal environment art.
             <br/><br/>
-            Since then it&apos;s been internships at Green Gold Animation and Studio Raaga, and now a Master&apos;s candidacy in Visual Effects at <span style={{ color: 'var(--ink)' }}>SCAD</span>, where I build environments and run the brain on XR-stage shorts. Most of what I do is photogrammetry-driven and modular — capturing real surfaces, rebuilding them in Unreal, dressing scenes that hold up under a moving camera at 24fps. Lately I&apos;m folding AI into the earliest stages of asset work, where it earns its place fastest.
+            After internships at Green Gold Animation and Studio Raaga, I’m now pursuing a Master’s in Visual Effects at <span style={{color:'var(--ink)'}}>SCAD</span>, building environments and operating the brain on XR-stage shorts. My work is mostly photogrammetry-driven and modular: capturing real surfaces, rebuilding them in Unreal, and dressing scenes that hold up under a moving camera. Lately, I’m exploring AI in the early stages of asset development.
             <br/><br/>
-            Photogrammetry is still my favourite part of the job — there&apos;s nothing like turning a real wall or a real stone into something a camera can move through.
+            Photogrammetry is still my favourite part — turning a real wall or stone into a world a camera can move through.
           </div>
         </Reveal>
       </div>
@@ -329,20 +329,18 @@ function SkillChip({ label, isActive, dim, onEnter, onLeave }) {
 
 // ─── 05 — CERTIFICATES ─────────────────────────────────────
 function CertificatesSection() {
-  return (
-    <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
-      <Reveal delay={80}>
-        <div style={{ fontSize: 'clamp(40px, 5.5vw, 80px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          Pieces of paper I&apos;ve <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>earned.</span>
-        </div>
-      </Reveal>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 18 }}>
-        {CERTIFICATES.map((c, i) => (
-          <Reveal key={c.title} delay={i * 60}><CertCard c={c} /></Reveal>
-        ))}
-      </div>
-    </div>
-  );
+  const learning = [
+    {title:'Virtual Production · XR Stage',org:'SCAD',kind:'Hands-on',yr:'Practice'},
+    {title:'Unreal Engine · Production',org:'Independent learning',kind:'Self-taught',yr:'Practice'},
+    {title:'Photogrammetry · RealityCapture',org:'SCAD class + independent practice',kind:'Course & practice',yr:'Study'},
+    {title:'AI-Assisted Asset Pipelines',org:'Independent study',kind:'Self-taught',yr:'Exploration'}
+  ];
+  const badges=CERTIFICATES.filter(c=>c.title.includes('Advanced Certificate')||c.title.includes('Creative Horizons'));
+  return <section className="about-journal-section about-learning">
+    <h2 className="about-section-title">Always <em>learning.</em></h2>
+    <div className="learning-grid">{learning.map(c=><CertCard key={c.title} c={c}/>)}</div>
+    <div className="learning-badges">{badges.map(c=><img key={c.id} src={'media/pages/about/badges/'+c.id+'.png'} alt={c.title} title={c.title} loading="lazy" width="120" height="120"/>)}</div>
+  </section>;
 }
 
 function CertCard({ c }) {
@@ -375,154 +373,45 @@ function CertCard({ c }) {
   );
 }
 
-// ─── 05 — HOBBIES ──────────────────────────────────────────
+const LIFE_PHOTOS = [{"image": "media/pages/about/selected/img_7757.webp", "aspect": "2268 / 4032", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_1853.webp", "aspect": "3024 / 4032", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_0172.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_7341.webp", "aspect": "3213 / 5712", "cap": "Trekking", "category": "Trekking"}, {"image": "media/pages/about/selected/img_7561.webp", "aspect": "4284 / 5712", "cap": "Fitness & yoga", "category": "Fitness & yoga"}, {"image": "media/pages/about/selected/img_9617.webp", "aspect": "4284 / 5712", "cap": "Music & art", "category": "Music & art"}, {"image": "media/pages/about/selected/img_9996.webp", "aspect": "4284 / 5712", "cap": "Reading", "category": "Reading"}, {"image": "media/pages/about/selected/img_6070.webp", "aspect": "5712 / 3213", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_8067.webp", "aspect": "4284 / 5712", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_5897.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_2510.webp", "aspect": "4284 / 5712", "cap": "Trekking", "category": "Trekking"}, {"image": "media/pages/about/selected/img_9414.webp", "aspect": "3024 / 4032", "cap": "Fitness & yoga", "category": "Fitness & yoga"}, {"image": "media/pages/about/selected/img_5503.webp", "aspect": "4284 / 5712", "cap": "Music & art", "category": "Music & art"}, {"image": "media/pages/about/selected/img_8015.webp", "aspect": "3024 / 4032", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_8086.webp", "aspect": "4284 / 5712", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_6324.webp", "aspect": "3024 / 4032", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_2034.webp", "aspect": "3024 / 4032", "cap": "Trekking", "category": "Trekking"}, {"image": "media/pages/about/selected/img_4898.webp", "aspect": "3024 / 4032", "cap": "Music & art", "category": "Music & art"}, {"image": "media/pages/about/selected/img_0888.webp", "aspect": "4032 / 3024", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_5953.webp", "aspect": "3213 / 5712", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_4655.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_9191.webp", "aspect": "3213 / 5712", "cap": "Trekking", "category": "Trekking"}, {"image": "media/pages/about/selected/img_4259.webp", "aspect": "4284 / 5712", "cap": "Music & art", "category": "Music & art"}, {"image": "media/pages/about/selected/img_4850.webp", "aspect": "3024 / 4032", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_8215.webp", "aspect": "3024 / 4032", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_4665.webp", "aspect": "3024 / 4032", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_9146.webp", "aspect": "5712 / 4284", "cap": "Trekking", "category": "Trekking"}, {"image": "media/pages/about/selected/img_1067.webp", "aspect": "3024 / 4032", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_8124.webp", "aspect": "3213 / 5712", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_6296.webp", "aspect": "2268 / 4032", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_9070.webp", "aspect": "4284 / 5712", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_7324.webp", "aspect": "4284 / 5712", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_6320.webp", "aspect": "5712 / 4284", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_7403.webp", "aspect": "4284 / 5712", "cap": "Photography", "category": "Photography"}, {"image": "media/pages/about/selected/img_8458.webp", "aspect": "5712 / 3213", "cap": "Travelling", "category": "Travelling"}, {"image": "media/pages/about/selected/img_6419.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_7191.webp", "aspect": "3024 / 4032", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_8307.webp", "aspect": "3024 / 4032", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_5833.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}, {"image": "media/pages/about/selected/img_5940.webp", "aspect": "4284 / 5712", "cap": "Food & cooking", "category": "Food & cooking"}];
+function shuffleLifePhotos(items) {
+  const copy=[...items];
+  for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}
+  return copy;
+}
 function HobbiesSection() {
-  return (
-    <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
-      <Reveal delay={80}>
-        <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1100 }}>
-          When I&apos;m not <span style={{ fontStyle: 'italic' }}>building worlds,</span> I&apos;m usually <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>staring at them.</span>
-        </div>
-      </Reveal>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
-        {HOBBIES.map((h, i) => (
-          <Reveal key={h.title} delay={i * 70}><HobbyCard h={h} /></Reveal>
-        ))}
-      </div>
-    </div>
-  );
+  const groups=[
+    {label:'Photography & travel',categories:['Photography','Travelling']},
+    {label:'Trekking & adventure',categories:['Trekking']},
+    {label:'Cooking & new food',categories:['Food & cooking']},
+    {label:'Music & art',categories:['Music & art']},
+    {label:'Fitness & yoga',categories:['Fitness & yoga']},
+    {label:'Reading',categories:['Reading']}
+  ];
+  const [paused,setPaused]=React.useState(false);
+  return <section className="about-journal-section life-frames">
+    <h2 className="about-section-title">Life <em>outside the frame.</em></h2>
+    <p className="life-caption">Travelling, cooking, tasting something new, and finding adventure in the everyday.</p>
+    <div className="hobby-accordion">{groups.map((g,i)=><HobbyFrame key={g.label} group={g} index={i} paused={paused} onToggle={()=>setPaused(v=>!v)}/>)}</div>
+  </section>;
 }
-
-function HobbyCard({ h }) {
-  const [hov, setH] = React.useState(false);
-  const [pos, setPos] = React.useState({ x: 0, y: 0 });
-  const hover = useCursorLabel('peek', 'default');
-  const stack = h.stack || [];
-
-  const onMove = (e) => setPos({ x: e.clientX, y: e.clientY });
-
-  return (
-    <div {...hover}
-      onMouseEnter={(e) => { setH(true); setPos({ x: e.clientX, y: e.clientY }); }}
-      onMouseLeave={() => setH(false)}
-      onMouseMove={onMove}
-      style={{
-        border: `1px solid ${hov ? 'rgba(217,162,74,0.4)' : 'var(--hair)'}`,
-        padding: '32px 28px 28px', position: 'relative', cursor: 'none',
-        background: hov ? 'rgba(217,162,74,0.05)' : 'transparent',
-        transition: 'background .3s, transform .3s, border-color .3s',
-        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
-        overflow: 'hidden',
-      }}>
-      {/* number stamp top-right */}
-      <div style={{ position: 'absolute', top: 16, right: 20,
-        fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2,
-        color: hov ? 'var(--accent)' : 'var(--dimmer)',
-        textTransform: 'uppercase', transition: 'color .3s' }}>
-        · {stack.length} frames
-      </div>
-
-      <div style={{ fontSize: 44, lineHeight: 1, marginBottom: 18,
-        transform: hov ? 'rotate(-6deg) scale(1.12)' : 'rotate(0) scale(1)',
-        transition: 'transform .4s ease', transformOrigin: 'left center' }}>
-        {h.emoji}
-      </div>
-      <div style={{ fontSize: 26, fontWeight: 300, letterSpacing: -0.4, fontStyle: 'italic', marginBottom: 12,
-        color: hov ? 'var(--ink)' : 'var(--ink)' }}>
-        {h.title}
-      </div>
-      <div style={{ fontFamily: 'var(--sans)', fontSize: 14, lineHeight: 1.65, color: 'var(--dim)', fontWeight: 300 }}>
-        {h.note}
-      </div>
-
-      {/* tiny progress hairline at bottom, fills on hover */}
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, background: 'var(--hair)' }}>
-        <div style={{ height: '100%', background: 'var(--accent)',
-          width: hov ? '100%' : '0%',
-          transition: 'width .6s cubic-bezier(.2,.8,.2,1)' }} />
-      </div>
-
-      {hov && <HobbyPopup stack={stack} cursorX={pos.x} cursorY={pos.y} title={h.title} />}
-    </div>
-  );
-}
-
-// ─── floating polaroid stack that cycles back-to-front, centered on cursor ────
-function HobbyPopup({ stack, cursorX, cursorY, title }) {
-  const [top, setTop] = React.useState(0);
-  // auto-swipe: every 1.1s the front polaroid moves to the back
-  React.useEffect(() => {
-    const t = setInterval(() => setTop((i) => (i + 1) % stack.length), 1100);
-    return () => clearInterval(t);
-  }, [stack.length]);
-
-  const POP_W = 280, POP_H = 220;
-  // center on the cursor, but clamp to viewport so it never clips off-screen
-  let left = cursorX - POP_W / 2;
-  let top_  = cursorY - POP_H / 2;
-  const m = 12;
-  left  = Math.max(m, Math.min(window.innerWidth  - POP_W - m, left));
-  top_  = Math.max(m, Math.min(window.innerHeight - POP_H - m, top_));
-
-  return ReactDOM.createPortal(
-    <div style={{
-      position: 'fixed', left, top: top_, width: POP_W, height: POP_H,
-      pointerEvents: 'none', zIndex: 9000,
-      animation: 'popIn .35s cubic-bezier(.2,.8,.2,1)',
-      transition: 'left .14s ease-out, top .14s ease-out',
-    }}>
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {stack.map((tone, i) => {
-          // depth = how far behind the front this card is, 0..N-1
-          const N = stack.length;
-          const depth = (i - top + N) % N;
-          const isFront = depth === 0;
-          // each card sits slightly behind the one in front of it
-          const offsetX = depth * 14;
-          const offsetY = depth * 8;
-          const rot = ((i * 53) % 13) - 6 + depth * 0.6;
-          const scale = 1 - depth * 0.04;
-          return (
-            <div key={i} style={{
-              position: 'absolute',
-              width: 150, height: 188,
-              background: 'var(--lab-ink,#f2ede3)',
-              padding: 10, paddingBottom: 28,
-              transform: `translate(${offsetX}px, ${offsetY}px) rotate(${rot}deg) scale(${scale})`,
-              transformOrigin: 'center center',
-              boxShadow: isFront
-                ? '0 18px 36px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.45)'
-                : '0 10px 22px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35)',
-              transition: 'transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease',
-              zIndex: N - depth,
-              opacity: 1,
-            }}>
-              <div style={{
-                width: '100%', height: '100%',
-                background: SCENES[tone] || SCENES.studio,
-                position: 'relative', overflow: 'hidden',
-              }}>
-                <div style={{ position: 'absolute', inset: 0,
-                  background: 'repeating-linear-gradient(180deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 4px)' }} />
-                <div style={{ position: 'absolute', inset: 0,
-                  boxShadow: 'inset 0 -30px 60px rgba(0,0,0,0.35)' }} />
-              </div>
-              <div style={{
-                position: 'absolute', left: 0, right: 0, bottom: 6, textAlign: 'center',
-                fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: 1.5,
-                color: 'rgba(20,18,16,0.6)', textTransform: 'uppercase',
-              }}>· {tone} · 0{i + 1}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      <style>{`
-        @keyframes popIn { 0% { opacity: 0; transform: scale(.92); } 100% { opacity: 1; transform: scale(1); } }
-      `}</style>
-    </div>,
-    document.body
-  );
+function HobbyFrame({group,index,paused,onToggle}) {
+  const [photos]=React.useState(()=>shuffleLifePhotos(LIFE_PHOTOS.filter(p=>group.categories.includes(p.category))));
+  const [current,setCurrent]=React.useState(0);
+  const frame=React.useRef(null);
+  React.useEffect(()=>{
+    const motion=matchMedia('(prefers-reduced-motion: reduce)');
+    let timer;
+    const start=()=>{clearInterval(timer);if(paused||motion.matches||photos.length<2)return;
+      timer=setInterval(()=>{const r=frame.current?.getBoundingClientRect();if(!document.hidden&&r&&r.bottom>0&&r.top<innerHeight)setCurrent(n=>(n+1)%photos.length);},1800+index*130);
+    };
+    start();motion.addEventListener('change',start);
+    return()=>{clearInterval(timer);motion.removeEventListener('change',start);};
+  },[paused,photos.length,index]);
+  return <button ref={frame} type="button" className="hobby-expand-frame" onClick={onToggle} aria-pressed={paused} aria-label={group.label+' — click to pause or resume photos'}>
+    {photos.map((p,i)=><img key={p.image} className={i===current?'is-current':''} src={p.image} alt={i===current?group.label+' from my photo journal':''} aria-hidden={i!==current} loading="lazy"/>)}
+    <span>{group.label}</span>
+  </button>;
 }
 
 // ─── 06 — PHOTO COLLECTION (clean grid, hover lift, click to open) ────
@@ -544,7 +433,7 @@ function PhotoCollection() {
   }, [focus, N]);
 
   return (
-    <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
+    <div className="about-photo-collection" style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 40, maxWidth: 1100 }}>
           Stills from <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> <span style={{ fontStyle: 'italic' }}>I&apos;ve walked through.</span>
@@ -559,7 +448,7 @@ function PhotoCollection() {
       }}>
         {photos.map((p, i) => {
           const aspects = ['4 / 5', '5 / 6', '1 / 1', '4 / 5', '3 / 4'];
-          const aspect = aspects[i % aspects.length];
+          const aspect = p.aspect || aspects[i % aspects.length];
           return (
             <Reveal key={i} delay={i * 60} y={20}>
               <PhotoCard p={p} i={i} aspect={aspect} hero={false} onOpen={() => setFocus(i)} />
@@ -582,7 +471,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
   // tape positions alternate
   const tapeLeft = i % 2 === 0;
   return (
-    <div {...hover} onClick={onOpen}
+    <div {...hover} role="button" tabIndex={0} aria-label={"Open "+p.cap} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onOpen();}}} onClick={onOpen}
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{
         position: 'relative',
@@ -625,10 +514,10 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
         {p.image && (
           <img src={p.image} alt={p.cap || ''}
             style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
+              position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain',
               filter: hov ? 'saturate(1.05) contrast(1.04)' : 'saturate(0.95)',
               transition: 'filter .5s ease, transform .8s ease',
-              transform: hov ? 'scale(1.04)' : 'scale(1)',
+              transform: 'none',
             }} />
         )}
         <div style={{ position: 'absolute', inset: 0,
@@ -643,22 +532,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
 
       </div>
 
-      {/* caption strip */}
-      <div style={{
-        position: 'absolute', left: 0, right: 0, bottom: 0, height: hero ? 56 : 42,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 18px',
-        fontFamily: hero ? 'var(--serif)' : 'var(--mono)',
-        fontSize: hero ? 16 : 12,
-        letterSpacing: hero ? 0 : 1.5,
-        fontStyle: hero ? 'italic' : 'normal',
-        color: '#2a2620',
-        textTransform: hero ? 'none' : 'uppercase',
-      }}>
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {hero ? `“${p.cap}”` : `· ${p.cap}`}
-        </span>
-      </div>
+
     </div>
   );
 }
@@ -667,7 +541,7 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
   const p = photos[idx];
   const N = photos.length;
   return (
-    <div onClick={close} style={{
+    <div className="about-photo-lightbox" onClick={close} style={{
       position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(6,5,4,0.94)',
       backdropFilter: 'blur(18px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexDirection: 'column', gap: 24, padding: 40, cursor: 'none',
@@ -677,10 +551,10 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
         boxShadow: '0 48px 120px rgba(0,0,0,0.7)',
         animation: 'pickup .45s cubic-bezier(.2,.8,.2,1)',
       }}>
-        <div style={{ width: 'min(78vw, 980px)', aspectRatio: '4 / 3', background: p.image ? '#0b0b0c' : (SCENES[p.tone] || SCENES.studio), position: 'relative', overflow: 'hidden' }}>
+        <div style={{ width: 'min(78vw, 980px)', height: 'min(65vh,700px)', background: p.image ? '#0b0b0c' : (SCENES[p.tone] || SCENES.studio), position: 'relative', overflow: 'hidden' }}>
           {p.image && (
             <img src={p.image} alt={p.cap || ''}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }} />
           )}
           <div style={{ position: 'absolute', inset: 0,
             background: 'repeating-linear-gradient(180deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px)' }} />
@@ -693,8 +567,8 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
           fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase',
           color: '#2a2620',
         }}>
-          <span>{p.cap}</span>
-          <span>{p.tag} · 0{idx + 1} / 0{N}</span>
+
+
         </div>
       </div>
 
@@ -718,7 +592,7 @@ function PolaroidLightbox({ photos, idx, setIdx, close }) {
 function MoviesSection() {
   const [focus, setFocus] = React.useState(null);
   return (
-    <div style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
+    <div id="about-films" style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
         <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1200 }}>
           Films that <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>inspired</span> my world-building.

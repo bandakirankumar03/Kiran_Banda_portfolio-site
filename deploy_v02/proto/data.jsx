@@ -138,17 +138,17 @@ const SKILLS = [
 // hobbies — each has a stack of photo placeholders that reveal on hover
 const HOBBIES = [
   { emoji: '📷', title: 'Photography',  note: 'Chasing light wherever it lives. Walls, water, weather — anything that holds a shadow.',
-    stack: ['canyon', 'dusk', 'studio', 'forest'] },
+    stack: [{"image": "media/pages/about/selected/img_7757.webp", "aspect": "2268 / 4032", "cap": "Camera under the night sky"}, {"image": "media/pages/about/selected/dscf0601.webp", "aspect": "4160 / 6240", "cap": "Light through stained glass"}, {"image": "media/pages/about/selected/dscf9769.webp", "aspect": "4160 / 6240", "cap": "Stepwell geometry"}] },
   { emoji: '🥾', title: 'Trekking',     note: 'Long walks with a heavier bag than I should be carrying. Mountains for reference. Mostly.',
-    stack: ['forest', 'ice', 'canyon', 'dusk'] },
+    stack: [{"image": "media/pages/about/selected/img_7341.webp", "aspect": "3213 / 5712", "cap": "On the waterfall trail"}, {"image": "media/pages/about/selected/img_2510.webp", "aspect": "4284 / 5712", "cap": "A pause in the mountains"}, {"image": "media/pages/about/selected/img_2606.webp", "aspect": "4032 / 2268", "cap": "Layered mountain ridges"}] },
   { emoji: '✈️', title: 'Travelling',   note: 'Trains, buses, the occasional flight. New air, new ground, new things to scan.',
-    stack: ['dusk', 'rain', 'canyon', 'neon'] },
+    stack: [{"image": "media/pages/about/selected/img_1853.webp", "aspect": "3024 / 4032", "cap": "Exploring a new city"}, {"image": "media/pages/about/selected/img_8067.webp", "aspect": "4284 / 5712", "cap": "Inside the palace courtyard"}, {"image": "media/pages/about/selected/img_6960.webp", "aspect": "3024 / 4032", "cap": "A town in the hills"}] },
   { emoji: '🍳', title: 'Cooking',      note: 'Loud kitchens, too much garlic, and an ongoing argument with biryani.',
-    stack: ['ember', 'studio', 'canyon', 'dusk'] },
+    stack: [{"image": "media/pages/about/selected/img_0172.webp", "aspect": "4284 / 5712", "cap": "From the kitchen"}, {"image": "media/pages/about/selected/img_5940.webp", "aspect": "4284 / 5712", "cap": "A bowl of curry"}, {"image": "media/pages/about/selected/img_5833.webp", "aspect": "4284 / 5712", "cap": "Breakfast at home"}] },
   { emoji: '📚', title: 'Reading books',note: 'Mostly Bachelard, Tanizaki, and design books with no plot. Underlined to death.',
-    stack: ['studio', 'dusk', 'ember', 'rain'] },
+    stack: [{"image": "media/pages/about/selected/img_9996.webp", "aspect": "4284 / 5712", "cap": "A book and a coffee"}] },
   { emoji: '🧪', title: 'Trying new stuff', note: 'Synths, ceramics, fermentation, ham radio — anything I have no business knowing yet.',
-    stack: ['neon', 'ice', 'ember', 'studio'] },
+    stack: [{"image": "media/pages/about/selected/img_5503.webp", "aspect": "4284 / 5712", "cap": "Colour on the pavement"}, {"image": "media/pages/about/selected/img_9617.webp", "aspect": "4284 / 5712", "cap": "Picking up the guitar"}, {"image": "media/pages/about/selected/img_7561.webp", "aspect": "4284 / 5712", "cap": "A different kind of practice"}] },
 ];
 
 // favourite films rated
@@ -177,12 +177,40 @@ const EXPERIENCE = [
   { yr: 'Jan — Mar 2024', role: 'VFX Lighting Artist (Intern)', org: 'Green Gold Animation · Hyderabad', note: 'Lighting on the animated TV series Booth Bandhuk. Production-ready rigs, mood/depth/consistency, AOV pass management for compositing.' },
 ];
 
-// CERTIFICATES — kept generic since none on resume; replace as earned
+// Verified Credly badges supplied by Kiran.
 const CERTIFICATES = [
-  { yr: '2025', title: 'XR Stage · Brain Operation',     org: 'SCAD',                kind: 'Hands-on' },
-  { yr: '2025', title: 'Unreal Engine 5 · Production',   org: 'Epic Online Learning',kind: 'Course' },
-  { yr: '2024', title: 'Reality Capture · Workflows',    org: 'Capturing Reality',   kind: 'Self-taught' },
-  { yr: '2024', title: 'AI-Assisted Asset Pipelines',    org: 'Independent study',   kind: 'Workflow' },
+  {
+    "id": "8bdf1d6e-5ed6-41b0-b622-cb45b188b7c8",
+    "title": "SCADamp: GET READY Badge"
+  },
+  {
+    "id": "e0cf4c1d-b6a6-47b9-95d3-ec2e700c3564",
+    "title": "SCADamp: STAND OUT Badge"
+  },
+  {
+    "id": "84ba3738-b948-4df1-afdf-edba779079d3",
+    "title": "SCADamp: STEP UP Badge"
+  },
+  {
+    "id": "30bdbe4d-2f0e-410b-911d-1ae0590b33b1",
+    "title": "SCADextra Master Class - Elevate Your Creative Horizons"
+  },
+  {
+    "id": "b686b303-5eaf-42ab-a230-918f13e499ec",
+    "title": "SCADamp: Essentials Certificate of Completion"
+  },
+  {
+    "id": "651931ec-f9bb-401a-afa2-3377af66e033",
+    "title": "SCADamp: DELIVER Badge"
+  },
+  {
+    "id": "d5d50c87-30ae-4269-90bb-98b5dae992d7",
+    "title": "SCADamp: BREAK THROUGH Badge"
+  },
+  {
+    "id": "b9f3734e-9c2e-4789-b462-1540b1b0e747",
+    "title": "SCADamp: Advanced Certificate of Completion"
+  }
 ];
 
 // inline gallery stills (for About page photo collection)
@@ -192,11 +220,31 @@ const CERTIFICATES = [
 //     image: 'media/pages/about/gallery/01.jpg' },
 // If `image` is missing, the gradient placeholder shows instead.
 const GALLERY = [
-  { tone: 'forest', cap: 'sanctuary / 02:41:13',  tag: 'UE5'     /*, image: 'media/pages/about/gallery/01.jpg' */ },
-  { tone: 'rain',   cap: 'platform 3 · rain',     tag: 'plate'   /*, image: 'media/pages/about/gallery/02.jpg' */ },
-  { tone: 'neon',   cap: 'alley · sign flicker',  tag: 'lookdev' /*, image: 'media/pages/about/gallery/03.jpg' */ },
-  { tone: 'canyon', cap: 'stone 041 · scan',      tag: '8K'      /*, image: 'media/pages/about/gallery/04.jpg' */ },
-  { tone: 'dusk',   cap: 'sunrise · reference',   tag: 'ref'     /*, image: 'media/pages/about/gallery/05.jpg' */ },
+  {
+    "image": "media/pages/about/selected/dscf0601.webp",
+    "aspect": "4160 / 6240",
+    "cap": "Stained light"
+  },
+  {
+    "image": "media/pages/about/selected/dscf9769.webp",
+    "aspect": "4160 / 6240",
+    "cap": "Stepwell geometry"
+  },
+  {
+    "image": "media/pages/about/selected/img_2606.webp",
+    "aspect": "4032 / 2268",
+    "cap": "Layered mountains"
+  },
+  {
+    "image": "media/pages/about/selected/img_8884.webp",
+    "aspect": "4536 / 8064",
+    "cap": "Waterfall in the mist"
+  },
+  {
+    "image": "media/pages/about/selected/img_9009.webp",
+    "aspect": "3024 / 4032",
+    "cap": "Forest stream"
+  }
 ];
 
 // ── Case-study extras ─────────────────────────────────────
