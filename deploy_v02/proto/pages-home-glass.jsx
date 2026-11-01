@@ -30,7 +30,7 @@ function ProjectHighlights(){
   const [active,setActive]=React.useState(0),[paused,setPaused]=React.useState(false);
   React.useEffect(()=>{
     let frame=0;
-    const update=()=>{frame=0;if(paused)return;const r=ref.current.getBoundingClientRect();const p=Math.max(0,Math.min(.999,-r.top/Math.max(1,r.height-innerHeight)));setActive(Math.floor(p*HOME_HIGHLIGHTS.length));};
+    const update=()=>{frame=0;if(paused||!ref.current)return;const r=ref.current.getBoundingClientRect();const p=Math.max(0,Math.min(.999,-r.top/Math.max(1,r.height-innerHeight)));setActive(Math.floor(p*HOME_HIGHLIGHTS.length));};
     const tick=()=>{if(!frame)frame=requestAnimationFrame(update);};
     window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();
     return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);};
@@ -274,7 +274,7 @@ function ProjectCarousel({ onOpen }) {
       `}</style>
       <Reveal>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'baseline', padding: '0 var(--pad)', marginBottom: 48, fontFamily: 'var(--mono)', fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)' }}>
-          <span style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: 'var(--lab-ink,#f2ede3)', fontWeight: 300 }}>
+          <span data-main-headline style={{ fontFamily: 'var(--serif, var(--mono))', fontSize: 'clamp(44px, 6vw, 76px)', lineHeight: 1, letterSpacing: -1.5, textTransform: 'none', color: 'var(--lab-ink,#f2ede3)', fontWeight: 300 }}>
             worlds,&nbsp;<span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>so far</span>
           </span>
           <div className="work-carousel-actions"><NavLink onClick={() => window.__go__({ name: 'work' })} style={{ color: 'var(--accent)' }}>

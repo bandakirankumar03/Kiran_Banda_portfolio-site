@@ -105,7 +105,7 @@ const PROJECTS = [
   {slug:'unreal-environment-studies',title:'Unreal Environment Studies',role:'Environment Artist',kind:'Environment',kindShort:'ENV',tone:'forest',tags:['Unreal Engine','Cinematics','Materials'],hero:'media/projects/Golden_Rain/web/view-1.jpg',tagline:'Golden Rain & Hidden Realm — studies in atmosphere, materials, and cinematic cameras.',blurb:'Two environments exploring how lighting, materials, and camera movement shape a scene in Unreal Engine.',breakdown:[]},
   // ── VFX Demo Reel (1) ──────────────────────────────────────
   {slug:'vfx-compositing-works', title:'VFX Compositing Demo Reel', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
-    hero:'media/pages/home/vfx-compositing-cover.jpg',
+    hero:'media/pages/home/vfx-compositing-cover.jpg', heroVideo:'media/pages/home/vfx-reel-glimpse.mp4',
     tagline:'Selected compositing work from my undergraduate years.',
     blurb:'Before moving into Unreal Engine, I developed my foundation in VFX compositing during my undergraduate studies. This reel brings together selected work from that period.', breakdown:[]},
 ];

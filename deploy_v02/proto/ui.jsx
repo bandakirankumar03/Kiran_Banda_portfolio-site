@@ -126,7 +126,7 @@ function Scene({ tone = 'dusk', cap, tag, children, style = {}, interactive = fa
   const showPoster = poster && !postFailed;
   const hasMedia = vid || showVideo || showImage;
   return (
-    <div onClick={onClick} {...(interactive ? hover : {})}
+    <div className="scene-surface" onClick={onClick} {...(interactive ? hover : {})}
       style={{
         position: 'relative', overflow: 'hidden',
         background: hasMedia ? '#0b0b0c' : (SCENES[tone] || SCENES.dusk),

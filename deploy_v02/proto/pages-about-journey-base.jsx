@@ -393,7 +393,7 @@ function HobbiesSection() {
   const [paused,setPaused]=React.useState(false);
   return <section className="about-journal-section life-frames">
     <h2 className="about-section-title">Life <em>outside the frame.</em></h2>
-    <p className="life-caption">Travelling, cooking, tasting something new, and finding adventure in the everyday.</p>
+    <p data-heading-caption className="life-caption">Travelling, cooking, tasting something new, and finding adventure in the everyday.</p>
     <div className="hobby-accordion">{groups.map((g,i)=><HobbyFrame key={g.label} group={g} index={i} paused={paused} onToggle={()=>setPaused(v=>!v)}/>)}</div>
   </section>;
 }
@@ -438,7 +438,7 @@ function PhotoCollection() {
   return (
     <div className="about-photo-collection" style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
-        <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 40, maxWidth: 1100 }}>
+        <div data-main-headline style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 40, maxWidth: 1100 }}>
           Stills from <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> <span style={{ fontStyle: 'italic' }}>I&apos;ve walked through.</span>
         </div>
       </Reveal>
@@ -474,7 +474,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
   // tape positions alternate
   const tapeLeft = i % 2 === 0;
   return (
-    <div {...hover} role="button" tabIndex={0} aria-label={"Open "+p.cap} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onOpen(e.currentTarget.getBoundingClientRect());}}} onClick={e=>onOpen(e.currentTarget.getBoundingClientRect())}
+    <div data-photo-frame {...hover} role="button" tabIndex={0} aria-label={"Open "+p.cap} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onOpen(e.currentTarget.getBoundingClientRect());}}} onClick={e=>onOpen(e.currentTarget.getBoundingClientRect())}
       onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{
         position: 'relative',
@@ -559,7 +559,7 @@ function MoviesSection() {
   return (
     <div id="about-films" style={{ padding: 'clamp(48px,10vw,90px) var(--pad)' }}>
       <Reveal delay={80}>
-        <div style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1200 }}>
+        <div data-main-headline style={{ fontSize: 'clamp(44px, 6vw, 88px)', lineHeight: 1, letterSpacing: -2, fontWeight: 300, marginBottom: 44, maxWidth: 1200 }}>
           Films that <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>inspired</span> my world-building.
         </div>
       </Reveal>

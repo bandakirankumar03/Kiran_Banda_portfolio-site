@@ -61,7 +61,7 @@ function App() {
   let page;
   if (route.name === 'home')    page = <HomePage />;
   else if (route.name === 'work')    page = <WorkPage />;
-  else if (route.name === 'about')   page = <AboutPage />;
+  else if (route.name === 'about')   page = <PortraitPreviewPage />;
   else if (route.name === 'contact') page = <ContactPage />;
   else if (route.name === 'case')    page = <CasePage key={route.slug} slug={route.slug} />;
   else page = <HomePage />;
@@ -82,7 +82,7 @@ function App() {
           <>
             <Nav />
             <div key={route.name+':' +(route.slug || '')} className={'site-page route-arrival site-page-' + route.name+(leaving?' route-leaving':'')} aria-busy={leaving}>{page}</div>
-            <SiteScrollMotion routeKey={route.name+':' +(route.slug || '')}/><CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
+            <FloatingSurfaces routeKey={route.name+':'+(route.slug||'')}/><HeadlineMotion routeKey={route.name+':' +(route.slug || '')}/><SiteScrollMotion routeKey={route.name+':' +(route.slug || '')}/><CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
 
           </>
         )}
