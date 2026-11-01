@@ -181,46 +181,43 @@ function Scene({ tone = 'dusk', cap, tag, children, style = {}, interactive = fa
 
 // ─── Scroll-triggered reveal ───────────────────────────────
 function Reveal({ children, delay = 0, y = 30, as: Tag = 'div', className, style = {} }) {
-  const ref = useRef(null);
-  const [shown, setShown] = useState(false);
-  const [reduced,setReduced]=useState(false);
-  useEffect(() => {
-    const element=ref.current;
-    const isCase=!!element?.closest('.case-cinematic');
-    const motion=matchMedia('(prefers-reduced-motion: reduce)');
-    let animation=null,speed=0;
-    const accelerate=e=>{
-      speed=e.detail.speed;
-      if(animation?.playState==='running')animation.updatePlaybackRate(1+Math.min(2,speed/2));
-    };
-    const preference=()=>{setReduced(motion.matches);if(motion.matches){animation?.finish();setShown(true);}};
-    preference();
-    motion.addEventListener('change',preference);
-    if(isCase)window.addEventListener('case-scroll-motion',accelerate);
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry=>{
-        if(!entry.isIntersecting)return;
-        if(isCase && !motion.matches && element.animate){
-          animation=element.animate([
-            {opacity:0,transform:`translateY(${Math.min(y,36)}px)`},
-            {opacity:1,transform:'translateY(0)'}
-          ],{duration:1200,delay:speed>1?0:Math.min(delay,150),easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});
-          animation.updatePlaybackRate(1+Math.min(2,speed/2));
-        }
-        setShown(true);io.disconnect();
-      });
-    },{threshold:isCase?0:.12,rootMargin:isCase?'0px 0px -24px 0px':'0px'});
-    if(element)io.observe(element);
-    return ()=>{io.disconnect();animation?.cancel();motion.removeEventListener('change',preference);window.removeEventListener('case-scroll-motion',accelerate);};
-  }, []);
-  return (
-    <Tag ref={ref} className={className} data-reveal={shown?'shown':'pending'} style={{
-      opacity:shown?1:0,
-      transform:shown?'translateY(0)':`translateY(${y}px)`,
-      transition: reduced?'none':`opacity .9s ${delay}ms ease, transform .9s ${delay}ms cubic-bezier(.2,.7,.2,1)`,
-      ...style,
-    }}>{children}</Tag>
-  );
+ return <Tag className={className} data-reveal="shown" data-scroll-reveal="" style={style}>{children}</Tag>;
+}
+function SiteScrollMotion({routeKey}){
+ React.useEffect(()=>{
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');let frame=0;
+  const page=document.querySelector('.site-page');if(!page)return;
+  // Animate content groups, not sticky containers or moving carousel cards.
+  const candidates=[...page.querySelectorAll('[data-reveal],section,.home-intro,.ongoing-section,.home-projects,.radar-section h2,.radar-item,.cinema-track,.favourites-heading,.favourites-stage,.contact-layout>div')];
+  const nodes=candidates.filter(el=>(!el.closest('.scroll-favourites')||el.matches('.favourites-heading,.favourites-stage'))&&!el.matches('.home-projects,.radar-section')&&!el.querySelector('[data-reveal],.radar-item,.cinema-track'));
+  const previous=[...page.querySelectorAll('[data-scroll-reveal]')];previous.forEach(el=>{el.removeAttribute('data-scroll-reveal');el.style.removeProperty('--reveal-opacity');el.style.removeProperty('--reveal-y');el.style.removeProperty('--reveal-x');el.style.removeProperty('--reveal-scale');});
+  nodes.forEach((el,i)=>{
+   el.setAttribute('data-scroll-reveal','');
+   const image=el.matches('.cinema-track,.favourites-stage')||!!el.querySelector('img,video');
+   const compact=el.matches('.radar-item')||el.getBoundingClientRect().height<200;
+   el.dataset.revealMotion=image?'image':compact?'detail':'editorial';
+
+     el.dataset.revealOrder=el.matches('.radar-item')?String([...el.parentElement.children].indexOf(el)%3):'0';
+  });
+  const update=()=>{frame=0;nodes.forEach(el=>{
+   const rect=el.getBoundingClientRect();
+   const oldY=parseFloat(el.style.getPropertyValue('--reveal-y'))||0;
+   const oldScale=parseFloat(el.style.getPropertyValue('--reveal-scale'))||1;
+   const top=rect.top-oldY-(el.offsetHeight*(1-oldScale)/2);
+   const stagger=Number(el.dataset.revealOrder)*18;
+   const p=reduced.matches?1:Math.max(0,Math.min(1,(innerHeight-top-18-stagger)/(innerHeight*.55)));
+   const ease=p*p*(3-2*p),remaining=1-ease;
+   const kind=el.dataset.revealMotion;
+   el.style.setProperty('--reveal-opacity',String(.12+.88*ease));
+   el.style.setProperty('--reveal-x','0px');
+   el.style.setProperty('--reveal-y',`${remaining*(kind==='image'?36:kind==='detail'?28:56)}px`);
+   el.style.setProperty('--reveal-scale',String(kind==='image'?.90+.10*ease:1));
+  });};
+  const tick=()=>{if(!frame)frame=requestAnimationFrame(update);};
+  const focus=e=>{const el=e.target.closest('[data-scroll-reveal]');if(el){el.style.setProperty('--reveal-opacity','1');el.style.setProperty('--reveal-y','0px');el.style.setProperty('--reveal-x','0px');el.style.setProperty('--reveal-scale','1');}};
+  page.addEventListener('focusin',focus);window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);reduced.addEventListener('change',tick);update();
+  return()=>{cancelAnimationFrame(frame);page.removeEventListener('focusin',focus);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);reduced.removeEventListener('change',tick);};
+ },[routeKey]);return null;
 }
 
 // ─── Nav (logo only · larger) ──────────────────────────────

@@ -105,7 +105,7 @@ const PROJECTS = [
   {slug:'unreal-environment-studies',title:'Unreal Environment Studies',role:'Environment Artist',kind:'Environment',kindShort:'ENV',tone:'forest',tags:['Unreal Engine','Cinematics','Materials'],hero:'media/projects/Golden_Rain/web/view-1.jpg',tagline:'Golden Rain & Hidden Realm — studies in atmosphere, materials, and cinematic cameras.',blurb:'Two environments exploring how lighting, materials, and camera movement shape a scene in Unreal Engine.',breakdown:[]},
   // ── VFX Demo Reel (1) ──────────────────────────────────────
   {slug:'vfx-compositing-works', title:'VFX Compositing Demo Reel', role:'VFX Compositor', kind:'VFX Reel', kindShort:'REEL', tone:'dusk', tags:['VFX','Compositing'],
-    hero:'https://i.vimeocdn.com/video/2213338051-a8295a7e0a7fa1ba75fb7b2a7d02dafb353a488261673f106269e9404349fc15-d_295x166?region=us',
+    hero:'media/pages/home/vfx-compositing-cover.jpg',
     tagline:'Selected compositing work from my undergraduate years.',
     blurb:'Before moving into Unreal Engine, I developed my foundation in VFX compositing during my undergraduate studies. This reel brings together selected work from that period.', breakdown:[]},
 ];
@@ -132,7 +132,7 @@ const SKILLS = [
   { group: 'Tools',      items: ['Unreal Engine 5', 'Maya', 'Blender', 'SpeedTree', 'Gaea', 'RealityCapture', 'Houdini', 'EmberGen', 'Substance Painter', 'Photoshop', 'After Effects', 'Premiere Pro', 'DaVinci Resolve', 'Nuke'] },
   { group: 'Core',       items: ['Environment Art', 'Unreal Environment Design', 'Modular Asset Creation', 'Photogrammetry', 'Level Dressing', 'Real-Time Lighting (Lumen)', 'Cinematic Composition', 'Mocap', 'Virtual Production', 'XR Stage Fundamentals'] },
   { group: 'Technical',  items: ['PBR Texturing', 'Material Creation', 'Scene Optimization', 'Performance Testing', 'Procedural Set Dressing', 'nDisplay', 'Brain Operation'] },
-  { group: 'Workflows',  items: ['AI Workflows · Across Production', 'Retopology', 'Texture Baking', 'AOV Passes', 'Face Tracking'] },
+  { group: 'Workflows',  items: ['AI Workflows · Across Production', 'Retopology', 'Texture Baking', 'AOV Passes'] },
 ];
 
 // hobbies — each has a stack of photo placeholders that reveal on hover
@@ -173,7 +173,7 @@ const EDUCATION = [
 // EXPERIENCE — straight from resume + current student VP roles
 const EXPERIENCE = [
   { yr: '2025 — now',  role: 'Env. Artist & Brain Operator', org: 'SCAD · XR Stage Productions', note: 'Built environments and ran the brain on two XR-stage shorts (XR01 Chinese Temple, The Parley). nDisplay, LED budgets, on-set live ops.' },
-  { yr: 'Mar — May 2024', role: 'VFX Compositor (Intern)', org: 'Studio Raaga · Remote', note: 'Prep and face-tracking for a short film in Nuke. Clean mattes, organized node graphs, and a lot of node-graph etiquette I still use.' },
+  { yr: 'Mar — May 2024', role: 'VFX Compositor (Intern)', org: 'Studio Raaga · Remote', note: 'Prep and compositing for a short film in Nuke. Clean mattes, organized node graphs, and a lot of node-graph etiquette I still use.' },
   { yr: 'Jan — Mar 2024', role: 'VFX Lighting Artist (Intern)', org: 'Green Gold Animation · Hyderabad', note: 'Lighting on the animated TV series Booth Bandhuk. Production-ready rigs, mood/depth/consistency, AOV pass management for compositing.' },
 ];
 

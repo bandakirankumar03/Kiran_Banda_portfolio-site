@@ -3,11 +3,11 @@
 
 function Intro({ onEnter }) {
   // stage indices:
-  //  0 = pre (black)
+  //  0 = pre (palette background)
   //  1 = wireframe (logo line-art, scanlines, grid)
   //  2 = solid (filled silhouette in mid-grey)
-  //  3 = texture (lavender albedo + grain)
-  //  4 = lit (white accent + soft halo)
+  //  3 = texture (palette accent + grain)
+  //  4 = lit (palette ink + soft halo)
   //  5 = pull-back / fade (logo shrinks, viewfinder corners pull in, fade)
   const [stage, setStage] = React.useState(0);
 
@@ -45,7 +45,7 @@ function Intro({ onEnter }) {
   return (
     <div className="site-intro" style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: '#0b0b0c',
+      background: 'var(--bg)',
       opacity: stage >= 6 ? 0 : 1, transition: 'opacity .8s ease',
       pointerEvents: stage >= 6 ? 'none' : 'auto',
       overflow: 'hidden', cursor: 'none',
@@ -54,8 +54,8 @@ function Intro({ onEnter }) {
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `
-          linear-gradient(rgba(180,170,255,0.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(180,170,255,0.06) 1px, transparent 1px)
+          linear-gradient(color-mix(in srgb,var(--accent) 6%,transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in srgb,var(--accent) 6%,transparent) 1px, transparent 1px)
         `,
         backgroundSize: '64px 64px',
         opacity: stage === 1 ? 1 : stage >= 2 && stage < 5 ? 0.25 : 0,
@@ -68,7 +68,7 @@ function Intro({ onEnter }) {
       {stage === 1 && (
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'linear-gradient(180deg, transparent 0%, rgba(180,170,255,0.18) 50%, transparent 100%)',
+          background: 'linear-gradient(180deg, transparent 0%, color-mix(in srgb,var(--accent) 18%,transparent) 50%, transparent 100%)',
           backgroundSize: '100% 220px',
           animation: 'scanSweep 1s linear',
         }} />
@@ -80,6 +80,7 @@ function Intro({ onEnter }) {
         flexDirection: 'column', gap: 36,
       }}>
         <div style={{
+          filter: stage >= 4 ? 'drop-shadow(0 0 20px color-mix(in srgb,var(--accent) 30%,transparent))' : 'none',
           position: 'relative', width: 'min(480px, calc(100vw - 64px))', height: 'auto', aspectRatio: '12 / 7',
           transform: stage >= 5 ? 'scale(0.42) translateY(-18vh)' : 'scale(1)',
           transition: 'transform 1.1s cubic-bezier(.6,.0,.2,1)',
@@ -94,10 +95,10 @@ function Intro({ onEnter }) {
             return (
               <div key={i} style={{
                 position: 'absolute', ...c, width: 38, height: 38,
-                borderTop: isTop ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
-                borderBottom: !isTop ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
-                borderLeft: isLeft ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
-                borderRight: !isLeft ? '1.5px solid var(--lab-primary,#F32E35)' : 'none',
+                borderTop: isTop ? '1.5px solid var(--accent)' : 'none',
+                borderBottom: !isTop ? '1.5px solid var(--accent)' : 'none',
+                borderLeft: isLeft ? '1.5px solid var(--accent)' : 'none',
+                borderRight: !isLeft ? '1.5px solid var(--accent)' : 'none',
                 opacity: stage >= 1 && stage < 5 ? 1 : 0,
                 transform: `translate(${isLeft ? '-6px' : '6px'}, ${isTop ? '-6px' : '6px'}) ` +
                            (stage >= 1 ? 'translate(0,0)' : ''),
@@ -107,33 +108,29 @@ function Intro({ onEnter }) {
           })}
 
           {/* WIRE: logo as outline only via filter trick — drop shadow + invert thin */}
-          <img src="proto/logo.png" alt="" style={{
-            position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
-            objectFit: 'contain',
-            opacity: stage === 1 ? 1 : 0,
-            filter: 'brightness(0) invert(1)',
-            mixBlendMode: 'screen',
-            // emulate "wireframe" look: high-contrast edges via outline trick + dotted overlay
-            maskImage: 'repeating-linear-gradient(45deg, black 0 1.5px, transparent 1.5px 4px)',
-            WebkitMaskImage: 'repeating-linear-gradient(45deg, black 0 1.5px, transparent 1.5px 4px)',
+          <div role="img" aria-label="Kiran Banda" style={{
+            position: 'absolute', inset: 40,
+            mask: 'url("proto/logo.png") center / contain no-repeat',
+            WebkitMask: 'url("proto/logo.png") center / contain no-repeat',
+            background: 'repeating-linear-gradient(45deg,var(--accent) 0 1.5px,transparent 1.5px 4px)', opacity: stage === 1 ? 1 : 0,
             transition: 'opacity .35s ease',
           }} />
 
           {/* SOLID: filled mid-grey silhouette */}
-          <img src="proto/logo.png" alt="" style={{
-            position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
-            objectFit: 'contain',
-            opacity: stage === 2 ? 1 : 0,
-            filter: 'invert(48%) sepia(8%) saturate(50%) brightness(0.85)',
+          <div role="img" aria-label="Kiran Banda" style={{
+            position: 'absolute', inset: 40,
+            mask: 'url("proto/logo.png") center / contain no-repeat',
+            WebkitMask: 'url("proto/logo.png") center / contain no-repeat',
+            background: 'color-mix(in srgb,var(--ink) 45%,var(--bg))', opacity: stage === 2 ? 1 : 0,
             transition: 'opacity .35s ease',
           }} />
 
-          {/* TEXTURE: lavender albedo, no light yet */}
-          <img src="proto/logo.png" alt="" style={{
-            position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
-            objectFit: 'contain',
-            opacity: stage === 3 ? 1 : 0,
-            filter: 'brightness(0) saturate(100%) invert(76%) sepia(18%) saturate(900%) hue-rotate(202deg)',
+          {/* TEXTURE: palette accent, no light yet */}
+          <div role="img" aria-label="Kiran Banda" style={{
+            position: 'absolute', inset: 40,
+            mask: 'url("proto/logo.png") center / contain no-repeat',
+            WebkitMask: 'url("proto/logo.png") center / contain no-repeat',
+            background: 'var(--accent)', opacity: stage === 3 ? 1 : 0,
             transition: 'opacity .35s ease',
           }} />
           {stage === 3 && (
@@ -144,65 +141,65 @@ function Intro({ onEnter }) {
             }} />
           )}
 
-          {/* LIT: white accent + soft glow */}
-          <img src="proto/logo.png" alt="Kiran Banda" style={{
-            position: 'absolute', inset: 40, width: 'calc(100% - 80px)', height: 'calc(100% - 80px)',
-            objectFit: 'contain',
-            opacity: stage >= 4 ? 1 : 0,
-            filter: 'brightness(0) invert(1) drop-shadow(0 0 20px rgba(180,170,255,0.25))',
-            transition: 'opacity .5s ease',
+          {/* LIT: palette ink + soft glow */}
+          <div role="img" aria-label="Kiran Banda" style={{
+            position: 'absolute', inset: 40,
+            mask: 'url("proto/logo.png") center / contain no-repeat',
+            WebkitMask: 'url("proto/logo.png") center / contain no-repeat',
+            background: 'var(--ink)', opacity: stage >= 4 ? 1 : 0,
+            transition: 'opacity .35s ease',
           }} />
         </div>
 
         {/* stage label + progress bar */}
         <div className="intro-progress-labels" style={{
           fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: 3,
-          textTransform: 'uppercase', color: 'rgba(242,237,227,0.7)',
+          textTransform: 'uppercase', color: 'color-mix(in srgb,var(--ink) 70%,transparent)',
           opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
           display: 'flex', alignItems: 'center', gap: 22, minWidth: 520, justifyContent: 'space-between',
         }}>
-          <span style={{ color: 'rgba(242,237,227,0.4)' }}>render</span>
+          <span style={{ color: 'color-mix(in srgb,var(--ink) 40%,transparent)' }}>render</span>
           <div className="intro-stages" style={{ display: 'flex', gap: 12, fontSize: 12 }}>
             {['wire', 'solid', 'texture', 'lit'].map((s, i) => (
-              <span key={s} style={{ color: stage === i + 1 ? 'var(--lab-primary,#F32E35)' : stage > i + 1 ? 'rgba(242,237,227,0.7)' : 'rgba(242,237,227,0.25)' }}>
+              <span key={s} style={{ color: stage === i + 1 ? 'var(--accent)' : stage > i + 1 ? 'color-mix(in srgb,var(--ink) 70%,transparent)' : 'color-mix(in srgb,var(--ink) 25%,transparent)' }}>
                 {String(i + 1).padStart(2, '0')} · {s}
               </span>
             ))}
           </div>
-          <span style={{ color: 'var(--lab-primary,#F32E35)', minWidth: 40, textAlign: 'right' }}>
+          <span style={{ color: 'var(--accent)', minWidth: 40, textAlign: 'right' }}>
             {stage <= 0 ? '00%' : stage === 1 ? '25%' : stage === 2 ? '50%' : stage === 3 ? '75%' : '100%'}
           </span>
         </div>
 
         {/* under-progress bar */}
         <div className="intro-progress-track" style={{
-          width: 520, height: 1, background: 'rgba(242,237,227,0.12)', position: 'relative',
+          width: 520, height: 1, background: 'color-mix(in srgb,var(--ink) 12%,transparent)', position: 'relative',
           opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s', marginTop: -22,
         }}>
           <div style={{
             position: 'absolute', left: 0, top: -0.5, height: 2,
-            background: 'var(--lab-primary,#F32E35)',
+            background: 'var(--accent)',
             width: `${stage <= 0 ? 0 : Math.min(100, stage * 25)}%`,
             transition: 'width .8s cubic-bezier(.2,.7,.2,1)',
-            boxShadow: '0 0 12px rgba(180,170,255,0.6)',
+            boxShadow: '0 0 12px color-mix(in srgb,var(--accent) 60%,transparent)',
           }} />
         </div>
 
         {/* final wordmark line — appears at LIT */}
         <div className="intro-wordmark" style={{
           fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: 4,
-          textTransform: 'uppercase', color: 'rgba(242,237,227,0.6)',
+          textTransform: 'uppercase', color: 'color-mix(in srgb,var(--ink) 60%,transparent)',
           opacity: stage >= 4 && stage < 5 ? 1 : 0, transition: 'opacity .6s',
           marginTop: -4,
         }}>
-          <span style={{ color: 'var(--lab-primary,#F32E35)' }}>kiran banda</span> &nbsp;·&nbsp; environment artist
+          <span style={{ color: 'var(--accent)' }}>kiran banda</span> &nbsp;·&nbsp; environment artist
         </div>
       </div>
 
       {/* skip hint */}
       <div style={{
         position: 'absolute', bottom: 28, right: 32,
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.4)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 40%,transparent)',
         letterSpacing: 2, textTransform: 'uppercase',
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
@@ -212,7 +209,7 @@ function Intro({ onEnter }) {
       {/* corner timestamps */}
       <div style={{
         position: 'absolute', top: 24, left: 28,
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 45%,transparent)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
@@ -222,7 +219,7 @@ function Intro({ onEnter }) {
       </div>
       <div style={{
         position: 'absolute', top: 24, right: 28, textAlign: 'right',
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'rgba(242,237,227,0.45)',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 45%,transparent)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
         opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
       }}>
