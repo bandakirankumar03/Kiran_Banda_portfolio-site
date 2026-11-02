@@ -196,16 +196,6 @@ function Intro({ onEnter }) {
         </div>
       </div>
 
-      {/* skip hint */}
-      <div style={{
-        position: 'absolute', bottom: 28, right: 32,
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 40%,transparent)',
-        letterSpacing: 2, textTransform: 'uppercase',
-        opacity: stage >= 1 && stage < 5 ? 1 : 0, transition: 'opacity .4s',
-      }}>
-        tap or press Enter to skip
-      </div>
-
       {/* corner timestamps */}
       <div style={{
         position: 'absolute', top: 24, left: 28,

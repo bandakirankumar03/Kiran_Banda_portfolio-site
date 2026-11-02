@@ -5,7 +5,7 @@ const PORTRAIT_STUDIES=[
  ['The vertical poster','A tall, graphic composition inspired by a film one-sheet.'],
  ['Quiet studio','A minimal studio portrait with open space and a restrained sage backdrop.']
 ];
-function PortraitPreviewPage(){return <div className="about-portrait-selected"><PortraitStudies/><AboutPractice portraitMotion/><HobbiesSection/><PhotoCollection/><FilmPreview/><Footer/></div>}
+function PortraitPreviewPage(){return <div className="about-portrait-selected portrait-refined" data-backdrop="1"><PortraitStudies/><AboutPractice portraitMotion/><HobbiesSection/><PhotoCollection/><FilmPreview/><Footer/></div>}
 function PortraitStudies(){
  const design=0;
  const [open,setOpen]=React.useState(false);const stage=React.useRef(null);
@@ -17,7 +17,7 @@ function PortraitStudies(){
   <div className="portrait-backplate" aria-hidden="true"/><div className="portrait-backtype" aria-hidden="true">{design===4?'KIRAN':design===3?'BANDA':'KIRAN'}</div>
   <div className="portrait-scene-copy"><p className="portrait-greeting">Hi, I’m</p><h1>Kiran <em>Banda.</em></h1><PortraitRoles/></div>
   <button type="button" className="portrait-person" onClick={()=>setOpen(true)} aria-label="Open original portrait of Kiran Banda"><img src="media/pages/about/portrait-cutout-preview.png" alt="Kiran Banda in a black blazer, arms folded" width="1088" height="1440"/></button>
-  <div className="portrait-side-note"><span>Light. Atmosphere. Story.</span><p>Real places.<br/>Imagined worlds.</p><a href="#/work">Explore my work ↗</a></div>
+  <div className="portrait-side-note"><span>Light. Atmosphere. Story.</span><p>Real places.<br/><em>Imagined worlds.</em></p><a href="#/work">Explore my work ↗</a></div>
  </div>
 
  {open&&<PolaroidLightbox photos={[{image:'media/pages/about/portrait.jpg',cap:'Kiran Banda'}]} idx={0} close={()=>setOpen(false)}/>}

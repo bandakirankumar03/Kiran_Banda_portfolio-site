@@ -35,7 +35,7 @@ function ProjectHighlights(){
     window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();
     return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);};
   },[paused]);
-  return <section className="scroll-favourites" ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2><span>Scroll to explore ↓</span></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt}/></button></article>)}</div></div></section>;
+  return <section className="scroll-favourites" ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt}/></button></article>)}</div></div></section>;
 }
 
 // ─── Fullscreen demo reel hero — pure visual, no overlay text ─
@@ -142,16 +142,6 @@ function ReelHero() {
         )}
       </div>
 
-      {/* tiny scroll cue only */}
-      <div style={{
-        position: 'absolute', bottom: isMobile ? 12 : 36, left: 0, right: 0, textAlign: 'center',
-        fontFamily: 'var(--mono)', fontSize: isMobile ? 10 : 14, color: 'rgba(242,237,227,0.75)',
-        letterSpacing: 3, textTransform: 'uppercase', zIndex: 5, opacity: fgOpacity,
-      }}>
-        <div style={{ fontSize: 18, color: 'var(--accent)', marginBottom: 8, animation: 'bobY 1.8s infinite' }}>↓</div>
-        scroll
-      </div>
-
       <style>{`
         @keyframes reelDrift { 0% { transform: scale(1.1) translateX(-1.5%); } 100% { transform: scale(1.1) translateX(1.5%); } }
         @keyframes bobY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
@@ -203,16 +193,14 @@ function ProjectCarousel({ onOpen }) {
   const trackRef = React.useRef(null);
   const dragRef=React.useRef(null),dragged=React.useRef(false);
   const posRef = React.useRef(0);
-  const speedRef = React.useRef(1.1);
-  const dispRef = React.useRef(1.1);
+  const speedRef = React.useRef(1.65);
+  const dispRef = React.useRef(1.65);
   const cursorXRef = React.useRef(null);
   const manualRef = React.useRef(0);
-  const pauseUntilRef = React.useRef(0);
   const moveByCard = direction => {
     const cards = trackRef.current?.querySelectorAll('[data-card]');
     if (!cards || cards.length < 2) return;
     manualRef.current -= direction * (cards[1].offsetLeft - cards[0].offsetLeft);
-    pauseUntilRef.current = performance.now() + 2200;
   };
   const loop = [...PROJECTS, ...PROJECTS];
 
@@ -227,7 +215,7 @@ function ProjectCarousel({ onOpen }) {
     let raf, previousTime;
     const loopFn = (time=performance.now()) => {
       const delta=Math.min(2,(time-(previousTime ?? time-16.667))/16.667); previousTime=time;
-      let target = dragRef.current ? 0 : 1.0;
+      let target = 1.65;
       if (cursorXRef.current !== null) {
         const cards = track.querySelectorAll('[data-card]');
         let min = Infinity;
@@ -238,17 +226,18 @@ function ProjectCarousel({ onOpen }) {
           if (d < min) min = d;
         });
         const k = Math.min(1, Math.max(0, min / 400));
-        target = 0.08 + k * 1.42;
+        target = .95 + k * 1.0;
       }
       speedRef.current = target;
       dispRef.current += (speedRef.current - dispRef.current) * 0.08;
-      if(dragRef.current){pauseUntilRef.current=performance.now()+1800;}
-      if (Math.abs(manualRef.current) > .1) {
-        const step = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? manualRef.current : manualRef.current * .14;
-        posRef.current += step;
-        manualRef.current -= step;
-      } else if (performance.now() > pauseUntilRef.current) {
-        if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) posRef.current -= dispRef.current * delta;
+      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!dragRef.current) {
+        // Blend the requested card movement with the running loop; no post-click hold.
+        if (Math.abs(manualRef.current) > .1) {
+          const step=reduced?manualRef.current:manualRef.current*(1-Math.pow(.86,delta));
+          posRef.current+=step;manualRef.current-=step;
+        }
+        if(!reduced)posRef.current-=dispRef.current*delta;
       }
       const cards = track.querySelectorAll('[data-card]');
       const half = cards[PROJECTS.length].offsetLeft - cards[0].offsetLeft;
@@ -286,7 +275,7 @@ function ProjectCarousel({ onOpen }) {
           </div></div>
         </div>
       </Reveal>
-      <div ref={trackRef} className="cinema-track" onPointerDown={e=>{if(e.button!==0)return;dragRef.current={x:e.clientX,last:e.clientX};dragged.current=false;}} onPointerMove={e=>{if(!dragRef.current)return;const delta=e.clientX-dragRef.current.last;if(Math.abs(e.clientX-dragRef.current.x)>7){dragged.current=true;e.currentTarget.setPointerCapture(e.pointerId);}if(dragged.current)posRef.current+=delta;dragRef.current.last=e.clientX;}} onPointerUp={()=>{dragRef.current=null;pauseUntilRef.current=performance.now()+2000;}} onPointerCancel={()=>{dragRef.current=null;}} onClickCapture={e=>{if(dragged.current){e.preventDefault();e.stopPropagation();dragged.current=false;}}} style={{ display: 'flex', gap: 'clamp(14px,4vw,28px)', willChange: 'transform', padding: '0 clamp(12px,4vw,24px)' }}>
+      <div ref={trackRef} className="cinema-track" onPointerDown={e=>{if(e.button!==0)return;dragRef.current={x:e.clientX,last:e.clientX};manualRef.current=0;dragged.current=false;}} onPointerMove={e=>{if(!dragRef.current)return;const delta=e.clientX-dragRef.current.last;if(Math.abs(e.clientX-dragRef.current.x)>7){dragged.current=true;e.currentTarget.setPointerCapture(e.pointerId);}if(dragged.current)posRef.current+=delta;dragRef.current.last=e.clientX;}} onPointerUp={()=>{dragRef.current=null;}} onLostPointerCapture={()=>{dragRef.current=null;}} onPointerCancel={()=>{dragRef.current=null;}} onClickCapture={e=>{if(dragged.current){e.preventDefault();e.stopPropagation();dragged.current=false;}}} style={{ display: 'flex', gap: 'clamp(14px,4vw,28px)', willChange: 'transform', padding: '0 clamp(12px,4vw,24px)' }}>
         {loop.map((p, i) => <CarouselCard key={i} p={p} onOpen={onOpen} />)}
       </div>
     </div>

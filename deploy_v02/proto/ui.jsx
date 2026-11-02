@@ -224,6 +224,32 @@ function SiteScrollMotion({routeKey}){
 function Nav() {
   const { route, go } = useContext(RouteCtx);
   const bp = useBP();
+  const navRef=React.useRef(null),activeItem=React.useRef(null),logoAnimations=React.useRef([]);
+  const settleItem=()=>{if(activeItem.current){activeItem.current.style.setProperty('--nav-item-x','0px');activeItem.current.style.setProperty('--nav-item-y','0px');activeItem.current=null}};
+  const settleNav=()=>{settleItem();navRef.current?.style.setProperty('--nav-x','0px');navRef.current?.style.setProperty('--nav-y','0px')};
+  React.useEffect(()=>()=>logoAnimations.current.forEach(a=>a.cancel()),[]);
+  React.useEffect(()=>{settleNav()},[route.name]);
+  const floatNav=e=>{
+    if(!matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    const bar=navRef.current,r=bar.getBoundingClientRect();
+    bar.style.setProperty('--nav-x',Math.max(-3,Math.min(3,(e.clientX-r.left-r.width/2)/r.width*6))+'px');
+    bar.style.setProperty('--nav-y',Math.max(-1.5,Math.min(1.5,(e.clientY-r.top-r.height/2)/r.height*3))+'px');
+    const item=e.target.closest('.nav-brand,.nav-menu-item');
+    if(activeItem.current!==item){settleItem();activeItem.current=item}
+    if(item){const b=item.getBoundingClientRect();item.style.setProperty('--nav-item-x',Math.max(-2.5,Math.min(2.5,(e.clientX-b.left-b.width/2)/b.width*5))+'px');item.style.setProperty('--nav-item-y',(Math.max(-1,Math.min(1,(e.clientY-b.top-b.height/2)/b.height*2))-1.5)+'px')}
+  };
+  const goHome=()=>{
+    logoAnimations.current.forEach(a=>a.cancel());
+    if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+      const gold=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      logoAnimations.current=[...navRef.current.querySelectorAll('.nav-logo-corner')].map((el,i)=>{
+        const x=i%2?1:-1,y=i<2?-1:1;
+        return el.animate([{transform:'translate(0,0)',filter:'drop-shadow(0 0 0 transparent)'},{offset:.32,transform:`translate(${x*3}px,${y*3}px)`,filter:`drop-shadow(0 0 4px ${gold}) drop-shadow(0 0 7px ${gold}88)`},{transform:'translate(0,0)',filter:'drop-shadow(0 0 0 transparent)'}],{duration:680,easing:'cubic-bezier(.16,1,.3,1)'});
+      });
+    }
+    if(route.name==='home')window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
+    else go({name:'home'});
+  };
   const onHome = route.name === 'home';
   const [shown, setShown] = React.useState(!onHome);
   React.useEffect(() => {
@@ -245,7 +271,7 @@ function Nav() {
   ];
   return (
     <React.Fragment>
-    <div className="site-nav" style={{
+    <div className="site-nav" ref={navRef} onPointerMove={floatNav} onPointerLeave={settleNav} style={{
       display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', flexWrap: 'nowrap',
       padding: bp === 'mobile' ? '6px 16px' : 'clamp(6px,1.5vw,8px) var(--pad)',
       fontFamily: 'var(--mono)', fontSize: bp === 'mobile' ? 13 : 14, letterSpacing: bp === 'mobile' ? 0.8 : 1.5,
@@ -263,16 +289,12 @@ function Nav() {
       borderBottom: 'none',
       boxShadow: '0 1px 0 rgba(115,194,251,0.06) inset, 0 18px 40px -28px rgba(115,194,251,0.5)',
     }}>
-      <div {...useCursorLabel('home', 'link')} onClick={() => go({ name: 'home' })}
-        style={{ display: 'flex', alignItems: 'center', cursor: 'none', flexShrink: 0 }}>
-        <img src="proto/logo.png" alt="KB" style={{
-          height: bp === 'mobile' ? 34 : 'clamp(52px, 9vw, 92px)', width: 'auto',
-          filter: 'brightness(0) saturate(100%) invert(70%) sepia(59%) saturate(3272%) hue-rotate(175deg) brightness(101%) contrast(101%)',
-        }} />
-      </div>
+      <button type="button" className="nav-brand" {...useCursorLabel('home', 'link')} onClick={goHome} aria-label="Go to homepage">
+        <span className="nav-logo" aria-hidden="true"><span className="nav-logo-mark nav-logo-core"/>{['tl','tr','bl','br'].map(c=><span key={c} className={'nav-logo-corner corner-'+c}><span className="nav-logo-mark"/></span>)}</span>
+      </button>
       <div style={{ display: 'flex', gap: bp === 'mobile' ? 10 : 'clamp(10px, 2.2vw, 28px)', borderRadius: 175, flexShrink: 0 }}>
         {items.map((i) => (
-          <NavLink key={i.k} onClick={() => go({ name: i.k })}
+          <NavLink key={i.k} className="nav-menu-item" onClick={() => go({ name: i.k })}
             style={{ color: route.name === i.k ? 'var(--accent)' : 'var(--lab-ink,#f2ede3)',
               borderBottom: route.name === i.k ? `1px solid var(--accent)` : 'none', paddingBottom: 2, whiteSpace: 'nowrap' }}>
             {i.l}
@@ -289,12 +311,12 @@ function Nav() {
   );
 }
 
-function NavLink({ children, onClick, style = {}, cursorLabel, href, target, rel }) {
+function NavLink({ children, onClick, style = {}, cursorLabel, href, target, rel, className }) {
   const text = typeof children === 'string' ? children : '';
   const hover = useCursorLabel(cursorLabel ?? text, 'link');
-  if (href) return <a {...hover} href={href} target={target} rel={rel} onClick={onClick} style={{ cursor: 'none', color: 'inherit', textDecoration: 'none', ...style }}>{children}</a>;
+  if (href) return <a {...hover} className={className} href={href} target={target} rel={rel} onClick={onClick} style={{ cursor: 'none', color: 'inherit', textDecoration: 'none', ...style }}>{children}</a>;
   return (
-    <span {...hover} onClick={onClick} style={{ cursor: 'none', ...style }}>{children}</span>
+    <span {...hover} className={className} onClick={onClick} style={{ cursor: 'none', ...style }}>{children}</span>
   );
 }
 

@@ -25,6 +25,7 @@
 @media(prefers-reduced-motion:reduce){.studio-follower.cursor-choice-3 .cursor-shape,.studio-follower.cursor-choice-3 .cursor-shape:before,.studio-follower.cursor-choice-3 .cursor-shape:after,.studio-follower.cursor-choice-3 .cursor-shape i{transition:none}}
 /* Final drafting cursor: no halo, restrained hover emphasis. */
 .studio-follower.cursor-choice-3 .cursor-shape i{display:none!important}
+
 .studio-follower.cursor-choice-3 .cursor-shape{width:23px;height:23px;filter:drop-shadow(0 1px 2px #0009)}
 .studio-follower.cursor-choice-3.is-interactive .cursor-shape{width:25px;height:25px;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--accent) 48%,transparent))}
 .studio-follower.cursor-choice-3.is-interactive .cursor-shape:before{height:1px}
@@ -41,3 +42,30 @@
 .studio-follower.cursor-choice-3.is-interactive .cursor-shape:after{width:2px;box-shadow:0 0 4px #ffffff80}
 .studio-follower.cursor-choice-3.is-pressed .cursor-shape{width:22px;height:22px}
 .studio-follower.cursor-choice-3 .cursor-shape i{display:none!important}
+/* Keep the drafting cross over controls that declare their own native cursor. */
+@media(hover:hover) and (pointer:fine){
+ html.has-drafting-cursor.has-drafting-cursor.has-drafting-cursor,
+ html.has-drafting-cursor.has-drafting-cursor.has-drafting-cursor *{cursor:none!important}
+ .studio-follower.cursor-choice-3.is-interactive .cursor-shape{width:24px;height:24px}
+ .studio-follower.cursor-choice-3.is-interactive .cursor-shape:before,
+ .studio-follower.cursor-choice-3.is-interactive .cursor-shape:after{box-shadow:0 0 6px #ffffffa6,0 0 11px #ffffff36}
+ .studio-follower.cursor-choice-3.is-pressed .cursor-shape{width:22px;height:22px}
+}
+/* Reframe the original mark's transparent margins without changing the artwork. */
+.nav-logo-mark{--nav-logo-color:var(--accent);display:block;flex:none;width:76px;height:40px;background:var(--nav-logo-color);mask-image:url('../proto/logo.png');-webkit-mask-image:url('../proto/logo.png');mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-size:132px 75.43px;-webkit-mask-size:132px 75.43px;mask-position:-28.28px -15.34px;-webkit-mask-position:-28.28px -15.34px;opacity:1;transition:background .3s ease}
+html[data-logo-tone="gold"] .nav-logo-mark{--nav-logo-color:var(--accent)}
+@media(max-width:600px){.nav-logo-mark{width:52px;height:28px;mask-size:90.25px 51.57px;-webkit-mask-size:90.25px 51.57px;mask-position:-19.34px -10.49px;-webkit-mask-position:-19.34px -10.49px}}
+
+/* The mark stays still inside its frame; only the four original corner pieces bloom. */
+html[data-logo-tone="white"] .nav-logo-mark{--nav-logo-color:var(--ink)}
+.site-nav{translate:var(--nav-x,0px) var(--nav-y,0px);transition:translate .65s cubic-bezier(.16,1,.3,1)!important}
+.nav-brand{display:flex;align-items:center;justify-self:start;background:transparent;border:0;padding:0;color:var(--accent);flex-shrink:0;position:relative;translate:var(--nav-item-x,0px) var(--nav-item-y,0px);transition:translate .55s cubic-bezier(.16,1,.3,1)}
+.nav-logo{display:block;position:relative;width:76px;height:40px;overflow:visible}
+.nav-logo-core{clip-path:polygon(0 24%,14% 24%,14% 0,86% 0,86% 24%,100% 24%,100% 76%,86% 76%,86% 100%,14% 100%,14% 76%,0 76%)}
+.nav-logo-corner{position:absolute;inset:0;display:block;pointer-events:none;translate:0 0;filter:drop-shadow(0 0 0 transparent);transition:translate .5s cubic-bezier(.16,1,.3,1),filter .4s ease}
+.corner-tl>.nav-logo-mark{clip-path:inset(0 86% 76% 0)}.corner-tr>.nav-logo-mark{clip-path:inset(0 0 76% 86%)}.corner-bl>.nav-logo-mark{clip-path:inset(76% 86% 0 0)}.corner-br>.nav-logo-mark{clip-path:inset(76% 0 0 86%)}
+.site-nav>div:nth-child(2)>.nav-menu-item{display:inline-block;translate:var(--nav-item-x,0px) var(--nav-item-y,0px);transition:translate .55s cubic-bezier(.16,1,.3,1),color .3s,text-shadow .3s}
+.nav-brand:focus-visible{outline:1px solid var(--accent);outline-offset:9px;border-radius:4px}
+@media(hover:hover) and (pointer:fine){.nav-brand:hover .corner-tl{translate:-1.2px -1.2px}.nav-brand:hover .corner-tr{translate:1.2px -1.2px}.nav-brand:hover .corner-bl{translate:-1.2px 1.2px}.nav-brand:hover .corner-br{translate:1.2px 1.2px}.nav-brand:hover .nav-logo-corner{filter:drop-shadow(0 0 2px var(--accent))}}
+@media(max-width:600px){.nav-logo{width:52px;height:28px}}
+@media(prefers-reduced-motion:reduce){.site-nav,.nav-brand,.nav-logo-corner,.site-nav>div:nth-child(2)>.nav-menu-item{translate:0 0!important;transition:none!important}.nav-brand:hover .nav-logo-corner{filter:none}}

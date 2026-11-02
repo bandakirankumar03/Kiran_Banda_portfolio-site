@@ -285,7 +285,7 @@ function SkillsSection() {
           <Reveal key={g.group} delay={gi * 80}>
             <div style={{ display: 'grid', gridTemplateColumns: useBP() === 'mobile' ? '1fr' : '180px 1fr', gap: 'clamp(16px,3vw,32px)', alignItems: 'start' }}>
               <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase', paddingTop: 14 }}>
-                · {String(gi + 1).padStart(2, '0')} {g.group}
+                {g.group}
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {g.items.map((s, ii) => {
@@ -341,7 +341,7 @@ function CertificatesSection() {
   return <section className="about-journal-section about-learning">
     <h2 className="about-section-title">Always <em>learning.</em></h2>
     <div className="learning-grid">{learning.map(c=><CertCard key={c.title} c={c}/>)}</div>
-    <div className="learning-badges">{badges.map(c=><img key={c.id} src={'media/pages/about/badges/'+c.id+'.png'} alt={c.title} title={c.title} loading="lazy" width="120" height="120"/>)}</div>
+    <div className="learning-badges">{badges.map(c=><a key={c.id} href={'https://www.credly.com/badges/'+c.id+'/public_url'} target="_blank" rel="noopener noreferrer" aria-label={c.title+' — view credential (opens in a new tab)'} title={c.title}><img src={'media/pages/about/badges/'+c.id+'.png'} alt={c.title} loading="lazy" width="120" height="120"/></a>)}</div>
   </section>;
 }
 

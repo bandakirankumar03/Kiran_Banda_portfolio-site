@@ -63,7 +63,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
     <div className="pc-image"><div className="pc-image-drift"><div className="pc-image-lens">{p.hero ? <img src={p.hero} alt={p.title+' environment'} fetchpriority="high"/> : <Scene tone={p.tone} style={{width:'100%',height:'100%'}}/>}</div></div></div><div className="pc-atmosphere" aria-hidden="true"/><div className="pc-grain" aria-hidden="true"/>
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
     <div className="pc-story"><div className="pc-role">{p.role}</div><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
-    <div className="pc-foot"><span>{p.client || 'Selected project'}</span><span className="pc-scroll">Scroll into the process</span></div>
+    <div className="pc-foot"><span>{p.client || 'Selected project'}</span></div>
   </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}</>;
 }
 
@@ -376,7 +376,7 @@ function ProcessBook({ p, x }) {
 
   return (
     <div style={{ marginBottom: 120 }}>
-      <SectionLabel note={`${Math.max(proc.length, 1)} stages`}>process book</SectionLabel>
+      <SectionLabel>process book</SectionLabel>
       <div style={{ display: 'grid', gap: 'clamp(48px,8vw,84px)' }}>
         {seq.map((kind, i) => render(kind, i))}
       </div>
@@ -422,7 +422,7 @@ function RenderComparison({ media, onInspect }) {
       <div className="xr-comparison-options">{labels.map((label,i)=><button type="button" key={label} aria-pressed={i===active} onClick={()=>setActive(i)}>{label}</button>)}</div>
       <button type="button" onClick={()=>change(1)} aria-label="Next render view">→</button>
     </div>
-    <p className="xr-caption" aria-live="polite">{String(active+1).padStart(2,'0')} / 03 · {labels[active]} <span style={{float:'right'}}>Swipe to compare</span></p>
+    <p className="xr-caption" aria-live="polite">{labels[active]}</p>
   </div>;
 }
 
@@ -650,18 +650,18 @@ function StoryBook({ p, x }) {
       `}</style>
       <div className="xr-flow" id="xr-process">
         <div className="xr-reveal xr-opening"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Environment / Development</span><h2>A world built<br/>for the <em>frame.</em></h2><p>{build.paragraphs[0]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-mountain"><Reveal y={24}>{mediaPlate(build.media[0])}<p className="xr-caption"><span>01</span>Gaea / terrain generation</p></Reveal></div>
-        <div className="xr-reveal xr-assembly"><Reveal y={24}>{mediaPlate(build.media[1])}<p className="xr-caption"><span>02</span>Unreal Engine / scene assembly</p></Reveal></div>
+        <div className="xr-reveal xr-mountain"><Reveal y={24}>{mediaPlate(build.media[0])}<p className="xr-caption">Gaea / terrain generation</p></Reveal></div>
+        <div className="xr-reveal xr-assembly"><Reveal y={24}>{mediaPlate(build.media[1])}<p className="xr-caption">Unreal Engine / scene assembly</p></Reveal></div>
         <div className="xr-reveal xr-build-note"><Reveal y={20}><div className="xr-copy"><div className="xr-tech-label">Terrain → composition</div><p>{build.paragraphs[1]}</p></div></Reveal></div>
-        <div className="xr-reveal xr-look-note"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Inside the scene</span><h2>Look closer.</h2><p>{look.paragraphs[0]}</p><p className="xr-caption">Three views. One environment.<br/>Select a view or swipe to compare.</p></div></Reveal></div>
+        <div className="xr-reveal xr-look-note"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Inside the scene</span><h2>Look closer.</h2><p>{look.paragraphs[0]}</p></div></Reveal></div>
         <div className="xr-reveal xr-beauty"><Reveal y={24}><RenderComparison onInspect={setSelected} media={[look.media[6],look.media[1],look.media[0]]}/></Reveal></div>
         <div className="xr-diagnostics">{[look.media[2],look.media[3]].map((m,i)=><div key={m.image} className="xr-reveal"><Reveal delay={i*80} y={24}>{mediaPlate(m)}<p className="xr-caption">{i===0?'Render buffers':'Geometry diagnostics'} ↗</p></Reveal></div>)}</div>
         <div className="xr-reveal xr-bridge"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">The production challenge</span><h2>Built in Unreal.<br/><em>Resolved on stage.</em></h2></div></Reveal></div>
-        <div className="xr-reveal xr-stage-view"><Reveal y={24}><div className="xr-stage">{mediaPlate(stage.media[1])}{mediaPlate(stage.media[0])}</div><p className="xr-caption"><span>03</span>The environment meets the physical set.</p></Reveal></div>
+        <div className="xr-reveal xr-stage-view"><Reveal y={24}><div className="xr-stage">{mediaPlate(stage.media[1])}{mediaPlate(stage.media[0])}</div><p className="xr-caption">The environment meets the physical set.</p></Reveal></div>
         <div className="xr-reveal xr-stage-note"><Reveal y={20}><div className="xr-copy"><div className="xr-tech-note"><div className="xr-tech-label">Constraint</div><p>Dense foliage and wind animation were too demanding for the XR setup.</p></div><div className="xr-tech-note"><div className="xr-tech-label">Intervention</div><p>Replaced PCG with camera-visible manual placement. Swapped selected tree meshes for image cards with subtle motion.</p></div><div className="xr-tech-note"><div className="xr-tech-label">Result</div><p>Reduced scene complexity while preserving the composition used for filming.</p></div></div></Reveal></div>
         <div className="xr-reveal xr-reflection"><Reveal y={20}><div className="xr-copy"><span className="xr-kicker">Beyond the viewport</span><h2>A shared<br/><em>production.</em></h2><p>{crew.paragraphs[0]}</p></div></Reveal></div>
         <div className="xr-reveal xr-set"><Reveal y={24}><div className="xr-set-grid">{[crew.media[0],crew.media[4],crew.media[1],crew.media[2]].map(m=>mediaPlate(m))}</div><p className="xr-caption">Camera / light / sound / collaboration</p></Reveal></div>
-        <div className="xr-reveal xr-crew-end"><Reveal y={24}>{mediaPlate(crew.media[5])}<p className="xr-caption"><span>04</span>The cast and crew behind The Gate Within.</p></Reveal></div>
+        <div className="xr-reveal xr-crew-end"><Reveal y={24}>{mediaPlate(crew.media[5])}<p className="xr-caption">The cast and crew behind The Gate Within.</p></Reveal></div>
         <div className="xr-reveal xr-ending"><Reveal y={24}>{mediaPlate(crew.media[3])}</Reveal></div>
         <div className="xr-reveal xr-outcome"><Reveal y={20}><span className="xr-kicker">What I took forward</span><p>Design for the image.<br/>Optimize for the shot.<br/><em>Build with the crew.</em></p></Reveal></div>
       </div>

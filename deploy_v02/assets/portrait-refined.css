@@ -1,0 +1,28 @@
+/* Approved composition: a clear introduction and a quieter, lower counterpoint. */
+.portrait-refined .portrait-scene{height:min(58vw,760px);min-height:690px;margin-top:0}
+.portrait-refined .portrait-backtype{color:var(--ink);opacity:.075!important;top:0}
+.portrait-refined .portrait-scene-copy{top:52%;width:29%}
+.portrait-refined .portrait-side-note{top:auto!important;bottom:8%;width:23%;right:var(--pad)}
+.portrait-refined .portrait-side-note>span{font-size:8px;opacity:.72}
+.portrait-refined .portrait-side-note p{font:italic clamp(23px,2.3vw,32px)/1.3 var(--serif);color:var(--ink);margin:16px 0 13px}
+.portrait-refined .portrait-side-note p em{font:inherit;color:var(--accent)}
+.quiet-practice .quiet-ai-focus .ai-workflow-type strong{color:var(--accent)}
+.quiet-practice .quiet-ai-focus .ai-workflow-type em,.quiet-practice .quiet-ai-focus:hover .ai-workflow-type em{color:var(--ink)}
+.portrait-refined .portrait-side-note a{opacity:.72}
+.portrait-refined .portrait-backplate{border:0;border-radius:0;box-shadow:none;background:none;pointer-events:none;transform:translate(calc(var(--px,0px)*-.6),calc(var(--py,0px)*-.6 + var(--portrait-scroll,0)*-24px));transition:transform 1s cubic-bezier(.16,1,.3,1)}
+.portrait-refined[data-backdrop="0"] .portrait-backplate{display:none}
+.portrait-refined[data-backdrop="1"] .portrait-backplate{inset:2% 14% -10%;border-radius:50%;background:radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--accent) 10%,transparent),color-mix(in srgb,var(--accent) 3%,transparent) 36%,transparent 68%)}
+.portrait-refined[data-backdrop="2"] .portrait-backplate{inset:-6% 9% -8%;border-radius:50%;background:linear-gradient(117deg,transparent 31%,color-mix(in srgb,var(--accent) 7%,transparent) 46%,color-mix(in srgb,var(--ink) 3%,transparent) 51%,transparent 66%);mask-image:radial-gradient(ellipse,#000 20%,transparent 70%);filter:blur(10px)}
+.portrait-refined[data-backdrop="3"] .portrait-backplate{inset:9% 25% 0;border-radius:43% 57% 61% 39% / 38% 48% 52% 62%;background:radial-gradient(ellipse at 25% 28%,color-mix(in srgb,var(--accent) 9%,transparent),color-mix(in srgb,var(--ink) 2%,transparent) 58%,transparent 75%);filter:blur(18px)}
+.portrait-finish-controls{max-width:1600px;padding:8px var(--pad) 22px;margin:auto}
+.finish-selected{display:flex;justify-content:space-between;gap:18px;font:10px/1.6 var(--mono);letter-spacing:.8px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.finish-selected>span:first-child{color:var(--accent)}
+.portrait-finish-controls nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.portrait-finish-controls button{background:transparent;border:1px solid var(--hair);border-radius:9px;padding:14px 16px;text-align:left;color:var(--ink);cursor:pointer;transition:background .3s,border-color .3s}
+.portrait-finish-controls button[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.portrait-finish-controls strong{display:block;font:500 13px/1.4 var(--serif);color:var(--accent)}
+.portrait-finish-controls small{display:block;font:10px/1.6 var(--sans);margin-top:6px;color:var(--dim)}
+.portrait-finish-controls button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media(max-width:1000px) and (min-width:761px){.portrait-refined .portrait-side-note{width:24%;bottom:7%}.portrait-refined .portrait-side-note p{font-size:25px}}
+@media(max-width:760px){.portrait-refined .portrait-scene{height:790px;min-height:0}.portrait-refined .portrait-scene-copy{top:4%;width:90%;left:5%}.portrait-refined .portrait-scene-copy .portrait-roles{margin-top:16px}.portrait-refined .portrait-side-note{display:none}.portrait-refined .portrait-backtype{top:28%}.portrait-finish-controls nav{grid-template-columns:repeat(2,minmax(0,1fr))}.portrait-finish-controls button{padding:12px}.finish-selected{font-size:9px}.finish-selected>span:last-child{display:none}.portrait-refined[data-backdrop="1"] .portrait-backplate{inset:28% -8% -4%}.portrait-refined[data-backdrop="2"] .portrait-backplate{inset:25% -10% -4%}.portrait-refined[data-backdrop="3"] .portrait-backplate{inset:34% 8% 0}}
+@media(prefers-reduced-motion:reduce){.portrait-refined .portrait-backplate{transform:none;transition:none}}
