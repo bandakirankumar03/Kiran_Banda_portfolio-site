@@ -1,6 +1,6 @@
 /* Approved composition: a clear introduction and a quieter, lower counterpoint. */
 .portrait-refined .portrait-scene{height:min(58vw,760px);min-height:690px;margin-top:0}
-.portrait-refined .portrait-backtype{color:var(--ink);opacity:.075!important;top:0}
+.portrait-refined .portrait-backtype{color:var(--ink);opacity:.055!important;top:0}
 .portrait-refined .portrait-scene-copy{top:52%;width:29%}
 .portrait-refined .portrait-side-note{top:auto!important;bottom:8%;width:23%;right:var(--pad)}
 .portrait-refined .portrait-side-note>span{font-size:8px;opacity:.72}

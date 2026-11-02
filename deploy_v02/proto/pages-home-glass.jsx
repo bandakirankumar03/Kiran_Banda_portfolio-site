@@ -26,16 +26,21 @@ const HOME_HIGHLIGHTS = [
 ];
 
 function ProjectHighlights(){
-  const ref=React.useRef(null);
+  const ref=React.useRef(null),activeRef=React.useRef(0);
   const [active,setActive]=React.useState(0),[paused,setPaused]=React.useState(false);
   React.useEffect(()=>{
     let frame=0;
-    const update=()=>{frame=0;if(paused||!ref.current)return;const r=ref.current.getBoundingClientRect();const p=Math.max(0,Math.min(.999,-r.top/Math.max(1,r.height-innerHeight)));setActive(Math.floor(p*HOME_HIGHLIGHTS.length));};
+    const update=()=>{frame=0;if(paused||!ref.current)return;const r=ref.current.getBoundingClientRect(),pin=ref.current.querySelector('.favourites-pin');
+      // Use the stable pinned height, not the phone browser's changing toolbar height.
+      const travel=Math.max(1,ref.current.offsetHeight-pin.offsetHeight),position=Math.max(0,Math.min(HOME_HIGHLIGHTS.length,-r.top/travel*HOME_HIGHLIGHTS.length));
+      let next=activeRef.current;while(next<HOME_HIGHLIGHTS.length-1&&position>next+1.06)next++;while(next>0&&position<next-.06)next--;
+      if(next!==activeRef.current){activeRef.current=next;setActive(next)}
+    };
     const tick=()=>{if(!frame)frame=requestAnimationFrame(update);};
     window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();
     return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);};
   },[paused]);
-  return <section className="scroll-favourites" ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt}/></button></article>)}</div></div></section>;
+  return <section className="scroll-favourites" data-active-project={HOME_HIGHLIGHTS[active].slug} ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt} decoding="async"/></button></article>)}</div></div></section>;
 }
 
 // ─── Fullscreen demo reel hero — pure visual, no overlay text ─

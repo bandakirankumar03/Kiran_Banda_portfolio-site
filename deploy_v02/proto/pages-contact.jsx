@@ -51,7 +51,7 @@ function ContactPage() {
       <div className="contact-content" style={{ padding: 'clamp(28px,6vw,40px) var(--pad) clamp(48px,9vw,80px)' }}>
         <Reveal delay={80}>
           <div data-main-headline style={{ fontSize: 'clamp(80px, 13vw, 184px)', lineHeight: 0.92, letterSpacing: -4, fontWeight: 300, marginBottom: 60 }}>
-            <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>say</span> <span style={{ color: 'var(--accent)' }}>hello.</span>
+            <span style={{ fontStyle: 'italic', color: 'var(--ink)' }}>say</span> <span style={{ color: 'var(--accent)' }}>hello.</span>
           </div>
         </Reveal>
 

@@ -14,7 +14,7 @@ function WorkPage(){
 function WorkFocusGallery({list,motion='2',initialIndex=0}){
  const first=Math.min(initialIndex,list.length-1);
  const [index,setIndex]=React.useState(first),[dragging,setDragging]=React.useState(false);
- const indexRef=React.useRef(first),gesture=React.useRef(null),rail=React.useRef(null),gallery=React.useRef(null),indicator=React.useRef(null),suppressClick=React.useRef(0);
+ const indexRef=React.useRef(first),gesture=React.useRef(null),rail=React.useRef(null),gallery=React.useRef(null),scrollTrack=React.useRef(null),scrollPin=React.useRef(null),indicator=React.useRef(null),suppressClick=React.useRef(0);
  const p=list[index]||list[0];
  const summary=FOCUS_PROJECT_SUMMARIES[p.slug];
  const select=React.useCallback(i=>{const next=Math.max(0,Math.min(list.length-1,i));if(gallery.current)gallery.current.dataset.direction=next>=indexRef.current?'next':'previous';indexRef.current=next;setIndex(next)},[list.length]);
@@ -26,23 +26,26 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
   };
   place();const observer=new ResizeObserver(place);observer.observe(el);return()=>observer.disconnect();
  },[index]);
+ React.useLayoutEffect(()=>{const track=scrollTrack.current,pin=scrollPin.current;const size=()=>track.style.setProperty('--focus-pin-height',pin.offsetHeight+'px');size();const observer=new ResizeObserver(size);observer.observe(pin);return()=>observer.disconnect()},[]);
  React.useEffect(()=>{
-  const el=gallery.current;let total=0,last=0,cooldown=0;
-  const wheel=e=>{if(e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY)||list.length<2)return;const amount=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?el.clientHeight:1),dir=Math.sign(amount);if(!dir)return;
-   if((dir<0&&indexRef.current===0)||(dir>0&&indexRef.current===list.length-1))return;
-   e.preventDefault();const now=performance.now();if(now-last>180)total=0;last=now;total+=amount;
-   if(now<cooldown||Math.abs(total)<38)return;select(indexRef.current+Math.sign(total));total=0;cooldown=now+380;
+  let frame=0;const update=()=>{frame=0;const track=scrollTrack.current,pin=scrollPin.current;if(!track||!pin)return;
+   const travel=track.offsetHeight-pin.offsetHeight;if(travel<=0)return;const top=parseFloat(getComputedStyle(pin).top)||0;
+   const progress=Math.max(0,Math.min(1,(top-track.getBoundingClientRect().top)/travel));select(Math.round(progress*(list.length-1)));
   };
-  el.addEventListener('wheel',wheel,{passive:false});return()=>el.removeEventListener('wheel',wheel);
+  const tick=()=>{if(!frame)frame=requestAnimationFrame(update)};window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);tick();
+  return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick)};
  },[list.length,select]);
+ const seek=i=>{const next=Math.max(0,Math.min(list.length-1,i));select(next);const track=scrollTrack.current,pin=scrollPin.current;const travel=track.offsetHeight-pin.offsetHeight,top=parseFloat(getComputedStyle(pin).top)||0;
+  window.scrollTo({top:window.scrollY+track.getBoundingClientRect().top-top+travel*next/Math.max(1,list.length-1),behavior:'instant'});
+ };
 
- const start=e=>{if(!e.isPrimary||(e.pointerType==='mouse'&&e.button!==0))return;gesture.current={id:e.pointerId,x:e.clientX,y:e.clientY,index:indexRef.current,moved:false,captured:false};};
+ const start=e=>{if(!e.isPrimary||e.pointerType!=='mouse'||e.button!==0)return;gesture.current={id:e.pointerId,x:e.clientX,y:e.clientY,index:indexRef.current,moved:false,captured:false};};
  const move=e=>{const g=gesture.current;if(!g||g.id!==e.pointerId)return;const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.hypot(dx,dy)>8)g.moved=true;
   if(!g.captured&&Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)*1.1){g.captured=true;e.currentTarget.setPointerCapture(e.pointerId);setDragging(true)}
-  if(g.captured){e.preventDefault();gallery.current.style.setProperty('--drag-pull',Math.max(-9,Math.min(9,(dy%80)*.12))+'px');select(g.index+Math.round(dy/80));}
+  if(g.captured){e.preventDefault();gallery.current.style.setProperty('--drag-pull',Math.max(-9,Math.min(9,(dy%80)*.12))+'px');seek(g.index+Math.round(dy/80));}
  };
  const finish=e=>{const g=gesture.current;if(!g)return;if(g.moved)suppressClick.current=performance.now()+450;gesture.current=null;setDragging(false);gallery.current.style.setProperty('--drag-pull','0px');if(e.currentTarget.hasPointerCapture(g.id))e.currentTarget.releasePointerCapture(g.id);};
- const keys=e=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;e.preventDefault();const at=e.key==='Home'?0:e.key==='End'?list.length-1:Math.max(0,Math.min(list.length-1,indexRef.current+(e.key==='ArrowDown'?1:-1)));select(at);rail.current.querySelectorAll('[data-focus-index]')[at]?.focus({preventScroll:true});};
+ const keys=e=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;e.preventDefault();const at=e.key==='Home'?0:e.key==='End'?list.length-1:Math.max(0,Math.min(list.length-1,indexRef.current+(e.key==='ArrowDown'?1:-1)));seek(at);rail.current.querySelectorAll('[data-focus-index]')[at]?.focus({preventScroll:true});};
  const drift=e=>{if(!matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;const el=e.currentTarget,r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.setProperty('--focus-x',x*12+'px');el.style.setProperty('--focus-y',y*8-2+'px');el.style.setProperty('--focus-ry',x*1.2+'deg');el.style.setProperty('--focus-rx',-y*.9+'deg');};
  const resetBar=()=>{gallery.current?.style.setProperty('--bar-hover-x','0px');gallery.current?.style.setProperty('--bar-hover-y','0px');};
  const floatBar=e=>{if(gesture.current||e.pointerType!=='mouse'||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
@@ -50,7 +53,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
   gallery.current.style.setProperty('--bar-hover-x',((e.clientX-r.left)/r.width-.5)*6+'px');gallery.current.style.setProperty('--bar-hover-y',((e.clientY-r.top)/r.height-.5)*4-2+'px');
  };
  const settle=e=>['--focus-x','--focus-y','--focus-rx','--focus-ry'].forEach(k=>e.currentTarget.style.setProperty(k,k.includes('rx')||k.includes('ry')?'0deg':'0px'));
- return <div className="ws-focus focus-gallery" ref={gallery} data-motion={motion} data-dragging={dragging}>
+ return <section className="focus-scroll-track" ref={scrollTrack} style={{'--focus-stops':Math.max(0,list.length-1)}}><div className="focus-scroll-pin" ref={scrollPin}><div className="ws-focus focus-gallery" ref={gallery} data-motion={motion} data-dragging={dragging}>
   <style>{FOCUS_GALLERY_CSS}</style>
   <div className="ws-focus-list" ref={rail} role="group" aria-label="Projects" onPointerDown={start} onPointerMove={e=>{move(e);floatBar(e)}} onPointerLeave={resetBar} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish} onKeyDown={keys} onClickCapture={e=>{if(performance.now()<suppressClick.current){e.preventDefault();e.stopPropagation()}}}>
    <div className="focus-selection-bar" ref={indicator} aria-hidden="true"/>
@@ -61,12 +64,13 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
    <div className="focus-shade"/>
    <div className="ws-focus-copy" key={p.slug}><p>{summary?<><em>{summary[0]}</em><span>{summary[1]}</span></>:p.tagline}</p><a className="focus-explore" href={'#/case/'+p.slug} aria-label={'Explore '+p.title}><span>Explore the project</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
   </article>
- </div>
+ </div></div></section>
 }
 const FOCUS_GALLERY_CSS=`
 .work-selected{max-width:1680px;margin:auto}.work-selected .ws-header{padding:clamp(28px,4vw,48px) var(--pad) 38px;display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:30px}.work-selected .ws-header h1{font:400 clamp(64px,8vw,124px)/.98 var(--serif);letter-spacing:-.055em;margin:0}.work-selected .ws-header h1 em{font-weight:400;color:var(--accent)}.work-selected .ws-content{padding:8px var(--pad) 75px;min-height:580px}
+.focus-scroll-track{position:relative;height:calc(var(--focus-pin-height,680px) + var(--focus-stops) * clamp(170px,22svh,230px));overflow:visible}.focus-scroll-pin{position:sticky;top:16px}.focus-scroll-pin .ws-focus-stage{position:relative;top:auto}
 .focus-gallery{--focus-ease:cubic-bezier(.16,1,.3,1);display:grid;grid-template-columns:minmax(250px,.8fr) minmax(0,2fr);gap:36px;align-items:start}
-.focus-gallery .ws-focus-list{display:grid;align-content:start;gap:2px;user-select:none;-webkit-user-select:none;touch-action:pan-x}
+.focus-gallery .ws-focus-list{display:grid;align-content:start;gap:2px;user-select:none;-webkit-user-select:none;touch-action:auto}
 .focus-gallery .ws-focus-link{display:block;position:relative;text-decoration:none;text-align:left;color:var(--ink);background:none;border:0;padding:16px 18px 16px 0;opacity:var(--name-opacity);transform:translateX(var(--name-depth)) scale(var(--name-scale));transform-origin:left center;transition:opacity .85s ease,transform 1s var(--focus-ease);-webkit-user-drag:none}
 .focus-gallery .ws-focus-link>span{display:block;color:var(--ink);font:400 clamp(22px,2vw,31px)/1.1 var(--serif);letter-spacing:-.6px;transition:color .35s}.focus-gallery .ws-focus-link small{display:block;font:9px/1.6 var(--mono);color:var(--dim);margin-top:7px}
 .focus-gallery .ws-focus-link[data-active=true]>span{font-weight:500;color:var(--accent);text-shadow:0 0 26px color-mix(in srgb,var(--accent) 15%,transparent)}.focus-gallery .ws-focus-link:focus-visible{opacity:1}
@@ -102,6 +106,8 @@ const FOCUS_GALLERY_CSS=`
 @media(max-width:800px){.focus-gallery[data-motion="2"] .ws-focus-link[data-active=true]{transform:scale(1.025)}.focus-gallery .ws-focus-link{transform-origin:center}}
 @media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.focus-gallery .focus-selection-bar,.focus-gallery .ws-focus-link[data-active=true]{translate:0 0}}
 @media(prefers-reduced-motion:reduce){.focus-gallery[data-motion="2"] .focus-layer{filter:none;transform:none}}
+
+@media(max-width:800px){.focus-scroll-pin{top:12px}.focus-scroll-pin .ws-focus-stage{height:clamp(240px,51svh,410px)}.focus-gallery .ws-focus-list{overflow-y:hidden}.focus-gallery[data-motion="2"] .focus-layer{filter:none;transform:scale(1.025);transition:opacity .5s ease}.focus-gallery[data-motion="2"] .focus-layer.is-active{transform:scale(1.025)}.focus-gallery .ws-focus-copy{animation:focusCaptionArrive .45s ease both}}
 
 @media(prefers-reduced-motion:reduce){.focus-gallery *{animation:none!important;transition:none!important}.focus-gallery .ws-focus-stage,.focus-gallery .ws-focus-list{translate:0 0;transform:none}.focus-gallery .focus-layer,.focus-gallery .focus-layer.is-active{transform:none}.focus-gallery .ws-focus-link:hover{translate:0 0}}
 `;
