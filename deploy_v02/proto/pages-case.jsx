@@ -62,7 +62,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
     `}</style>
     <div className="pc-image"><div className="pc-image-drift"><div className="pc-image-lens">{p.hero ? <img src={p.hero} alt={p.title+' environment'} fetchpriority="high"/> : <Scene tone={p.tone} style={{width:'100%',height:'100%'}}/>}</div></div></div><div className="pc-atmosphere" aria-hidden="true"/><div className="pc-grain" aria-hidden="true"/>
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
-    <div className="pc-story"><div className="pc-role">{p.role}</div><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
+    <div className="pc-story"><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
     <div className="pc-foot"><span>{p.client || 'Selected project'}</span></div>
   </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}</>;
 }
@@ -109,16 +109,56 @@ function SectionLabel({ children, note }) {
   );
 }
 
-function SoftwareMarks({ list }) {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
-      {(list.length ? list : ['—']).map((sw, i) => (
-        <span key={i} style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 1, color: 'var(--ink)' }}>
-          {typeof sw === 'string' ? sw : sw.name}{i < list.length - 1 ? ' ·' : ''}
-        </span>
-      ))}
-    </div>
-  );
+const PROJECT_TOOL_MARKS = {
+  'Unreal Engine':{file:'unrealengine.svg', light:true},
+  'Gaea':{file:'gaea.png'},
+  'Fab':{file:'fab.svg'},
+  'Blender':{file:'blender.svg'},
+  'Sony mocopi':{file:'mocopi.png', wide:true},
+  'XYN':{file:'xyn.png', wide:true},
+  'Lightroom CC':{file:'lightroom-cc.svg'},
+  'RealityScan':{file:'realityscan.svg'},
+  'RealityCapture':{file:'realitycapture.svg'},
+  'Claude':{file:'claude.svg'},
+  'Meshy AI':{file:'meshy.png'},
+  'Weavy AI':{file:'weavy.svg'},
+  'Polycam':{file:'polycam.png'},
+  'Sketchfab':{file:'sketchfab.svg'},
+  'Maya':{file:'maya.svg'},
+  'Arnold':{file:'arnold.svg'},
+  'Nuke':{file:'nuke.svg', wide:true},
+  'After Effects':{file:'aftereffects.svg'},
+  'ZBrush':{file:'zbrush.svg'},
+  'Substance Painter':{file:'substance.svg'},
+  'Marmoset':{file:'marmoset.png', light:true},
+  'SpeedTree':{file:'speedtree.gif', wide:true},
+  'Photoshop':{file:'photoshop.svg'},
+  'Premiere Pro':{file:'premierepro.svg'},
+  'DaVinci Resolve':{file:'davinci.png'},
+  'Houdini':{file:'houdini.svg'},
+  'EmberGen':{file:'embergen.svg'},
+};
+const PROJECT_TOOLSETS = {
+ 'xr01-chinese-temple':['Unreal Engine','Gaea','Fab'],
+ 'ranasthala':[{name:'Unreal Engine',detail:'PCG'},'Blender','Lightroom CC','RealityScan','Meshy AI','DaVinci Resolve','Weavy AI','Claude'],
+ 'xr02-1920s-nyc':['Unreal Engine','Blender','Sony mocopi','XYN'],
+ 'rainy-forest':[{name:'Unreal Engine',detail:'PCG · Splines · Ultra Dynamic Sky'},'Gaea'],
+ 'photogrammetry-archive':['RealityCapture','Polycam','ZBrush','Substance Painter','Marmoset'],
+ 'unreal-environment-studies':[{name:'Unreal Engine',detail:'Ultra Dynamic Sky'},'Fab','Sketchfab'],
+ 'vfx-compositing-works':['Maya','Arnold','Nuke','After Effects'],
+};
+function SoftwareMarks({ list=[] }) {
+ const aliases={'Lightroom':'Lightroom CC','Unreal Engine 5':'Unreal Engine','Fab assets':'Fab','Reality Capture':'RealityCapture','Substance 3D':'Substance Painter'};
+ const seen=new Set();
+ const tools=list.map(item=>typeof item==='string'?{name:aliases[item]||item}:item).filter(item=>{
+   if(!PROJECT_TOOL_MARKS[item.name]||seen.has(item.name))return false;seen.add(item.name);return true;
+ });
+ return <div className="project-tool-logos" aria-label="Applications used">
+   {tools.map(tool=>{const mark=PROJECT_TOOL_MARKS[tool.name],label=tool.name+(tool.detail?' · '+tool.detail:'');return <span key={tool.name} className={'project-tool-mark'+(mark.wide?' project-tool-wide':'')+(mark.light?' project-tool-light':'')} role="img" tabIndex={0} aria-label={label} title={label}>
+     <img src={'media/tools/'+mark.file} alt="" aria-hidden="true" loading="lazy" width={mark.wide?76:40} height="40"/>
+     <span className="project-tool-tooltip" aria-hidden="true">{label}</span>
+   </span>})}
+ </div>;
 }
 
 // ─── process-book blocks — landscape-first, medium-sized plates ───
@@ -789,7 +829,7 @@ function XRCasePage({p,x,prev,next,go}) {
       .xr-cover-links a:hover { color:#d79a7b; }
       .xr-case-body { padding:0 var(--pad); max-width:none; margin:auto; }
       .xr-brief { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:32px; padding:32px 0 40px; margin:0 auto 64px; max-width:none;  }
-      .xr-brief span { display:block; font:12px var(--mono); text-transform:uppercase; letter-spacing:1.8px; color:var(--lab-primary,#c88968); margin-bottom:12px; }
+      .xr-brief > div > span { display:block; font:12px var(--mono); text-transform:uppercase; letter-spacing:1.8px; color:var(--lab-primary,#c88968); margin-bottom:12px; }
       .xr-brief p { font:13px/1.8 Arial,sans-serif; margin:0; color:var(--lab-muted,#c7c2b9); }
       .xr-brief strong { color:var(--ink); font-weight:400; }
       .xr-screening { max-width:none; margin:0 auto; scroll-margin-top:90px;  padding-top:38px; }
@@ -816,7 +856,7 @@ function XRCasePage({p,x,prev,next,go}) {
     `}</style>
     <ProjectCover p={p} description="An Unreal environment brought to life on the virtual production stage." actionLabel="Watch the film" onAction={()=>document.getElementById('xr-screening').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}/>
     <main className="xr-case-body">
-      <div className="xr-brief"><div><span>My contribution</span><p><strong>Environment artist · Virtual production</strong><br/>Scene development, composition, and on-stage adaptation.</p></div><div><span>Toolset</span><p>Unreal Engine 5 / Gaea<br/>Fab asset integration</p></div><div><span>Production focus</span><p>Camera-led foliage placement<br/>Real-time scene optimization</p></div></div>
+      <div className="xr-brief"><div><span>My contribution</span><p><strong>Environment artist · Virtual production</strong><br/>Scene development, composition, and on-stage adaptation.</p></div><div><span>Toolset</span><SoftwareMarks list={PROJECT_TOOLSETS[p.slug]}/></div><div><span>Production focus</span><p>Camera-led foliage placement<br/>Real-time scene optimization</p></div></div>
       <StoryBook p={p} x={x}/>
       <div id="xr-screening" className="xr-screening"><div className="xr-screening-heading"><h2>The finished work.</h2><span className="xr-kicker">Film / environment / on set</span></div><StoryFilms p={p} x={x}/></div>
     </main>
@@ -869,7 +909,7 @@ function CasePage({ slug }) {
 
         <Reveal delay={180}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24, marginBottom: 'clamp(48px,8vw,90px)', fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
-            {[['Client', `${p.client} · ${p.year}`], ['Role', p.role], p.focus ? ['Focus', p.focus] : ['Duration', p.duration], ['Software', null]].map(([k, v]) => (
+            {[['Client', `${p.client} · ${p.year}`], p.focus ? ['Focus', p.focus] : ['Duration', p.duration], ['Software', null]].map(([k, v]) => (
               <div key={k} style={{ borderTop: 'none', paddingTop: 14 }}>
                 <div>{k}</div>
                 {v ? <div style={{ color: 'var(--ink)', marginTop: 6 }}>{v}</div> : <SoftwareMarks list={x.software || []} />}
@@ -910,12 +950,12 @@ function CaseImageInteraction({routeKey}) {
 
 function ProjectBrief({p}){
  const details={
- 'ranasthala':['Director · Writer · Producer · Cinematographer · Photographer · Environment artist','Unreal Engine / Lightroom / RealityScan / PCG / Claude','Photogrammetry-led arena / Virtual production filming'],
+ 'ranasthala':['Director · Writer · Producer · Cinematographer · Photogrammetry artist · Environment artist','Unreal Engine / Blender / Lightroom CC / RealityScan / Meshy AI / DaVinci Resolve / Weavy AI / Claude','Photogrammetry-led arena / Virtual production filming'],
  'xr02-1920s-nyc':['Environment artist / Motion capture','Unreal Engine / Blender / Sony mocopi / XYN','Digital environment / Character capture / Stage integration'],
  'rainy-forest':['Solo environment artist','Unreal Engine / Gaea / PCG / Splines / Ultra Dynamic Sky','Terrain / Procedural railway / Atmosphere'],
  'photogrammetry-archive':['Photography / Photogrammetry / Asset presentation','Photogrammetry / Polycam','Surface capture / 3D reconstruction / Interactive assets'],
  'unreal-environment-studies':['Environment composition / Lighting / Cameras','Unreal Engine / Ultra Dynamic Sky / Fab / Sketchfab','Materials / Weather / Cinematic rendering'],
  'vfx-compositing-works':['VFX compositing / Undergraduate work','Compositing workflow','Selected compositing shots / Demo reel']};
  const d=details[p.slug]||[p.role,(p.tags||[]).join(' / '),p.focus||p.kind];
- return <div className="shared-project-brief"><style>{`.shared-project-brief{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:35px;margin:0 var(--pad);padding:32px 0;}.shared-project-brief span{font:12px var(--mono);color:var(--lab-primary);text-transform:uppercase;letter-spacing:1.2px}.shared-project-brief p{font:14px/1.75 Arial,sans-serif;color:var(--dim);margin:12px 0 0;max-width:50ch}@media(max-width:700px){.shared-project-brief{grid-template-columns:1fr;gap:24px}}`}</style>{['My contribution','Toolset','Production focus'].map((label,i)=><div key={label}><span>{label}</span><p>{d[i]}</p></div>)}</div>;
+ return <div className="shared-project-brief"><style>{`.shared-project-brief{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:35px;margin:0 var(--pad);padding:32px 0;}.shared-project-brief>div>span{font:12px var(--mono);color:var(--lab-primary);text-transform:uppercase;letter-spacing:1.2px}.shared-project-brief p{font:14px/1.75 Arial,sans-serif;color:var(--dim);margin:12px 0 0;max-width:50ch}@media(max-width:700px){.shared-project-brief{grid-template-columns:1fr;gap:24px}}`}</style>{['My contribution','Toolset','Production focus'].map((label,i)=><div key={label}><span>{label}</span>{i===1?<SoftwareMarks list={PROJECT_TOOLSETS[p.slug]||(window.CASE_EXTRAS?.[p.slug]?.software)||[]}/>:<p>{d[i]}</p>}</div>)}</div>;
 }

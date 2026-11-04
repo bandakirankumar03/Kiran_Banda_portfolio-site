@@ -4,15 +4,6 @@
 .home-page .favourite-slide{transform:none!important;transition:opacity .55s ease,visibility 0s linear .55s!important;will-change:opacity}
 .home-page .favourite-slide.active{transition:opacity .55s ease,visibility 0s linear 0s!important}
 .home-page .favourites-heading{translate:none!important;scale:1!important;opacity:1!important}
-/* A spaced editorial shelf, rather than a joined grid of tiles. */
-.home-page .radar-section .radar-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:26px clamp(30px,5vw,76px)!important;border:0!important}
-.home-page .radar-section .radar-item{grid-template-columns:90px minmax(0,1fr)!important;gap:24px!important;padding:20px 8px 25px!important;min-height:146px;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0;align-items:center}
-.home-page .radar-section .radar-item:after{content:'';position:absolute;bottom:0;left:8px;right:8px;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--ink) 13%,transparent),transparent 92%);pointer-events:none}
-.home-page .radar-section .radar-image{width:90px!important;height:104px!important;transform:none!important;border-radius:9px;border-color:color-mix(in srgb,var(--ink) 14%,transparent);box-shadow:0 9px 24px #0003!important}
-.home-page .radar-section .radar-item:hover .radar-image{transform:translateY(-4px)!important}
-.home-page .radar-section .radar-copy h3{font-size:clamp(23px,2vw,30px)!important;margin:8px 0!important;line-height:1.22!important}
-.home-page .radar-section .radar-source{font-size:10px!important;line-height:1.6;margin-top:10px;opacity:.78}
-.home-page .radar-section .radar-arrow{top:18px;right:4px}
 @media(max-width:700px){
  .home-page .favourites-pin{padding:22px 20px;height:100svh;overflow:hidden}
  .home-page .favourites-stage{flex:1;height:auto;min-height:0}
@@ -23,11 +14,7 @@
  .home-page .favourite-copy h3{font-size:clamp(26px,7vw,34px);margin:11px 0}
  .home-page .favourite-copy p{font-size:13px;line-height:1.65;margin:8px 0}
  .home-page .favourite-copy a{margin-top:3px}
- .home-page .radar-section .radar-list{grid-template-columns:1fr!important;gap:20px!important}
- .home-page .radar-section .radar-item{grid-template-columns:76px minmax(0,1fr)!important;gap:24px!important;padding:16px 4px 24px!important;min-height:128px}
- .home-page .radar-section .radar-image{width:76px!important;height:90px!important}
- .home-page .radar-section .radar-copy h3{font-size:25px!important}
- .home-page .radar-section .radar-arrow{top:9px;right:2px;font-size:15px;opacity:.6}
 }
-@media(prefers-reduced-motion:reduce){.home-page .favourite-slide,.home-page .favourite-slide.active{transition:none!important}.home-page .radar-section .radar-item:hover .radar-image{transform:none!important}}
 .focus-scroll-track .focus-scroll-pin .ws-focus-stage{position:relative;top:auto}
+
+@media(prefers-reduced-motion:reduce){.home-page .favourite-slide,.home-page .favourite-slide.active{transition:none!important}}

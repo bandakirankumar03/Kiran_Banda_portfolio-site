@@ -400,50 +400,83 @@ function OngoingCard({ o }) {
   );
 }
 
-// ─── Interests ───
+// ─── A small, living index of things worth following ───
+const DISCOVERIES = [
+  { id:'dlss5', title:'DLSS 5', source:'NVIDIA', note:'Neural rendering. A new conversation between lighting, materials, and AI.', image:'dlss5.webp', alt:'DLSS 5 game-rendering example published by NVIDIA.', href:'https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/' },
+  { id:'brush', title:'Brush / 4D splats', source:'Brush', note:'Beyond a frozen capture. Gaussian splat sequences, moving through time.', video:'brush.mp4', alt:'Brush Gaussian splatting demo, with captured scenes by GradeEterna.', href:'https://github.com/ArthurBrussee/brush' },
+  { id:'foliage', title:'Procedural worlds', source:'Unreal Engine', note:'Following PCG, Nanite Foliage, and new ways to build living landscapes.', image:'foliage.webp', alt:'Procedural vegetation imagery from Epic Games’ Unreal Engine 5.7 announcement.', href:'https://www.unrealengine.com/en-US/news/unreal-engine-5-7-is-now-available' },
+  { id:'marble', title:'Marble', source:'World Labs', note:'From a visual idea to a 3D world. Another way to explore a place.', image:'marble.webp', alt:'Victorian foyer reference shown in World Labs’ Marble world model article.', href:'https://www.worldlabs.ai/blog/marble-world-model' },
+];
+
+const DISCOVERY_EVENTS = [
+  { title:'GDC', date:'1–4 March', start:'2027-03-01', end:'2027-03-04', place:'San Francisco', topic:'Real-time art & game technology', href:'https://gdconf.com/' },
+  { title:'NAB Show', date:'3–7 April', start:'2027-04-03', end:'2027-04-07', place:'Las Vegas', topic:'Production, post & media technology', href:'https://www.nabshow.com/las-vegas/' },
+  { title:'FMX', date:'27–30 April', start:'2027-04-27', end:'2027-04-30', place:'Stuttgart', topic:'Animation, VFX & digital media', href:'https://fmx.de/en/home' },
+  { title:'SIGGRAPH', date:'8–12 August', start:'2027-08-08', end:'2027-08-12', place:'Anaheim', topic:'Graphics research & production', href:'https://s2027.siggraph.org/' },
+];
+
 function InterestsSection() {
-  const items = [
-    { image: 'unreal', category: 'Exploring', title: 'Nanite tessellation', note: 'Surfaces with more to say.', source: 'Unreal Engine', href: 'https://www.unrealengine.com/en-US/unreal-engine-5' },
-    { image: 'polycam', category: 'Watching', title: 'Gaussian splatting', note: 'Real places, captured differently.', source: 'Polycam', href: 'https://poly.cam/tools/gaussian-splatting' },
-    { image: 'meshy', category: 'Experimenting', title: 'AI-assisted blockouts', note: 'Another way into an idea.', source: 'Meshy', href: 'https://www.meshy.ai/' },
-    { image: 'scad', category: 'Creative rooms', title: 'SCAD AnimationFest', note: 'Animation, film, and the people making it.', source: 'SCAD', href: 'https://www.scad.edu/scadfilm/festivals/animationfest2026' },
-    { image: 'fmx', category: 'Following', title: 'FMX · Stuttgart', note: 'Art, technology, and moving images.', source: 'FMX', href: 'https://fmx.de/en/home' },
-    { image: 'poetics', category: 'On the bookshelf', title: 'The Poetics of Space', note: 'Gaston Bachelard. Thinking about atmosphere.', source: 'Book cover · Wikipedia', href: 'https://en.wikipedia.org/wiki/The_Poetics_of_Space' },
-  ];
-  return <section className="interest-editorial radar-section" aria-labelledby="radar-title">
-    <h2 id="radar-title">Caught my <em>eye.</em></h2>
-    <div className="radar-list">
-      {items.map(item => <a key={item.image} className={'radar-item radar-item-'+item.image} href={item.href} target="_blank" rel="noopener noreferrer" aria-label={`${item.title} — ${item.source} (opens in a new tab)`}>
-        <div className="radar-image"><img src={'assets/radar/'+item.image+'.webp'} alt="" loading="lazy" width="112" height="88"/></div>
-        <div className="radar-copy"><span className="radar-category">{item.category}</span><h3>{item.title}</h3><p>{item.note}</p><span className="radar-source">{item.source}</span></div>
-        <span className="radar-arrow" aria-hidden="true">↗</span>
-      </a>)}
+  const root=React.useRef(null),video=React.useRef(null);
+  const [active,setActive]=React.useState(0),[visible,setVisible]=React.useState(false);
+  const [hovered,setHovered]=React.useState(false),[focused,setFocused]=React.useState(false),[paused,setPaused]=React.useState(false);
+  const [reduced,setReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
+  React.useEffect(()=>{
+    const media=matchMedia('(prefers-reduced-motion:reduce)'),change=()=>setReduced(media.matches);
+    media.addEventListener('change',change);
+    const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:.18});
+    observer.observe(root.current);
+    const visibility=()=>{if(document.hidden)setVisible(false);else if(root.current){const r=root.current.getBoundingClientRect();setVisible(r.bottom>0&&r.top<innerHeight)}};
+    document.addEventListener('visibilitychange',visibility);
+    return()=>{observer.disconnect();media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility)};
+  },[]);
+  React.useEffect(()=>{
+    if(!visible||hovered||focused||paused||reduced)return;
+    const timer=setTimeout(()=>setActive(i=>(i+1)%DISCOVERIES.length),4600);
+    return()=>clearTimeout(timer);
+  },[active,visible,hovered,focused,paused,reduced]);
+  React.useEffect(()=>{
+    const el=video.current;if(!el)return;
+    if(active===1&&visible&&!paused&&!reduced)el.play().catch(()=>{});else el.pause();
+  },[active,visible,paused,reduced]);
+  const float=e=>{
+    if(e.pointerType!=='mouse'||reduced)return;
+    const r=e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--discovery-x',((e.clientX-r.left)/r.width-.5)*10+'px');
+    e.currentTarget.style.setProperty('--discovery-y',((e.clientY-r.top)/r.height-.5)*8+'px');
+  };
+  const settle=e=>{e.currentTarget.style.setProperty('--discovery-x','0px');e.currentTarget.style.setProperty('--discovery-y','0px')};
+  return <section ref={root} className="discovery-section" aria-labelledby="discovery-title" data-active-discovery={DISCOVERIES[active].id}
+    onFocusCapture={e=>setFocused(!!e.target.closest('.discovery-index,.discovery-credit'))} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setFocused(false)}}>
+    <h2 id="discovery-title">Caught my <em>eye.</em></h2>
+    <div className="discovery-layout">
+      <div className="discovery-visual" onPointerMove={float} onPointerLeave={settle}>
+        <button className="discovery-media" onClick={()=>setPaused(v=>!v)} aria-pressed={paused} aria-label={paused?'Resume discoveries':'Pause discoveries'}>
+          {DISCOVERIES.map((item,i)=><span key={item.id} className={'discovery-frame'+(i===active?' is-current':'')} aria-hidden={i!==active}>
+            {item.video?<video ref={video} src={'assets/radar/'+item.video} loop muted playsInline preload="metadata" aria-label={item.alt}/>:<img src={'assets/radar/'+item.image} alt={item.alt} loading="lazy" decoding="async" width="1100" height="700"/>}
+          </span>)}
+          <span className="discovery-glass" aria-hidden="true"/>
+        </button>
+        <a className="discovery-credit" href={DISCOVERIES[active].href} target="_blank" rel="noopener noreferrer">{DISCOVERIES[active].source}<span aria-hidden="true">↗</span></a>
+      </div>
+      <div className="discovery-index" aria-label="Things I’m following">
+        {DISCOVERIES.map((item,i)=><a key={item.id} className={'discovery-entry'+(i===active?' is-current':'')} href={item.href} target="_blank" rel="noopener noreferrer"
+          onPointerEnter={e=>{if(e.pointerType==='mouse'){setActive(i);setHovered(true)}}} onPointerLeave={()=>setHovered(false)} onFocus={()=>setActive(i)} aria-label={item.title+' — '+item.source+' (opens in a new tab)'}>
+          <span className="discovery-name">{item.title}<span aria-hidden="true">↗</span></span>
+          <span className="discovery-note">{item.note}</span>
+        </a>)}
+      </div>
     </div>
-    <style>{`
-      .radar-section{padding:clamp(40px,5vw,68px) var(--pad);max-width:1296px;margin:0 auto;box-sizing:border-box}
-      .radar-section h2{font:300 clamp(44px,5.5vw,80px)/1.06 var(--serif);letter-spacing:-2px;margin:0 0 40px}
-      .radar-section h2 em{font-weight:300;color:var(--lab-primary,#C1663B)}
-      .radar-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 36px}
-      .radar-item{display:grid;grid-template-columns:84px minmax(0,1fr) 12px;gap:16px;align-items:center;text-decoration:none;color:var(--ink);min-width:0;outline-offset:8px}
-      .radar-image{width:84px;height:98px;overflow:hidden;background:rgba(128,128,128,.06);border-radius:2px;transition:transform .35s ease,box-shadow .35s ease}
-      .radar-image img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.65);transition:transform .5s ease,filter .35s ease}
-      .radar-item-scad .radar-image img,.radar-item-poetics .radar-image img{object-fit:contain;padding:7px;box-sizing:border-box}
-      .radar-item-scad .radar-image{background:#15131d}
-      .radar-item-meshy .radar-image img{object-fit:contain;background:#fff}
-      .radar-copy{min-width:0}
-      .radar-category{font:11px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.8px;color:var(--dim)}
-      .radar-copy h3{font:300 26px/1.2 var(--serif);letter-spacing:-.4px;margin:8px 0}
-      .radar-copy p{font:13px/1.6 var(--mono);color:var(--dim);margin:0}
-      .radar-source{display:block;font:11px/1.5 var(--mono);color:var(--dim);opacity:.8;margin-top:8px}
-      .radar-arrow{font:17px var(--serif);color:var(--dim);transition:transform .3s ease,color .3s ease}
-      .radar-item:hover .radar-image,.radar-item:focus-visible .radar-image{transform:translateY(-4px) rotate(-2deg);box-shadow:0 9px 22px #0003}
-      .radar-item:hover img,.radar-item:focus-visible img{filter:saturate(1);transform:scale(1.06)}
-      .radar-item:hover .radar-arrow,.radar-item:focus-visible .radar-arrow{transform:translate(3px,-3px);color:var(--accent)}
-      .radar-item:focus-visible{outline:1px solid var(--accent)}
-      @media(max-width:1250px){.radar-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:600px){.radar-list{grid-template-columns:1fr;gap:28px}.radar-item{grid-template-columns:72px minmax(0,1fr) 16px;gap:16px}.radar-image{width:72px;height:88px}.radar-copy h3{font-size:25px}}
-      @media(prefers-reduced-motion:reduce){.radar-item *{transition:none!important}.radar-item:hover .radar-image,.radar-item:focus-visible .radar-image,.radar-item:hover img,.radar-item:focus-visible img,.radar-item:hover .radar-arrow,.radar-item:focus-visible .radar-arrow{transform:none}}
-    `}</style>
+    <aside className="discovery-events" aria-labelledby="discovery-events-title">
+      <h3 id="discovery-events-title">Looking ahead, <em>2027.</em></h3>
+      <div className="discovery-events-list">
+        {DISCOVERY_EVENTS.map(event=><a className="discovery-event" key={event.title} href={event.href} target="_blank" rel="noopener noreferrer" aria-label={`${event.title} 2027, ${event.date}, ${event.place} (opens in a new tab)`}>
+          <span className="discovery-event-date"><time dateTime={event.start}>{event.date}</time><span aria-hidden="true">↗</span></span>
+          <span className="discovery-event-title">{event.title}</span>
+          <span className="discovery-event-place">{event.place}</span>
+          <span className="discovery-event-topic">{event.topic}</span>
+        </a>)}
+      </div>
+    </aside>
   </section>;
 }
 

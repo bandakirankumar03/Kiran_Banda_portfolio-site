@@ -1,4 +1,5 @@
-const TOOL_LOGOS=[{"name": "Unreal Engine 5", "file": "unrealengine.svg", "wide": false}, {"name": "Maya", "file": "maya.svg", "wide": false}, {"name": "Blender", "file": "blender.svg", "wide": false}, {"name": "SpeedTree", "file": "speedtree.gif", "wide": true}, {"name": "Gaea", "file": "gaea.png", "wide": false}, {"name": "RealityCapture", "file": "realitycapture.svg", "wide": false}, {"name": "Houdini", "file": "houdini.svg", "wide": false}, {"name": "EmberGen", "file": "embergen.svg", "wide": false}, {"name": "Substance Painter", "file": "substance.svg", "wide": false}, {"name": "Photoshop", "file": "photoshop.svg", "wide": false}, {"name": "After Effects", "file": "aftereffects.svg", "wide": false}, {"name": "Premiere Pro", "file": "premierepro.svg", "wide": false}, {"name": "DaVinci Resolve", "file": "davinci.png", "wide": false}, {"name": "Nuke", "file": "nuke.svg", "wide": true}];
+const TOOL_LOGOS=[{"name": "Unreal Engine 5", "file": "unrealengine.svg", "wide": false}, {"name": "Maya", "file": "maya.svg", "wide": false}, {"name": "Blender", "file": "blender.svg", "wide": false}, {"name": "SpeedTree", "file": "speedtree.gif", "wide": true}, {"name": "Gaea", "file": "gaea.png", "wide": false}, {"name": "RealityCapture", "file": "realitycapture.svg", "wide": false}, {"name": "Houdini", "file": "houdini.svg", "wide": false}, {"name": "EmberGen", "file": "embergen.svg", "wide": false}, {"name": "Substance Painter", "file": "substance.svg", "wide": false}, {"name": "Photoshop", "file": "photoshop.svg", "wide": false}, {"name": "Lightroom CC", "file": "lightroom-cc.svg", "wide": false}, {"name": "After Effects", "file": "aftereffects.svg", "wide": false}, {"name": "Premiere Pro", "file": "premierepro.svg", "wide": false}, {"name": "DaVinci Resolve", "file": "davinci.png", "wide": false}, {"name": "Nuke", "file": "nuke.svg", "wide": true}];
+const AI_TOOL_LOGOS=[{"name": "Claude", "file": "claude.svg", "wide": false}, {"name": "ChatGPT", "file": "chatgpt.svg", "wide": false}, {"name": "Weavy AI", "file": "weavy.svg", "wide": false}, {"name": "Meshy AI", "file": "meshy.png", "wide": false}, {"name": "ComfyUI", "file": "comfyui.svg", "wide": false}];
 function HeadlineMotion({routeKey}){
  React.useLayoutEffect(()=>{
   const page=document.querySelector('.site-page');if(!page)return;
@@ -14,6 +15,29 @@ function HeadlineMotion({routeKey}){
  },[routeKey]);return null;
 }
 
+function AmbientFloat({routeKey}){
+ React.useEffect(()=>{
+  const page=document.querySelector('.site-page');if(!page)return;
+  const reduced=matchMedia('(prefers-reduced-motion:reduce)'),fine=matchMedia('(hover:hover) and (pointer:fine)');
+  const selector='.ongoing-card,.study-card,.experience-card,[data-card],.favourite-photo,.hobby-expand-frame,.film-print,[data-photo-frame],.discovery-media,.ws-focus-stage,.about-split-lenses .lens-surface';
+  const items=new Map(),visible=new Set();
+  const sync=()=>items.forEach((animation,el)=>{if(visible.has(el)&&!document.hidden&&!reduced.matches&&fine.matches)animation.play();else animation.pause()});
+  const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)visible.add(entry.target);else visible.delete(entry.target)});sync()});
+  const register=()=>{
+   items.forEach((animation,el)=>{if(!el.isConnected){animation.cancel();observer.unobserve(el);visible.delete(el);items.delete(el)}});
+   page.querySelectorAll(selector).forEach(el=>{
+    if(items.has(el)||el.closest('dialog,.orbital-toolkit,.portrait-studies')||el.parentElement?.closest(selector))return;
+    el.classList.add('ambient-float');
+    const i=items.size,isLens=el.matches('.about-split-lenses .lens-surface'),animation=el.animate([{'--ambient-y':'1.5px'},{'--ambient-y':'-1.5px'},{'--ambient-y':'1.5px'}],{duration:(isLens?9400:7200)+(i%5)*450,delay:-(i%7)*830,iterations:Infinity,easing:'ease-in-out'});
+    animation.pause();items.set(el,animation);observer.observe(el);
+   });
+  };
+  register();const mutations=new MutationObserver(register);mutations.observe(page,{childList:true,subtree:true});
+  document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);fine.addEventListener('change',sync);
+  return()=>{observer.disconnect();mutations.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);fine.removeEventListener('change',sync);items.forEach((animation,el)=>{animation.cancel();el.classList.remove('ambient-float')})};
+ },[routeKey]);return null;
+}
+
 function FloatingSurfaces({routeKey}){
  React.useEffect(()=>{
   const page=document.querySelector('.site-page');if(!page)return;
@@ -24,7 +48,7 @@ function FloatingSurfaces({routeKey}){
   const selectors=cards+','+frames+','+text+',img';
   const registered=new Set(),states=new Map();let active=new Set(),frame=0,last=0;
   const register=()=>page.querySelectorAll(selectors).forEach(el=>{
-   if(registered.has(el)||el.closest('.site-nav,dialog,[role="dialog"]'))return;
+   if(registered.has(el)||el.closest('.site-nav,.portrait-studies,.orbital-toolkit,.quiet-focus-list,dialog,[role="dialog"]'))return;
    // Framed photographs move as a single object so their crop and paper edges stay intact.
    if(el.matches('img')&&el.closest(frames+',.portrait-person'))return;
    registered.add(el);el.classList.add('float-surface');
@@ -60,5 +84,5 @@ function FloatingSurfaces({routeKey}){
   const observer=new MutationObserver(records=>{if(records.some(r=>r.addedNodes.length))register();});observer.observe(page,{childList:true,subtree:true});
   page.addEventListener('pointermove',move,{passive:true});page.addEventListener('pointerleave',release);window.addEventListener('blur',release);window.addEventListener('scroll',release,{passive:true});fine.addEventListener('change',reset);reduced.addEventListener('change',reset);
   return()=>{cancelAnimationFrame(frame);observer.disconnect();page.removeEventListener('pointermove',move);page.removeEventListener('pointerleave',release);window.removeEventListener('blur',release);window.removeEventListener('scroll',release);fine.removeEventListener('change',reset);reduced.removeEventListener('change',reset);registered.forEach(el=>{el.classList.remove('float-surface','float-glass','float-engaged');['--float-x','--float-y','--float-tilt'].forEach(p=>el.style.removeProperty(p));});};
- },[routeKey]);return null;
+ },[routeKey]);return <AmbientFloat routeKey={routeKey}/>;
 }

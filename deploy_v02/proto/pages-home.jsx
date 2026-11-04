@@ -25,63 +25,17 @@ const HOME_HIGHLIGHTS = [
   { project: 'Monsoon Station', slug: 'rainy-forest', topic: 'The final render', title: 'Finding the atmosphere.', description: 'My favourite view of Monsoon Station: the railway winding through the trees, with mountain light pulling the whole scene together.', image: 'monsoon-station/web/highresscreenshot00008.webp', alt: 'A final Unreal render of Monsoon Station, with railway bridges, forest and sunlit mountains.' },
 ];
 
-function ProjectHighlights() {
-  const [active, setActive] = React.useState(0);
-  const [paused, setPaused] = React.useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const [visible, setVisible] = React.useState(false);
-  const [pageVisible, setPageVisible] = React.useState(!document.hidden);
-  const sectionRef = React.useRef(null);
-  const running = !paused && visible && pageVisible;
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: .3 });
-    observer.observe(sectionRef.current);
-    const onVisibility = () => setPageVisible(!document.hidden);
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', onVisibility); };
-  }, []);
-  React.useEffect(() => {
-    if (!running) return;
-    const timer = setTimeout(() => setActive(index => (index + 1) % HOME_HIGHLIGHTS.length), 2000);
-    return () => clearTimeout(timer);
-  }, [running, active]);
-  const select = (index) => { setActive((index + HOME_HIGHLIGHTS.length) % HOME_HIGHLIGHTS.length); setPaused(false); };
-  const item = HOME_HIGHLIGHTS[active];
-  return (
-    <section ref={sectionRef} className="project-highlights" aria-labelledby="highlights-title" aria-roledescription="carousel">
-      <h2 id="highlights-title">A few <em>favourites.</em></h2>
-      <div className="highlight-layout">
-        <div className="highlight-copy" aria-live={paused ? 'polite' : 'off'}>
-          <div className="highlight-project">{item.project} <span> / {item.topic}</span></div>
-          <h3 key={item.title}>{item.title}</h3>
-          <p>{item.description}</p>
-          <a className="highlight-link" href={`#/case/${item.slug}`}>Explore the project <span aria-hidden="true">↗</span></a>
-        </div>
-        <button type="button" className="highlight-image" onClick={() => setPaused(value => !value)} aria-label={paused ? "Resume project highlights" : "Pause project highlights"} aria-pressed={paused}>
-          {HOME_HIGHLIGHTS.map((slide, index) => <img key={slide.slug} className={index === active ? 'is-active' : ''} src={`media/projects/${slide.image}`} alt={index === active ? slide.alt : ''} aria-hidden={index !== active} width="1920" height="1080" loading="lazy"/>)}
-        </button>
-      </div>
-      <style>{`
-        .project-highlights{padding:clamp(60px,8vw,120px) var(--pad);scroll-margin-top:80px}
-        .project-highlights h2{font:300 clamp(44px,5.5vw,80px)/1.06 var(--serif);letter-spacing:-2px;margin:0 0 40px}
-        .project-highlights h2 em{color:var(--lab-primary,#C1663B);font-weight:300}
-        .highlight-layout{display:flex;flex-direction:column;gap:30px;max-width:1200px;margin:0 auto}
-        .highlight-image{order:-1;position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;aspect-ratio:16/9;background:#121219;overflow:hidden;text-align:left}
-        .highlight-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .45s ease}
-        .highlight-image img.is-active{opacity:1}
-        .highlight-copy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(30px,8vw,120px);width:100%;align-items:start}
-        .highlight-project{grid-column:1;font:11px/1.8 var(--mono);color:var(--accent);margin-bottom:12px}
-        .highlight-project span{color:var(--dim)}
-        .highlight-copy h3{grid-column:1;grid-row:2 / 4;font:300 clamp(26px,3vw,42px)/1.15 var(--serif);letter-spacing:-.7px;margin:0;min-height:98px;max-width:500px}
-        .highlight-copy p{grid-column:2;grid-row:1 / 3;font:300 16px/1.8 var(--sans);color:var(--dim);margin:0;min-height:86px}
-        .highlight-link{grid-column:2;display:inline-block;justify-self:start;padding:12px 0;font:11px/1.8 var(--mono);color:var(--ink);text-decoration:none}
-        .highlight-link span{color:var(--accent);margin-left:16px}
-        .project-highlights a:focus-visible,.highlight-image:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
-        @media(max-width:600px){.highlight-layout{gap:22px}.highlight-copy{display:block}.highlight-copy h3{font-size:28px;min-height:64px;margin-bottom:16px}.highlight-copy p{font-size:15px;min-height:108px}.highlight-project{font-size:10px}.highlight-link{margin-top:8px}}
-        @media(prefers-reduced-motion:reduce){.highlight-image img{transition:none}}
-
-      `}</style>
-    </section>
-  );
+function ProjectHighlights(){
+  const ref=React.useRef(null);
+  const [active,setActive]=React.useState(0),[paused,setPaused]=React.useState(false);
+  React.useEffect(()=>{
+    let frame=0;
+    const update=()=>{frame=0;if(paused)return;const r=ref.current.getBoundingClientRect();const p=Math.max(0,Math.min(.999,-r.top/Math.max(1,r.height-innerHeight)));setActive(Math.floor(p*HOME_HIGHLIGHTS.length));};
+    const tick=()=>{if(!frame)frame=requestAnimationFrame(update);};
+    window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();
+    return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);};
+  },[paused]);
+  return <section className="scroll-favourites" ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2><span>Scroll to explore ↓</span></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt}/></button></article>)}</div></div></section>;
 }
 
 // ─── Fullscreen demo reel hero — pure visual, no overlay text ─
@@ -427,10 +381,10 @@ function OngoingCard({ o }) {
   return (
     <div className="ongoing-card" ref={ref} {...hover} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{ border: `1px solid var(--hair)`, padding: 26, position: 'relative', overflow: 'hidden', cursor: 'none',
-        borderColor: h ? 'rgba(217,162,74,0.4)' : 'var(--hair)', transition: 'border-color .3s' }}>
+        borderColor: h ? 'rgba(var(--accent-rgb,215,184,125),0.4)' : 'var(--hair)', transition: 'border-color .3s' }}>
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(280px 240px at var(--mx, -200px) var(--my, -200px), rgba(217,162,74,0.10), transparent 70%)',
+        background: 'radial-gradient(280px 240px at var(--mx, -200px) var(--my, -200px), rgba(var(--accent-rgb,215,184,125),0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
       <div style={{ position: 'relative', fontSize: 30, fontWeight: 300, letterSpacing: -0.6, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 16,

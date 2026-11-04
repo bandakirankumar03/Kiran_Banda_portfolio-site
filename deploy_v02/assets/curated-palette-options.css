@@ -1,0 +1,18 @@
+html[data-palette-tone="light"] .site-nav img{filter:brightness(0)!important}
+html[data-palette-tone="light"] .tool-logo img[src*="unrealengine"],html[data-palette-tone="light"] .tool-logo img[src*="nuke"]{filter:brightness(0)!important}
+html[data-palette-tone="light"] .tool-logo img[src*="speedtree"]{filter:grayscale(1) brightness(.3)!important;mix-blend-mode:multiply}
+html[data-palette-tone="light"] .tool-logo img[src*="gaea"]{filter:brightness(0)!important}
+html[data-palette-study] .contact-page button[type="submit"]{color:var(--bg)!important}
+html[data-palette-tone="light"] .float-glass,html[data-palette-tone="light"] .portrait-practice .float-glass{box-shadow:inset 0 1px 2px color-mix(in srgb,var(--ink) 8%,transparent),0 14px 25px -24px color-mix(in srgb,var(--ink) 40%,transparent)!important}
+
+/* Each choice previews its own color balance before selection. */
+.palette-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.palette-options button{background:var(--option-bg);color:var(--option-ink);border-color:color-mix(in srgb,var(--option-ink) 25%,transparent);padding:13px 15px}
+.palette-options button[aria-pressed=true]{background:var(--option-bg);border-color:var(--option-accent);box-shadow:inset 0 0 0 1px var(--option-accent)}
+.palette-options small{color:color-mix(in srgb,var(--option-ink) 75%,transparent);min-height:0;font-size:10px}
+.palette-swatches{height:9px;outline:0;margin-bottom:9px;gap:4px;overflow:visible}
+.palette-swatches i{border-radius:2px;border:1px solid color-mix(in srgb,var(--option-ink) 22%,transparent)}
+.palette-options .palette-sample{display:block;font:400 25px/1.1 var(--serif);letter-spacing:-.7px;margin-top:14px}
+.palette-sample em{color:var(--option-accent);font-weight:400}
+.palette-options strong{font-family:var(--mono);font-size:10px}
+@media(max-width:760px){.palette-options{grid-template-columns:repeat(2,minmax(0,1fr))}.palette-options button{padding:11px}.palette-options .palette-sample{font-size:20px}.palette-options small{font-size:9px}}

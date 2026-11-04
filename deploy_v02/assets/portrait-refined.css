@@ -26,3 +26,17 @@
 @media(max-width:1000px) and (min-width:761px){.portrait-refined .portrait-side-note{width:24%;bottom:7%}.portrait-refined .portrait-side-note p{font-size:25px}}
 @media(max-width:760px){.portrait-refined .portrait-scene{height:790px;min-height:0}.portrait-refined .portrait-scene-copy{top:4%;width:90%;left:5%}.portrait-refined .portrait-scene-copy .portrait-roles{margin-top:16px}.portrait-refined .portrait-side-note{display:none}.portrait-refined .portrait-backtype{top:28%}.portrait-finish-controls nav{grid-template-columns:repeat(2,minmax(0,1fr))}.portrait-finish-controls button{padding:12px}.finish-selected{font-size:9px}.finish-selected>span:last-child{display:none}.portrait-refined[data-backdrop="1"] .portrait-backplate{inset:28% -8% -4%}.portrait-refined[data-backdrop="2"] .portrait-backplate{inset:25% -10% -4%}.portrait-refined[data-backdrop="3"] .portrait-backplate{inset:34% 8% 0}}
 @media(prefers-reduced-motion:reduce){.portrait-refined .portrait-backplate{transform:none;transition:none}}
+/* Decode the lighter portrait first, then reveal one composited image layer. */
+.site-page-about.route-arrival{animation:aboutPageArrival .45s ease-out both}
+.site-page-about.route-arrival.route-leaving{animation:pageDepart .16s ease both}
+.portrait-refined .portrait-person{animation:none;opacity:0;transform:translate3d(var(--px,0px),calc(var(--py,0px) + var(--portrait-scroll,0)*24px + 14px),0);transition:opacity .65s ease,transform .32s cubic-bezier(.2,.7,.2,1);will-change:transform,opacity;backface-visibility:hidden}
+.portrait-refined .portrait-scene[data-portrait-ready="true"] .portrait-person{opacity:1;transform:translate3d(var(--px,0px),calc(var(--py,0px) + var(--portrait-scroll,0)*24px),0)}
+.portrait-refined .portrait-person img{filter:none}
+.portrait-refined .portrait-backtype{transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+.portrait-refined .portrait-backplate{transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.portrait-refined .portrait-roles{position:relative;color:color-mix(in srgb,var(--accent) 82%,var(--ink))}
+.portrait-refined .portrait-role-word,.portrait-refined .portrait-roles-static{color:inherit;font-weight:500}
+.portrait-refined .portrait-role-word{position:absolute;top:0;left:0;width:100%;opacity:0;transform:translateY(5px);animation:none;transition:opacity .45s ease,transform .6s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
+.portrait-refined .portrait-role-word.is-current{opacity:1;transform:translateY(0)}
+@keyframes aboutPageArrival{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.site-page-about.route-arrival,.site-page-about.route-arrival.route-leaving,.portrait-refined .portrait-role-word{animation:none!important}.portrait-refined .portrait-person,.portrait-refined .portrait-scene[data-portrait-ready="true"] .portrait-person{transform:none!important;transition:none;will-change:auto}}

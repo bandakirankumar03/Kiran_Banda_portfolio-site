@@ -1,4 +1,9 @@
 /* Shared typography polish for every route in the approved portrait preview. */
+@property --ambient-y{syntax:'<length>';inherits:false;initial-value:0px}
+.ambient-float{translate:0 var(--ambient-y)!important}
+.float-surface.ambient-float,.float-surface.ambient-float[data-scroll-reveal]{translate:calc(var(--reveal-x,0px) + var(--float-x,0px)) calc(var(--reveal-y,0px) + var(--float-y,0px) + var(--ambient-y))!important}
+.focus-gallery .ws-focus-stage.ambient-float{translate:var(--focus-x,0px) calc(var(--focus-y,0px) + var(--ambient-y))!important}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.ambient-float,.float-surface.ambient-float,.float-surface.ambient-float[data-scroll-reveal]{translate:var(--reveal-x,0px) var(--reveal-y,0px)!important}.focus-gallery .ws-focus-stage.ambient-float{translate:0 0!important}}
 .float-surface{--float-x:0px;--float-y:0px;--float-tilt:0deg;translate:var(--float-x) var(--float-y)!important;rotate:1 -1 0 var(--float-tilt)}
 .float-surface[data-scroll-reveal]{translate:calc(var(--reveal-x,0px) + var(--float-x)) calc(var(--reveal-y,0px) + var(--float-y))!important}
 .float-glass{background:radial-gradient(ellipse at 8% 0%,color-mix(in srgb,var(--ink) 5%,transparent),transparent 66%),linear-gradient(145deg,color-mix(in srgb,var(--accent) 3%,transparent),color-mix(in srgb,var(--bg) 56%,transparent))!important;box-shadow:inset 0 1px 2px color-mix(in srgb,var(--ink) 8%,transparent),inset 0 -1px 5px #0002,0 16px 32px -27px #000b!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:7px;transition:box-shadow .65s ease,background .65s ease}

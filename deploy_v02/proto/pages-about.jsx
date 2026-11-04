@@ -52,7 +52,7 @@ function BioSection() {
   );
 }
 
-const ROLES = ['Environment Artist', 'VFX Compositor', 'Editor', 'Photogrammetry Artist', 'Virtual Art Department', 'Traveler', 'Dreamer'];
+const ROLES = ['Environment Artist', 'VFX Compositor', 'Editor', 'Photogrammetry Artist', 'Virtual Art Department', 'Director', 'VFX Supervisor', 'Producer'];
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%*+=-';
 function RotatingRole() {
   const [i, setI] = React.useState(0);
@@ -183,7 +183,7 @@ function EducationRow({ e }) {
       }}>
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(260px 220px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.10), transparent 70%)',
+        background: 'radial-gradient(260px 220px at var(--mx, -200px) var(--my, 50%), rgba(var(--accent-rgb,215,184,125),0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
 
@@ -233,7 +233,7 @@ function ExperienceRow({ e, last }) {
         paddingLeft: h ? 36 : 24 }}>
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(280px 240px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.12), transparent 70%)',
+        background: 'radial-gradient(280px 240px at var(--mx, -200px) var(--my, 50%), rgba(var(--accent-rgb,215,184,125),0.12), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
 
@@ -268,7 +268,7 @@ function SkillsSection() {
       <div style={{
         position: 'absolute', left: mouse.x, top: mouse.y, width: 480, height: 480,
         transform: 'translate(-50%, -50%)', pointerEvents: 'none',
-        background: 'radial-gradient(circle, rgba(217,162,74,0.12) 0%, transparent 60%)',
+        background: 'radial-gradient(circle, rgba(var(--accent-rgb,215,184,125),0.12) 0%, transparent 60%)',
         opacity: active ? 1 : 0, transition: 'opacity .4s', filter: 'blur(20px)',
       }} />
 
@@ -315,12 +315,12 @@ function SkillChip({ label, isActive, dim, onEnter, onLeave }) {
         padding: '10px 16px',
         border: `1px solid ${isActive ? 'var(--accent)' : 'var(--hair)'}`,
         color: isActive ? 'var(--accent)' : 'var(--ink)',
-        background: isActive ? 'rgba(217,162,74,0.08)' : 'transparent',
+        background: isActive ? 'rgba(var(--accent-rgb,215,184,125),0.08)' : 'transparent',
         opacity: dim ? 0.32 : 1,
         cursor: 'none',
         transform: isActive ? 'translateY(-2px)' : 'translateY(0)',
         transition: 'all .25s cubic-bezier(.2,.7,.2,1)',
-        boxShadow: isActive ? '0 8px 24px rgba(217,162,74,0.18)' : 'none',
+        boxShadow: isActive ? '0 8px 24px rgba(var(--accent-rgb,215,184,125),0.18)' : 'none',
       }}>
       {label}
     </span>
@@ -352,10 +352,10 @@ function CertCard({ c }) {
       style={{ position: 'relative', overflow: 'hidden',
         border: `1px solid var(--hair)`, padding: '24px 26px', cursor: 'none',
         transform: h ? 'translateY(-3px)' : 'translateY(0)', transition: 'transform .3s, border-color .3s',
-        borderColor: h ? 'rgba(217,162,74,0.4)' : 'var(--hair)' }}>
+        borderColor: h ? 'rgba(var(--accent-rgb,215,184,125),0.4)' : 'var(--hair)' }}>
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(300px 240px at var(--mx, -200px) var(--my, -200px), rgba(217,162,74,0.10), transparent 70%)',
+        background: 'radial-gradient(300px 240px at var(--mx, -200px) var(--my, -200px), rgba(var(--accent-rgb,215,184,125),0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
       <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--dim)', marginBottom: 18 }}>
@@ -499,8 +499,8 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
         position: 'absolute',
         top: -10, [tapeLeft ? 'left' : 'right']: '14%',
         width: 64, height: 22,
-        background: 'rgba(217,162,74,0.32)',
-        border: '1px solid rgba(217,162,74,0.45)',
+        background: 'rgba(var(--accent-rgb,215,184,125),0.32)',
+        border: '1px solid rgba(var(--accent-rgb,215,184,125),0.45)',
         boxShadow: '0 2px 4px rgba(0,0,0,0.25)',
         transform: `rotate(${tapeLeft ? -4 : 4}deg)`,
         backgroundImage: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 4px, transparent 4px 8px)',
@@ -622,7 +622,7 @@ function MovieRow({ m, active, onEnter, onLeave, last }) {
         paddingLeft: active ? 40 : 24 }}>
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(280px 200px at var(--mx, -200px) var(--my, 50%), rgba(217,162,74,0.10), transparent 70%)',
+        background: 'radial-gradient(280px 200px at var(--mx, -200px) var(--my, 50%), rgba(var(--accent-rgb,215,184,125),0.10), transparent 70%)',
         opacity: 'var(--mActive, 0)', transition: 'opacity .25s',
       }} />
 

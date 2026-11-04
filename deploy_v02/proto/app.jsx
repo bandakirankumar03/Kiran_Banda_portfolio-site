@@ -56,6 +56,8 @@ function App() {
   else if (route.name === 'case')    page = <CasePage key={route.slug} slug={route.slug} />;
   else page = <HomePage />;
 
+  React.useEffect(()=>{const replay=()=>setIntroDone(false);window.addEventListener('kb-replay-intro',replay);return()=>window.removeEventListener('kb-replay-intro',replay);},[]);
+
   const enterSite = React.useCallback(() => {
     sessionStorage.setItem('kb-intro-done', '1');
     setIntroDone(true);
@@ -65,13 +67,14 @@ function App() {
     <RouteCtx.Provider value={{ route, go }}>
       <CursorCtx.Provider value={{ label, mode, setLabel, setMode }}>
         <Cursor />
+        <StyleLab hidden={!introDone} />
         {!introDone && <Intro onEnter={enterSite} />}
         {introDone && (
           <>
             <Nav />
             <div className={'site-page site-page-' + route.name}>{page}</div>
-            <CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
-            <StyleLab />
+            <SiteScrollMotion routeKey={route.name+':' +(route.slug || '')}/><CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
+
           </>
         )}
       </CursorCtx.Provider>

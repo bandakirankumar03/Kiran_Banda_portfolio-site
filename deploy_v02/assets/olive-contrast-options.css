@@ -1,0 +1,9 @@
+/* The dark olive and limestone stay constant; one bolder accent changes. */
+.style-name-preview .portrait-backtype{color:var(--ink);opacity:.14}
+.style-name-preview .portrait-backplate{background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.style-name-preview .portrait-side-note p,.style-name-preview .portrait-role-word{color:var(--ink)}
+.palette-options button[aria-pressed=true]{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.palette-options button[aria-pressed=true] strong{color:var(--accent)}
+.palette-swatches i:first-child{flex:3}.palette-swatches i:last-child{flex:.8}
+html[data-palette-study] .float-glass{background:radial-gradient(ellipse at 8% 0%,color-mix(in srgb,var(--ink) 5%,transparent),transparent 66%),color-mix(in srgb,var(--bg) 60%,transparent)!important}
+html[data-palette-study] .school-mark{color:var(--ink)!important}

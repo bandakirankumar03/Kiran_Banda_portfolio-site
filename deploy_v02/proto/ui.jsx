@@ -189,7 +189,7 @@ function SiteScrollMotion({routeKey}){
   const page=document.querySelector('.site-page');if(!page)return;
   // Animate content groups, not sticky containers or moving carousel cards.
   const candidates=[...page.querySelectorAll('[data-reveal],section,.home-intro,.ongoing-section,.home-projects,.radar-section h2,.radar-item,.cinema-track,.favourites-heading,.favourites-stage,.contact-layout>div')];
-  const nodes=candidates.filter(el=>!el.closest('.scroll-favourites,.focus-scroll-track')&&!el.matches('.home-projects,.radar-section')&&!el.querySelector('[data-reveal],.radar-item,.cinema-track'));
+  const nodes=candidates.filter(el=>!el.closest('.scroll-favourites,.focus-scroll-track,.portrait-studies')&&!el.matches('.home-projects,.radar-section')&&!el.querySelector('[data-reveal],.radar-item,.cinema-track'));
   const previous=[...page.querySelectorAll('[data-scroll-reveal]')];previous.forEach(el=>{el.removeAttribute('data-scroll-reveal');el.style.removeProperty('--reveal-opacity');el.style.removeProperty('--reveal-y');el.style.removeProperty('--reveal-x');el.style.removeProperty('--reveal-scale');});
   nodes.forEach((el,i)=>{
    el.setAttribute('data-scroll-reveal','');

@@ -1,13 +1,23 @@
 function AboutPage(){if(location.pathname.includes("film-options"))return <><FilmPreview standalone/><Footer/></>;return <div className="about-page"><BioSection/><AboutPractice/><HobbiesSection/><PhotoCollection/><FilmPreview/><Footer/></div>}
-function AboutPractice({portraitMotion=false}={}){
+function AboutPractice({portraitMotion=false,aiPreview=false}={}){
  const root=React.useRef(null);
+ const [focus,setFocus]=React.useState(null);
+ const activeFocus=PRACTICE_FOCUS.find(item=>item.id===focus);
  React.useLayoutEffect(()=>{const elements=[...root.current.querySelectorAll('[data-arrive]')];const reduced=matchMedia('(prefers-reduced-motion: reduce)');let frame;const update=()=>{frame=0;elements.forEach((el,i)=>{const r=el.getBoundingClientRect();const t=Math.max(0,Math.min(1,(innerHeight*.96-r.top)/(innerHeight*.35)));const p=reduced.matches?1:t*t*(3-2*t);el.style.setProperty('--arrival-shift',(1-p)*26+'px');el.style.opacity=.18+.82*p;el.style.transform=`translateY(${(1-p)*35}px) scale(${.96+.04*p}) rotate(${(1-p)*(i%2?1:-1)}deg)`;})};const tick=()=>{if(!frame)frame=requestAnimationFrame(update)};window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick)}},[]);
  const drift=e=>{if(!portraitMotion||!matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;const surface=e.target.closest('.study-card,.experience-card');if(!surface||!root.current.contains(surface))return;const r=surface.getBoundingClientRect();surface.style.setProperty('--card-x',((e.clientX-r.left)/r.width-.5)*16+'px');surface.style.setProperty('--card-y',((e.clientY-r.top)/r.height-.5)*10+'px')};
  const settle=e=>{if(!portraitMotion)return;const surface=e.target.closest('.study-card,.experience-card');if(surface&&!surface.contains(e.relatedTarget)){surface.style.setProperty('--card-x','0px');surface.style.setProperty('--card-y','0px')}};
  return <div className={'practice'+(portraitMotion?' portrait-practice':'')} ref={root} onPointerMove={drift} onPointerOut={settle}>
- <section className="practice-section"><header data-arrive><h2>A foundation in <em>making.</em></h2></header><div className="study-grid">{EDUCATION.slice(0,2).map((e,i)=><article className="study-card" data-arrive key={e.yr}><div className="study-top"><span>{e.yr}</span><span>{i===0?'POSTGRADUATE':'UNDERGRADUATE'}</span></div><div className="school-mark" aria-hidden="true">{i===0?'SCAD':'IACG'}<span>↗</span></div><h3>{portraitMotion?<><span className="degree-level">{i===0?'Master of Arts':'Bachelor of Arts · Honours'}</span><span className="degree-subject">{i===0?<>Visual <em>Effects.</em></>:<>Multi<em>media.</em></>}</span></>:e.org}</h3><p>{e.where}</p><div className="study-note">{i===0?'Exploring virtual production, Unreal Engine and XR-stage workflows.':'A foundation in modelling, lighting, compositing and motion.'}</div></article>)}</div></section>
- <section className="practice-section experience-section"><header data-arrive><h2>From the frame<br/>to the <em>film set.</em></h2><p data-heading-caption>Lighting, compositing, and building worlds for the camera.</p></header><div className="experience-stack">{EXPERIENCE.map((e,i)=><article className="experience-card" data-arrive data-studio={i===0?'SCAD':i===1?'RAAGA':'GREEN GOLD'} key={e.org}><div className="experience-meta"><span>{e.yr}</span>{i===0&&<span className="live-label"><i/> CURRENT PRACTICE</span>}</div><h3>{e.role}</h3><h4>{e.org}</h4><p>{e.note}</p><div className="practice-tags">{(i===0?['Unreal Engine','Virtual production','nDisplay']:i===1?['Nuke','Compositing']:['Lighting','AOV passes','Production']).map(t=><span key={t}>{t}</span>)}</div></article>)}</div></section>
- <section className="practice-section toolkit-section quiet-toolkit" aria-labelledby="practice-tools-title"><header data-arrive><h2 id="practice-tools-title">How I <em>build.</em></h2><p data-heading-caption>Environment art, grounded in real places and made for the camera.</p></header><div className="quiet-toolkit-body" data-arrive><div className="quiet-practice"><small>MY FOCUS</small><ul><li>Environment art & scene building</li><li>Photogrammetry & materials</li><li>Real-time lighting</li><li>Virtual production & compositing</li><li className="quiet-ai-focus"><span className="ai-workflow-type"><strong>AI-assisted</strong>{' '}<em>workflow.</em></span><p className="quiet-ai-note">AI helps me explore faster and make more room for the craft.</p></li></ul></div><div className="quiet-tools"><small>TOOLS I USE</small><ul>{TOOL_LOGOS.map(tool=><li key={tool.name} className={tool.wide?'tool-logo tool-logo-wide':'tool-logo'} tabIndex={0} aria-label={tool.name}><img src={'media/tools/'+tool.file} alt={tool.name+' logo'} loading="lazy" width="48" height="48"/><span className="tool-logo-name">{tool.name}</span></li>)}</ul></div></div></section>
+ <SplitFocusPractice/>
+ <section className="practice-section toolkit-section quiet-toolkit" aria-labelledby="practice-tools-title">
+   <header data-arrive><h2 id="practice-tools-title">How I <em>build.</em></h2></header>
+   <div className="quiet-toolkit-body" data-arrive>
+     <div className="quiet-practice"><small>MY FOCUS</small><ul className="quiet-focus-list">{PRACTICE_FOCUS.map(item=><li key={item.id}><button type="button" className={focus===item.id?'is-active':''} aria-pressed={focus===item.id} onPointerEnter={e=>{if(e.pointerType==='mouse')setFocus(item.id)}} onPointerLeave={e=>{if(e.pointerType==='mouse')setFocus(null)}} onFocus={e=>{if(e.currentTarget.matches(':focus-visible'))setFocus(item.id)}} onBlur={e=>{if(!e.relatedTarget?.closest('.quiet-focus-list'))setFocus(null)}} onClick={()=>{if(matchMedia('(hover:hover) and (pointer:fine)').matches)setFocus(item.id);else setFocus(v=>v===item.id?null:item.id)}}><strong>{item.title}</strong><span>{item.tail}</span></button></li>)}</ul></div>
+     <div className="quiet-tools"><OrbitalToolkit tools={TOOL_LOGOS} variant={5} highlighted={activeFocus?.tools}/></div>
+   </div>
+   {aiPreview?<div className="quiet-ai-workflow ai-context" data-arrive><AIWorkflowInContext/></div>:<div className="quiet-ai-workflow" data-arrive aria-labelledby="ai-workflow-heading">
+     <div className="ai-selected-studio"><h3 id="ai-workflow-heading"><strong>AI-assisted.</strong><em>Explore faster.<br/>Create with intention.</em></h3><OrbitalToolkit tools={AI_TOOL_LOGOS} ai variant={5}/></div>
+   </div>}
+ </section>
  <section className="practice-section learning-section"><header data-arrive><h2>Always <em>learning.</em></h2><p data-heading-caption>On set, in class, and through experiments of my own.</p><div className="practice-badges" data-arrive>{CERTIFICATES.filter(c=>c.title.includes('Advanced Certificate')||c.title.includes('Creative Horizons')).map(c=><a key={c.id} href={'https://www.credly.com/badges/'+c.id+'/public_url'} target="_blank" rel="noopener noreferrer" aria-label={c.title+' — view credential (opens in a new tab)'} title={c.title}><img src={'media/pages/about/badges/'+c.id+'.png'} alt={c.title} width="90" height="90" loading="lazy"/></a>)}</div></header><div className="learning-studies">{[
  ['Virtual production & XR','SCAD · Hands-on','Working with Unreal environments, nDisplay and the practical demands of an XR stage.'],
  ['Unreal Engine','Independent · Self-taught','Building environments through personal projects, with a focus on light, atmosphere and real-time workflows.'],
@@ -33,3 +43,61 @@ function AboutPractice({portraitMotion=false}={}){
 }
 
 function LearningHover({item}){const [expanded,setExpanded]=React.useState(false);return <article className={'learning-hover'+(expanded?' is-expanded':'')} onMouseEnter={()=>{if(matchMedia('(hover:hover)').matches)setExpanded(true)}} onMouseLeave={()=>setExpanded(false)} data-arrive><button onClick={()=>{if(matchMedia('(hover:hover)').matches)setExpanded(true);else setExpanded(v=>!v)}} onFocus={e=>{if(e.currentTarget.matches(':focus-visible'))setExpanded(true)}} onBlur={()=>setExpanded(false)} aria-expanded={expanded}><h3>{item[0]}</h3><small>{item[1]}</small></button><div className="learning-reveal" aria-hidden={!expanded}><div><p>{item[2]}</p></div></div></article>}
+
+function ToolkitLogoList({tools,label}){
+ return <ul aria-label={label}>{tools.map(tool=><li key={tool.name} className={tool.wide?'tool-logo tool-logo-wide':'tool-logo'} tabIndex={0} aria-label={tool.name}><img src={'media/tools/'+tool.file} alt={tool.name+' logo'} loading="lazy" width="48" height="48"/><span className="tool-logo-name">{tool.name}</span></li>)}</ul>;
+}
+
+const PRACTICE_FOCUS=[
+ {id:'environment',title:'Environment art',tail:'& scene building',tools:['Unreal Engine 5','Maya','Blender','SpeedTree','Gaea','Houdini','Substance Painter','Photoshop']},
+ {id:'capture',title:'Photogrammetry',tail:'& Gaussian splatting · 3DGS',tools:['RealityCapture','Lightroom CC','Substance Painter','Blender']},
+ {id:'lighting',title:'Real-time',tail:'lighting',tools:['Unreal Engine 5','Maya','Blender','Houdini']},
+ {id:'production',title:'Virtual production',tail:'& compositing',tools:['Unreal Engine 5','DaVinci Resolve','After Effects','Nuke']}
+];
+
+function OrbitalToolkit({tools,ai=false,variant=1,highlighted,center}){
+ const root=React.useRef(null),[paused,setPaused]=React.useState(false),[running,setRunning]=React.useState(false);
+ React.useEffect(()=>{
+  let inView=false;
+  const update=()=>setRunning(inView&&!document.hidden);
+  const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;update()},{rootMargin:'80px'});
+  observer.observe(root.current);document.addEventListener('visibilitychange',update);
+  return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update)};
+ },[]);
+ const mark=(tool,i)=><button type="button" className={'orbit-tool'+(tool.wide?' orbit-tool-wide':'')+(highlighted?.includes(tool.name)?' is-related':'')} key={tool.name} style={{'--orbit-i':i}} aria-label={tool.name==='RealityCapture'?'RealityScan':tool.name} aria-pressed={paused} onClick={()=>setPaused(p=>!p)}><span className="orbit-tool-drift"><img src={'media/tools/'+tool.file} alt="" aria-hidden="true" width="44" height="44" loading="lazy"/></span><span className="orbit-tool-name">{tool.name==='RealityCapture'?'RealityScan':tool.name}</span></button>;
+ const satellites=ai?tools:tools.slice(1),rings=variant===2?[satellites.slice(0,7),satellites.slice(7)]:[satellites];
+ const track=(ring,n)=><div className={'orbit-track orbit-track-'+n} key={n}>{ring.map((tool,i)=>{
+  const angle=ai?(-110+i*72)*Math.PI/180:variant===5?i*137.508*Math.PI/180:i/ring.length*Math.PI*2;
+  const radius=ai?40:variant===5?22+23*i/(ring.length-1):43;
+  return <div className="orbit-position" key={tool.name} style={{left:(50+radius*Math.cos(angle))+'%',top:(50+radius*Math.sin(angle))+'%'}}><div className="orbit-counter"><div className="orbit-upright">{mark(tool,tools.indexOf(tool))}</div></div></div>;
+ })}</div>;
+ return <div ref={root} className={'orbital-toolkit'+(ai?' orbital-ai':'')+(center?' orbital-centered':'')} data-focus-active={highlighted!==undefined} data-orbit={variant} data-running={running&&!paused} role="group" aria-label={ai?'AI tools':'Creative applications'}>
+  {center&&<div className="orbit-ai-center">{center}</div>}
+  {ai&&variant!==5?<div className="orbit-ai-row">{tools.map(mark)}</div>:<>{!ai&&<><div className="orbit-guide" aria-hidden="true"/><div className="orbit-core">{mark(tools[0],0)}</div></>}<div className="orbit-plane">{rings.map(track)}</div></>}
+ </div>;
+}
+
+const ABOUT_LENS_EDUCATION=EDUCATION.slice(0,2).map((e,i)=>({date:e.yr,label:i===0?'SCAD':'IACG',title:i===0?'Visual Effects.':'Multimedia.',level:i===0?'Master of Arts':'Bachelor of Arts · Honours',where:e.where,note:i===0?'Exploring virtual production, Unreal Engine and XR-stage workflows.':'A foundation in modelling, lighting, compositing and motion.'}));
+const ABOUT_LENS_EXPERIENCE=EXPERIENCE.map(e=>({date:e.yr,label:e.org.split(' · ')[0],title:e.role,where:e.org,note:e.note}));
+
+function ExpandingLensGroup({items,education=false,version,live=false}){
+ const [active,setActive]=React.useState(0),refs=React.useRef([]),keyboardMode=React.useRef(false);
+ const select=i=>setActive(i);
+ const keys=(e,i)=>{const direction=['ArrowRight','ArrowDown'].includes(e.key)?1:['ArrowLeft','ArrowUp'].includes(e.key)?-1:0;let next;if(direction)next=(i+direction+items.length)%items.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=items.length-1;else return;e.preventDefault();keyboardMode.current=true;refs.current[next]?.focus();select(next)};
+ const move=e=>{if(!matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches)return;const button=e.currentTarget,r=button.getBoundingClientRect();button.style.setProperty('--lens-x',((e.clientX-r.left)/r.width-.5)*4+'px');button.style.setProperty('--lens-y',((e.clientY-r.top)/r.height-.5)*3+'px')};
+ const leave=e=>{e.currentTarget.style.setProperty('--lens-x','0px');e.currentTarget.style.setProperty('--lens-y','0px')};
+ return <div className={'lens-group'+(education?' lens-education':' lens-experience')} role="group" aria-label={education?'Education':'Experience'} data-lens-reveal={live?undefined:true} data-arrive={live?true:undefined}>{items.map((item,i)=><button type="button" ref={el=>refs.current[i]=el} key={item.label} className={'lens-item'+(i===active?' is-selected':'')} style={{'--lens-i':i,'--lens-distance':i-active}} aria-expanded={i===active} aria-controls={'lens-detail-'+(education?'education':'experience')+'-'+i} onPointerEnter={e=>{if(e.pointerType==='mouse'&&!keyboardMode.current)select(i)}} onPointerMove={e=>{if(e.pointerType==='mouse'){keyboardMode.current=false;select(i)}move(e)}} onPointerLeave={leave} onFocus={e=>{if(e.currentTarget.matches(':focus-visible')){keyboardMode.current=true;select(i)}}} onClick={e=>{if(e.detail>0)keyboardMode.current=false;select(i)}} onKeyDown={e=>keys(e,i)}>
+  <span className="lens-surface">
+   <span className="lens-header"><span className="lens-date">{item.date}</span><span className="lens-label">{item.label}</span></span>
+   <span className="lens-main"><span className="lens-title">{item.title}</span>{education&&<span className="lens-level">{item.level}</span>}</span>
+   <span className="lens-reveal" id={'lens-detail-'+(education?'education':'experience')+'-'+i} aria-hidden={i!==active}><span className="lens-detail"><span className="lens-place">{education?item.where:item.where.split(' · ').slice(1).join(' · ')}</span><span className="lens-note">{item.note}</span></span></span>
+  </span>
+ </button>)}</div>;
+}
+
+function SplitFocusPractice(){
+ return <div className="about-split-lenses lens-options" data-lens-version="5">
+  <section className="practice-section" aria-labelledby="about-education-title"><header data-arrive><h2 id="about-education-title">A foundation in <em>making.</em></h2></header><ExpandingLensGroup items={ABOUT_LENS_EDUCATION} education version={5} live/></section>
+  <section className="practice-section" aria-labelledby="about-experience-title"><header data-arrive><h2 id="about-experience-title">From the frame<br/>to the <em>film set.</em></h2></header><ExpandingLensGroup items={ABOUT_LENS_EXPERIENCE} version={5} live/></section>
+ </div>;
+}
