@@ -89,7 +89,7 @@ const PROJECTS = [
 
   },
 
-  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Assets complete; filming is underway.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], hero:'media/projects/Ranasthala/web/highresscreenshot00058.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Two environments, brought to life across a three-day XR-stage shoot.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
@@ -223,27 +223,32 @@ const GALLERY = [
   {
     "image": "media/pages/about/selected/dscf0601.webp",
     "aspect": "4160 / 6240",
-    "cap": "Stained light"
+    "cap": "Stained light",
+    "location": "Jodhpur"
   },
   {
     "image": "media/pages/about/selected/dscf9769.webp",
     "aspect": "4160 / 6240",
-    "cap": "Stepwell geometry"
+    "cap": "Stepwell geometry",
+    "location": "Jaipur"
   },
   {
     "image": "media/pages/about/selected/img_2606.webp",
     "aspect": "4032 / 2268",
-    "cap": "Layered mountains"
+    "cap": "Layered mountains",
+    "location": "Smoky Mountains"
   },
   {
     "image": "media/pages/about/selected/img_8884.webp",
     "aspect": "4536 / 8064",
-    "cap": "Waterfall in the mist"
+    "cap": "Waterfall in the mist",
+    "location": "Kalu Waterfalls"
   },
   {
     "image": "media/pages/about/selected/img_9009.webp",
     "aspect": "3024 / 4032",
-    "cap": "Forest stream"
+    "cap": "Forest stream",
+    "location": "Arden Forest"
   }
 ];
 

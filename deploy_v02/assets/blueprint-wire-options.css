@@ -1,0 +1,31 @@
+/* Local-only study. Loaded exclusively by blueprint-wire-options.html. */
+.wire-study-layer{position:fixed;inset:0;width:100%;height:100%;z-index:24;pointer-events:none;overflow:hidden;color:var(--accent)}
+.wire-study-link{transition:opacity .65s ease;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wire-study-base{stroke:var(--accent);stroke-width:1.35;opacity:.48}
+.wire-study-shadow{stroke:var(--bg);stroke-width:5;opacity:.8}
+.wire-study-secondary{stroke:var(--ink);stroke-width:1;opacity:.14}
+.wire-study-pin{stroke:var(--accent);stroke-width:1.25;fill:var(--bg)}
+.wire-study-exec{stroke:var(--ink);fill:var(--bg);stroke-width:1.1}
+.wire-study-signal{fill:var(--ink);stroke:var(--accent);stroke-width:1}
+.wire-study-trace{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;opacity:.82}
+.wire-study-layer[data-wire-mode="1"] .wire-study-base{opacity:.4;stroke-width:1.1}
+.wire-study-layer[data-wire-mode="3"] .wire-study-base{opacity:.4}
+.wire-study-layer[data-wire-mode="4"] .wire-study-base{stroke-width:1.7;opacity:.7}
+.wire-study-layer[data-wire-mode="5"] .wire-study-base{stroke-width:1.5;opacity:.55}
+.wire-study-controls{position:fixed;z-index:2147483000;bottom:18px;left:50%;translate:-50% 0;width:min(950px,calc(100% - 32px));box-sizing:border-box;padding:13px 16px 12px;background:rgba(9,13,11,.94);backdrop-filter:blur(24px);border:1px solid rgba(226,188,98,.28);border-radius:17px;color:var(--ink);box-shadow:0 12px 50px #0008,inset 0 1px 0 #f4f0e516;font-family:var(--sans,Arial,sans-serif)}
+.wire-study-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.wire-study-title{font-size:11px;letter-spacing:1px;color:var(--accent);text-transform:uppercase;font-weight:500}
+.wire-study-utilities{display:flex;gap:14px;align-items:center}
+.wire-study-utilities button,.wire-study-utilities a{border:0;background:none;padding:4px 0;font:11px var(--sans,Arial,sans-serif);color:var(--dim);text-decoration:none;cursor:inherit!important}
+.wire-study-utilities button:hover,.wire-study-utilities a:hover{color:var(--ink)}
+.wire-study-options{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.wire-study-option{border:1px solid transparent;background:transparent;padding:8px 9px 7px;color:var(--dim);border-radius:9px;text-align:left;font:12px var(--sans,Arial,sans-serif);cursor:inherit!important;transition:background .3s,border-color .3s,color .3s}
+.wire-study-option svg{display:block;width:100%;height:21px;margin-bottom:5px;overflow:visible;color:var(--accent)}
+.wire-study-option[aria-pressed="true"]{color:var(--ink);border-color:rgba(226,188,98,.35);background:rgba(226,188,98,.08)}
+.wire-study-option:hover{background:rgba(244,240,229,.055);color:var(--ink)}
+.wire-study-option:focus-visible,.wire-study-utilities button:focus-visible,.wire-study-show:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wire-study-description{font:11px/1.5 var(--sans,Arial,sans-serif);color:var(--dim);margin:9px 2px 0}
+.wire-study-show{position:fixed;bottom:20px;right:22px;z-index:2147483000;padding:12px 17px;border:1px solid rgba(226,188,98,.32);background:rgba(9,13,11,.94);border-radius:30px;color:var(--accent);font:12px var(--sans,Arial,sans-serif);cursor:inherit!important}
+.wire-study-controls[hidden],.wire-study-show[hidden]{display:none}
+@media(max-width:650px){.wire-study-controls{bottom:10px;padding:11px;width:calc(100% - 20px)}.wire-study-options{display:flex;overflow-x:auto;scrollbar-width:thin;gap:5px}.wire-study-option{flex:0 0 108px;font-size:11px}.wire-study-title{font-size:9px;letter-spacing:.6px}.wire-study-utilities{gap:10px}.wire-study-description{font-size:10px}.wire-study-utilities a{display:none}}
+@media(prefers-reduced-motion:reduce){.wire-study-link,.wire-study-option{transition:none}}

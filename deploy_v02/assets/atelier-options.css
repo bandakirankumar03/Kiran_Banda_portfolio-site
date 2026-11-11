@@ -1,0 +1,19 @@
+.atelier-options .prep-options-bar nav{grid-template-columns:repeat(5,minmax(0,1fr))}
+.atelier-gallery{height:clamp(510px,48vw,700px);max-width:1190px;margin:auto}
+.atelier-print{position:absolute;left:var(--ax);top:var(--ay);width:var(--aw);rotate:var(--ar);z-index:var(--az);translate:var(--prep-x) var(--prep-y);transition:left 1.1s cubic-bezier(.22,1,.36,1),top 1.1s cubic-bezier(.22,1,.36,1),width 1.1s,rotate 1s,translate .9s cubic-bezier(.22,1,.36,1),scale .75s cubic-bezier(.22,1,.36,1),opacity .7s}
+.atelier-print .prep-photo{height:auto}.atelier-print .prep-photo img{height:auto!important}
+.atelier-print:nth-child(2) .prep-drift,.atelier-print:nth-child(5) .prep-drift{animation-delay:-3s;animation-duration:8s}.atelier-print:nth-child(3) .prep-drift,.atelier-print:nth-child(6) .prep-drift{animation-delay:-5s;animation-duration:9s}
+.atelier-variant-3{height:clamp(540px,50vw,720px)}.atelier-variant-4{height:clamp(540px,50vw,720px)}
+.atelier-variant-5 .atelier-print{transition:left 3.5s cubic-bezier(.45,0,.25,1),top 3.5s cubic-bezier(.45,0,.25,1),width 3.5s cubic-bezier(.45,0,.25,1),rotate 3.5s ease,translate .9s cubic-bezier(.22,1,.36,1),scale .75s,opacity .7s}
+@media(hover:hover) and(pointer:fine){
+ .atelier-gallery:has(.prep-photo:hover) .atelier-print{opacity:.7}
+ .atelier-gallery .atelier-print:has(.prep-photo:hover),.atelier-gallery .atelier-print:focus-within{opacity:1;scale:1.07;translate:var(--prep-x) calc(var(--prep-y) - 9px);z-index:20}
+ .atelier-variant-3 .atelier-print:has(.prep-photo:hover){rotate:0deg;scale:1.12;translate:var(--prep-x) calc(var(--prep-y) - 15px)}
+}
+@media(max-width:900px) and(min-width:601px){.atelier-options .prep-options-bar nav{grid-template-columns:repeat(5,minmax(0,1fr))}.atelier-options .prep-options-bar nav button{font-size:10px}.atelier-gallery{height:500px}.atelier-variant-3,.atelier-variant-4{height:520px}}
+@media(max-width:600px){
+ .atelier-options .prep-options-bar nav{grid-template-columns:repeat(3,minmax(0,1fr))}.atelier-options .prep-options-top{font-size:8px}.atelier-options .prep-options-bar nav button{min-height:40px}
+ .atelier-gallery{height:535px;width:100%}.atelier-variant-3{height:525px}.atelier-variant-4{height:550px}
+ .atelier-print{left:var(--mx);top:var(--my);width:var(--mw);rotate:var(--mr);z-index:var(--mz)}
+}
+@media(prefers-reduced-motion:reduce){.atelier-print{transition:none!important}}

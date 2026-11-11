@@ -202,3 +202,14 @@
 @media(hover:hover){.hobby-expand-frame:hover{flex:2.5}}
 @media(max-width:700px){.hobby-accordion{height:330px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;gap:10px}.hobby-expand-frame{flex:0 0 58%;min-width:170px;scroll-snap-align:start}.hobby-expand-frame:focus-visible{flex:0 0 58%}}
 @media(prefers-reduced-motion:reduce){.hobby-expand-frame,.hobby-expand-frame img{transition:none}}
+
+/* Preserve portrait photographs while retaining the expanding, looping strip. */
+.hobby-accordion{height:clamp(330px,32vw,440px)}
+.hobby-expand-frame{background:transparent;transition:flex .75s cubic-bezier(.22,1,.36,1)}
+.hobby-expand-frame img{object-fit:contain;object-position:center;scale:1!important;transform:none!important}
+.hobby-expand-frame:focus-visible{flex:1.15}
+@media(hover:hover) and(pointer:fine){.hobby-expand-frame:hover{flex:1.15}}
+@media(max-width:700px){.hobby-accordion{height:350px}.hobby-expand-frame,.hobby-expand-frame:focus-visible,.hobby-expand-frame:hover{flex:0 0 70%}.hobby-expand-frame img{object-fit:contain}}
+.still-location{position:absolute;right:7px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;color:var(--bg);font:500 9px/1.2 var(--mono);letter-spacing:.4px;white-space:nowrap;pointer-events:none}
+@media(max-width:600px){.still-location{font-size:8px;right:7px}}
+@media(prefers-reduced-motion:reduce){.hobby-expand-frame{transition:none}}
