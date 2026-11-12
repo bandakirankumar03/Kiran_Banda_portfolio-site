@@ -10,7 +10,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
       {opacity:0,transform:'translateY(24px)',clipPath:'inset(0 0 100% 0)'},
       {opacity:1,transform:'translateY(0)',clipPath:'inset(0)'}
     ],{duration:1200,delay:200+i*120,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'})));
-    animations.push(cover.querySelector('.pc-image').animate([{opacity:0,clipPath:'inset(5% 3%)'},{opacity:1,clipPath:'inset(0)'}],{duration:1900,delay:100,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'}));
+    if(!p.caseHero)animations.push(cover.querySelector('.pc-image').animate([{opacity:0,clipPath:'inset(5% 3%)'},{opacity:1,clipPath:'inset(0)'}],{duration:1900,delay:100,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'}));
     const finish=()=>animations.forEach(a=>a.finish());
     motion.addEventListener('change',finish);
     return ()=>{animations.forEach(a=>a.cancel());motion.removeEventListener('change',finish);};
@@ -31,7 +31,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
   },[p.slug]);
   const words=p.title.split(' '), last=words.pop();
   const move=e=>{if(!matchMedia('(hover:hover) and (prefers-reduced-motion:no-preference)').matches)return;const r=e.currentTarget.getBoundingClientRect();ref.current.style.setProperty('--cx',`${(e.clientX-r.left-r.width/2)*.012}px`);ref.current.style.setProperty('--cy',`${(e.clientY-r.top-r.height/2)*.012}px`);ref.current.style.setProperty('--lx',`${(e.clientX-r.left)/r.width*100}%`);};
-  return <><header className="project-cover" ref={ref} onPointerMove={move} onPointerLeave={()=>{ref.current.style.setProperty('--cx','0px');ref.current.style.setProperty('--cy','0px');}}>
+  return <><header className={'project-cover'+(p.caseHero?' project-cover-art':'')} ref={ref} onPointerMove={move} onPointerLeave={()=>{ref.current.style.setProperty('--cx','0px');ref.current.style.setProperty('--cy','0px');}}>
     <style>{`
       .project-cover {--accent:#73c2fb;position:relative;isolation:isolate;overflow:hidden;min-height:660px;height:92svh;max-height:1080px;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:125px var(--pad) 28px;}
       .project-cover .pc-image {position:absolute;inset:0;z-index:-3;overflow:hidden;}
@@ -59,6 +59,16 @@ function ProjectCover({p, description, actionLabel, onAction}) {
       .pc-title-line {display:block;}
       @media(max-width:760px) {.project-cover{min-height:640px;height:90svh;padding-top:100px;}.pc-top{font-size:12px;}.pc-story{margin-top:auto;margin-bottom:24px;}.pc-story h1{font-size:clamp(56px,12vw,88px);}.pc-role{font-size:12px;}.pc-bottom{display:block;}.pc-bottom p{font-size:13px;max-width:38ch;}.pc-action{margin-top:20px;gap:15px;}.pc-action span{width:40px;height:40px;}.pc-foot{font-size:12px;}}
       @media(prefers-reduced-motion:reduce){.project-cover *{animation:none!important;transition:none!important;}.project-cover .pc-image-drift,.project-cover .pc-image-lens{transform:none!important;}}
+      .project-cover.project-cover-art{height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;justify-content:flex-start;gap:0}
+      .project-cover-art .pc-top{order:-1;flex:none;width:100%;padding:17px var(--pad);background:var(--bg);font-size:10px}
+      .project-cover-art .pc-image{position:relative!important;inset:auto!important;z-index:0!important;flex:none;width:100%;height:auto;aspect-ratio:2048/878}
+      .project-cover-art .pc-image-drift,.project-cover-art .pc-image-lens{transform:none!important;translate:none!important;scale:1!important;animation:none!important;transition:none!important}
+      .project-cover-art .pc-image-lens>img{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center;filter:none!important}
+      .project-cover-art:after,.project-cover-art .pc-atmosphere,.project-cover-art .pc-grain{display:none!important}
+      .project-cover-art .pc-story{flex:none;margin:0 auto!important;padding:23px var(--pad) 12px}
+      .project-cover-art .pc-story h1{font-size:clamp(34px,4.2vw,60px);margin-bottom:13px;max-width:100%}
+      .project-cover-art .pc-foot{flex:none;padding:8px var(--pad) 21px;font-size:10px}
+      @media(max-width:760px){.project-cover-art .pc-top{padding:13px var(--pad);font-size:9px}.project-cover-art .pc-story{padding:20px var(--pad) 9px}.project-cover-art .pc-story h1{font-size:clamp(34px,9vw,46px);margin-bottom:12px}.project-cover-art .pc-bottom p{font-size:12px;line-height:1.65;max-width:44ch}.project-cover-art .pc-foot{padding-bottom:18px}}
     `}</style>
     <div className="pc-image"><div className="pc-image-drift"><div className="pc-image-lens">{(p.caseHero||p.hero) ? <img src={p.caseHero||p.hero} alt={p.title+(p.coverArt?' cover artwork':' environment')} fetchpriority="high"/> : <Scene tone={p.tone} style={{width:'100%',height:'100%'}}/>}</div></div></div><div className="pc-atmosphere" aria-hidden="true"/><div className="pc-grain" aria-hidden="true"/>
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
