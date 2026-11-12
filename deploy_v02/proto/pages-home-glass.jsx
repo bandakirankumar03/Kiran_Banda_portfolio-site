@@ -404,8 +404,8 @@ function OngoingCard({ o }) {
 const DISCOVERIES = [
   { id:'dlss5', title:'DLSS 5', source:'NVIDIA', note:'Neural rendering. A new conversation between lighting, materials, and AI.', image:'dlss5.webp', alt:'DLSS 5 game-rendering example published by NVIDIA.', href:'https://www.nvidia.com/en-us/geforce/news/dlss5-breakthrough-in-visual-fidelity-for-games/' },
   { id:'brush', title:'Brush / 4D splats', source:'Brush', note:'Beyond a frozen capture. Gaussian splat sequences, moving through time.', video:'brush.mp4', alt:'Brush Gaussian splatting demo, with captured scenes by GradeEterna.', href:'https://github.com/ArthurBrussee/brush' },
-  { id:'foliage', title:'Procedural worlds', source:'Unreal Engine', note:'Following PCG, Nanite Foliage, and new ways to build living landscapes.', image:'foliage.webp', alt:'Procedural vegetation imagery from Epic Games’ Unreal Engine 5.7 announcement.', href:'https://www.unrealengine.com/en-US/news/unreal-engine-5-7-is-now-available' },
-  { id:'marble', title:'Marble', source:'World Labs', note:'From a visual idea to a 3D world. Another way to explore a place.', image:'marble.webp', alt:'Victorian foyer reference shown in World Labs’ Marble world model article.', href:'https://www.worldlabs.ai/blog/marble-world-model' },
+  { id:'gaussian-vp', title:'3D Gaussian / Virtual production', source:'ACM SIGGRAPH · Filmakademie', note:'A direction I’m excited about: captured places becoming real-time worlds on the LED stage.', image:'gaussian-vp.webp', alt:'DOSENMUTTER virtual production image, © Filmakademie Baden-Württemberg GmbH, Finn-Oliver Walter, via ACM SIGGRAPH.', href:'https://blog.siggraph.org/2026/07/gaussian-splatting-in-virtual-production-how-we-put-a-human-sized-can-into-a-childhood-bedroom.html/' },
+  { id:'hybrid-vfx', title:'Hybrid VFX', source:'Foundry', note:'Following how AI and compositing come together, with artists shaping the final frame.', image:'hybrid-vfx.webp', alt:'AI-assisted cinematic workflow in Griptape, published by Foundry.', href:'https://www.foundry.com/insights/pipeline-workflows/what-griptape-ai-orchestration-vfx' },
 ];
 
 const DISCOVERY_EVENTS = [

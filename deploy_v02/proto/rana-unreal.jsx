@@ -12,6 +12,8 @@ function RanaUnrealReveal({frames,label}){
 
 function RanaUnrealChapter(){
  const [comparison,setComparison]=React.useState(0),[cinematic,setCinematic]=React.useState(0),[selected,setSelected]=React.useState(null);
+ const cinemaRef=React.useRef(null);
+ const [cinemaVisible,setCinemaVisible]=React.useState(false),[cinemaFocus,setCinemaFocus]=React.useState(false),[cinemaPaused,setCinemaPaused]=React.useState(false),[cinemaReduced,setCinemaReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
  const comparisons=[
   {name:'Arena',frames:[['view-00006.webp','Early environment'],['view-00053.webp','Developed environment']]},
   {name:'Hallway',frames:[['view-00071.webp','Blockout'],['view-00077.webp','Final atmosphere']]},
@@ -23,6 +25,14 @@ function RanaUnrealChapter(){
  const inspect=(file,alt)=>setSelected({image:RANA_UNREAL_ROOT+file,alt});
  const changeComparison=i=>setComparison(i);
  const changeCinema=d=>setCinematic(i=>(i+d+films.length)%films.length);
+ React.useEffect(()=>{
+  const el=cinemaRef.current,media=matchMedia('(prefers-reduced-motion:reduce)');
+  const observer=new IntersectionObserver(([entry])=>setCinemaVisible(entry.isIntersecting&&!document.hidden),{threshold:.15});observer.observe(el);
+  const visibility=()=>{const r=el.getBoundingClientRect();setCinemaVisible(!document.hidden&&r.bottom>0&&r.top<innerHeight)},motion=()=>setCinemaReduced(media.matches);
+  document.addEventListener('visibilitychange',visibility);media.addEventListener('change',motion);
+  return()=>{observer.disconnect();document.removeEventListener('visibilitychange',visibility);media.removeEventListener('change',motion)};
+ },[]);
+ React.useEffect(()=>{if(!cinemaVisible||cinemaFocus||cinemaPaused||cinemaReduced||selected)return;const timer=setTimeout(()=>setCinematic(i=>(i+1)%films.length),4200);return()=>clearTimeout(timer)},[cinematic,cinemaVisible,cinemaFocus,cinemaPaused,cinemaReduced,selected]);
  return <div className="ru-chapter" data-image-navigation=""><style>{RANA_UNREAL_STYLE}</style>
   <section className="ru-development" aria-labelledby="ru-development-heading"><div className="ru-heading"><h2 id="ru-development-heading">From blockout<br/><em>to atmosphere.</em></h2><p>Unreal Engine · environment development.</p></div>
    <div className="ru-tabs" role="group" aria-label="Unreal development comparisons">{comparisons.map((item,i)=><button type="button" key={item.name} aria-pressed={comparison===i} onClick={()=>changeComparison(i)}>{item.name}</button>)}</div>
@@ -33,9 +43,9 @@ function RanaUnrealChapter(){
    <div className="ru-tech-cards">{tech.map(([file,label,note],i)=><button type="button" key={file} className={'ru-tech-card ru-tech-card-'+i} aria-label={'Expand '+label+' technical board'} onClick={()=>inspect(file,note)}><img src={RANA_UNREAL_ROOT+file} alt={note} loading="lazy"/><span><strong>{label}</strong><span aria-hidden="true">↗</span></span><small>{note}</small></button>)}</div>
    <span className="ru-profile-note">Profile snapshot · 730K primitives · 3.86 GB VRAM</span>
   </section>
-  <section className="ru-cinematics" aria-labelledby="ru-cinema-heading"><div className="ru-heading"><h2 id="ru-cinema-heading">Light. Scale.<br/><em>Story.</em></h2><p>Cinematic views · arena and hallway.</p></div>
+  <section ref={cinemaRef} className="ru-cinematics" aria-labelledby="ru-cinema-heading" onFocusCapture={()=>setCinemaFocus(true)} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setCinemaFocus(false)}}><div className="ru-heading"><h2 id="ru-cinema-heading">Light. Scale.<br/><em>Story.</em></h2><p>Cinematic views · arena and hallway.</p></div>
    <div className="ru-cinema-layout"><button type="button" className="ru-cinema-main" aria-label={'Expand cinematic · '+films[cinematic][1]} onClick={()=>inspect(...films[cinematic])}><img key={films[cinematic][0]} src={RANA_UNREAL_ROOT+films[cinematic][0]} alt={films[cinematic][1]} loading="lazy"/></button><div className="ru-cinema-previews">{[1,2].map(d=>{const i=(cinematic+d)%films.length;return <button key={d} type="button" aria-label={'Preview '+films[i][1]} onClick={()=>setCinematic(i)}><img src={RANA_UNREAL_ROOT+films[i][0]} alt={films[i][1]} loading="lazy"/></button>})}</div></div>
-   <div className="ru-cinema-foot"><span><b>{String(cinematic+1).padStart(2,'0')} / {films.length}</b>{films[cinematic][1]}</span><div><button type="button" aria-label="Previous cinematic view" onClick={()=>changeCinema(-1)}>←</button><button type="button" aria-label="Next cinematic view" onClick={()=>changeCinema(1)}>→</button></div></div>
+   <div className="ru-cinema-foot"><span><b>{String(cinematic+1).padStart(2,'0')} / {films.length}</b>{films[cinematic][1]}</span><div><button type="button" aria-label={cinemaPaused?'Resume automatic cinematic rotation':'Pause automatic cinematic rotation'} aria-pressed={cinemaPaused} onClick={()=>setCinemaPaused(v=>!v)}>{cinemaPaused?'▷':'Ⅱ'}</button><button type="button" aria-label="Previous cinematic view" onClick={()=>changeCinema(-1)}>←</button><button type="button" aria-label="Next cinematic view" onClick={()=>changeCinema(1)}>→</button></div></div>
   </section>
   {selected&&<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
  </div>;

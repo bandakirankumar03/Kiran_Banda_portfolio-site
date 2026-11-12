@@ -30,11 +30,11 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
   const el=scrollTrack.current,bodyOverflow=document.body.style.overflow,htmlOverflow=document.documentElement.style.overflow;
   document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';window.scrollTo({top:0,behavior:'instant'});
   const size=()=>{const nav=document.querySelector('.site-nav');document.documentElement.style.setProperty('--work-top',(nav?nav.getBoundingClientRect().bottom+10:90)+'px')};size();window.addEventListener('resize',size);
-  let total=0,last=0,lastStep=0,locked=false,touch=null;
-  const wheel=e=>{if(e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;e.preventDefault();const now=performance.now();if(now-last>220&&now-lastStep>650){total=0;locked=false}last=now;if(locked)return;total+=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);if(Math.abs(total)>=100){select(indexRef.current+Math.sign(total));locked=true;lastStep=now;total=0}};
+  let total=0,last=0,lastStep=-420,touch=null;
+  const wheel=e=>{if(e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;e.preventDefault();const now=performance.now();if(now-last>180)total=0;last=now;if(now-lastStep<420)return;total+=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);if(Math.abs(total)>=45){select(indexRef.current+Math.sign(total));lastStep=now;total=0}};
   const startTouch=e=>{if(e.touches.length!==1){touch=null;return}touch={x:e.touches[0].clientX,y:e.touches[0].clientY}};
   const moveTouch=e=>{if(!touch||e.touches.length!==1)return;const dx=e.touches[0].clientX-touch.x,dy=e.touches[0].clientY-touch.y;if(Math.abs(dy)>Math.abs(dx)&&e.cancelable)e.preventDefault()};
-  const endTouch=e=>{if(!touch)return;const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;touch=null;if(Math.abs(dy)>45&&Math.abs(dy)>Math.abs(dx)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dy<0?1:-1))}};
+  const endTouch=e=>{if(!touch)return;const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;touch=null;if(Math.abs(dy)>28&&Math.abs(dy)>Math.abs(dx)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dy<0?1:-1))}};
   el.addEventListener('wheel',wheel,{passive:false});el.addEventListener('touchstart',startTouch,{passive:true});el.addEventListener('touchmove',moveTouch,{passive:false});el.addEventListener('touchend',endTouch,{passive:true});
   return()=>{document.body.style.overflow=bodyOverflow;document.documentElement.style.overflow=htmlOverflow;window.removeEventListener('resize',size);el.removeEventListener('wheel',wheel);el.removeEventListener('touchstart',startTouch);el.removeEventListener('touchmove',moveTouch);el.removeEventListener('touchend',endTouch)};
  },[list.length,select]);
@@ -43,7 +43,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
  const start=e=>{if(!e.isPrimary||e.pointerType!=='mouse'||e.button!==0)return;gesture.current={id:e.pointerId,x:e.clientX,y:e.clientY,index:indexRef.current,moved:false,captured:false};};
  const move=e=>{const g=gesture.current;if(!g||g.id!==e.pointerId)return;const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.hypot(dx,dy)>8)g.moved=true;
   if(!g.captured&&Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)*1.1){g.captured=true;e.currentTarget.setPointerCapture(e.pointerId);setDragging(true)}
-  if(g.captured){e.preventDefault();gallery.current.style.setProperty('--drag-pull',Math.max(-9,Math.min(9,(dy%80)*.12))+'px');seek(g.index+Math.round(dy/80));}
+  if(g.captured){e.preventDefault();gallery.current.style.setProperty('--drag-pull',Math.max(-9,Math.min(9,(dy%56)*.12))+'px');seek(g.index+Math.round(dy/56));}
  };
  const finish=e=>{const g=gesture.current;if(!g)return;if(g.moved)suppressClick.current=performance.now()+450;gesture.current=null;setDragging(false);gallery.current.style.setProperty('--drag-pull','0px');if(e.currentTarget.hasPointerCapture(g.id))e.currentTarget.releasePointerCapture(g.id);};
  const keys=e=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;e.preventDefault();const at=e.key==='Home'?0:e.key==='End'?list.length-1:Math.max(0,Math.min(list.length-1,indexRef.current+(e.key==='ArrowDown'?1:-1)));seek(at);rail.current.querySelectorAll('[data-focus-index]')[at]?.focus({preventScroll:true});};
