@@ -478,7 +478,7 @@ function PhotoCard({ p, i, aspect = '4 / 5', hero = false, onOpen }) {
         position: 'relative',
         background: 'var(--lab-ink,#f2ede3)',
         padding: 14,
-        paddingRight: p.location ? 30 : 14,
+        paddingRight: 14,
         paddingBottom: hero ? 56 : 42,
         boxShadow: hov
           ? '0 30px 64px rgba(0,0,0,0.55), 0 8px 18px rgba(0,0,0,0.35)'

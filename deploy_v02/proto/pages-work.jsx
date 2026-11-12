@@ -9,7 +9,7 @@ const FOCUS_PROJECT_SUMMARIES={
  'vfx-compositing-works':['Where the layers come together.','Selected compositing work from my undergraduate years.']
 };
 function WorkPage(){
- return <div className="work-page work-selected"><header className="ws-header"><h1>The <em>shot list.</em></h1></header><main className="ws-content"><WorkFocusGallery list={PROJECTS}/></main><Footer/></div>
+ return <div className="work-page work-selected"><header className="ws-header"><h1>The <em>shot list.</em></h1></header><main className="ws-content"><WorkFocusGallery list={PROJECTS}/></main></div>
 }
 function WorkFocusGallery({list,motion='2',initialIndex=0}){
  const first=Math.min(initialIndex,list.length-1);
@@ -26,18 +26,19 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
   };
   place();const observer=new ResizeObserver(place);observer.observe(el);return()=>observer.disconnect();
  },[index]);
- React.useLayoutEffect(()=>{const track=scrollTrack.current,pin=scrollPin.current;const size=()=>track.style.setProperty('--focus-pin-height',pin.offsetHeight+'px');size();const observer=new ResizeObserver(size);observer.observe(pin);return()=>observer.disconnect()},[]);
  React.useEffect(()=>{
-  let frame=0;const update=()=>{frame=0;const track=scrollTrack.current,pin=scrollPin.current;if(!track||!pin)return;
-   const travel=track.offsetHeight-pin.offsetHeight;if(travel<=0)return;const top=parseFloat(getComputedStyle(pin).top)||0;
-   const progress=Math.max(0,Math.min(1,(top-track.getBoundingClientRect().top)/travel));select(Math.round(progress*(list.length-1)));
-  };
-  const tick=()=>{if(!frame)frame=requestAnimationFrame(update)};window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);tick();
-  return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick)};
+  const el=scrollTrack.current,bodyOverflow=document.body.style.overflow,htmlOverflow=document.documentElement.style.overflow;
+  document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';window.scrollTo({top:0,behavior:'instant'});
+  const size=()=>{const nav=document.querySelector('.site-nav');document.documentElement.style.setProperty('--work-top',(nav?nav.getBoundingClientRect().bottom+10:90)+'px')};size();window.addEventListener('resize',size);
+  let total=0,last=0,lastStep=0,locked=false,touch=null;
+  const wheel=e=>{if(e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;e.preventDefault();const now=performance.now();if(now-last>220&&now-lastStep>650){total=0;locked=false}last=now;if(locked)return;total+=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);if(Math.abs(total)>=100){select(indexRef.current+Math.sign(total));locked=true;lastStep=now;total=0}};
+  const startTouch=e=>{if(e.touches.length!==1){touch=null;return}touch={x:e.touches[0].clientX,y:e.touches[0].clientY}};
+  const moveTouch=e=>{if(!touch||e.touches.length!==1)return;const dx=e.touches[0].clientX-touch.x,dy=e.touches[0].clientY-touch.y;if(Math.abs(dy)>Math.abs(dx)&&e.cancelable)e.preventDefault()};
+  const endTouch=e=>{if(!touch)return;const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;touch=null;if(Math.abs(dy)>45&&Math.abs(dy)>Math.abs(dx)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dy<0?1:-1))}};
+  el.addEventListener('wheel',wheel,{passive:false});el.addEventListener('touchstart',startTouch,{passive:true});el.addEventListener('touchmove',moveTouch,{passive:false});el.addEventListener('touchend',endTouch,{passive:true});
+  return()=>{document.body.style.overflow=bodyOverflow;document.documentElement.style.overflow=htmlOverflow;window.removeEventListener('resize',size);el.removeEventListener('wheel',wheel);el.removeEventListener('touchstart',startTouch);el.removeEventListener('touchmove',moveTouch);el.removeEventListener('touchend',endTouch)};
  },[list.length,select]);
- const seek=i=>{const next=Math.max(0,Math.min(list.length-1,i));select(next);const track=scrollTrack.current,pin=scrollPin.current;const travel=track.offsetHeight-pin.offsetHeight,top=parseFloat(getComputedStyle(pin).top)||0;
-  window.scrollTo({top:window.scrollY+track.getBoundingClientRect().top-top+travel*next/Math.max(1,list.length-1),behavior:'instant'});
- };
+ const seek=i=>select(i);
 
  const start=e=>{if(!e.isPrimary||e.pointerType!=='mouse'||e.button!==0)return;gesture.current={id:e.pointerId,x:e.clientX,y:e.clientY,index:indexRef.current,moved:false,captured:false};};
  const move=e=>{const g=gesture.current;if(!g||g.id!==e.pointerId)return;const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.hypot(dx,dy)>8)g.moved=true;
@@ -64,7 +65,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
    <div className="focus-shade"/>
    <div className="ws-focus-copy" key={p.slug}><p>{summary?<><em>{summary[0]}</em><span>{summary[1]}</span></>:p.tagline}</p><a className="focus-explore" href={'#/case/'+p.slug} aria-label={'Explore '+p.title}><span>Explore the project</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
   </article>
- </div></div></section>
+ </div><div className="work-step-controls"><button type="button" aria-label="Previous project" disabled={index===0} onClick={()=>seek(index-1)}>←</button><span aria-live="polite">{String(index+1).padStart(2,'0')} / {String(list.length).padStart(2,'0')}</span><button type="button" aria-label="Next project" disabled={index===list.length-1} onClick={()=>seek(index+1)}>→</button></div></div></section>
 }
 const FOCUS_GALLERY_CSS=`
 .work-selected{max-width:1680px;margin:auto}.work-selected .ws-header{padding:clamp(28px,4vw,48px) var(--pad) 38px;display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:30px}.work-selected .ws-header h1{font:400 clamp(64px,8vw,124px)/.98 var(--serif);letter-spacing:-.055em;margin:0}.work-selected .ws-header h1 em{font-weight:400;color:var(--accent)}.work-selected .ws-content{padding:8px var(--pad) 75px;min-height:580px}

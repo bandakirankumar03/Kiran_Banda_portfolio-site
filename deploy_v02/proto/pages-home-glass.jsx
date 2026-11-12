@@ -121,7 +121,7 @@ function ReelHero() {
                   pointerEvents: 'none',
                 }} />
             ) : (
-              <TapVideo title="Homepage reel" src={HERO_VIDEO} autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches} loop muted playsInline
+              <TapVideo title="Homepage reel" priority src={HERO_VIDEO} autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches} loop muted playsInline
                 poster={(HERO_POSTER && !posterFailed) ? HERO_POSTER : undefined}
                 onError={() => setMediaFailed(true)}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />

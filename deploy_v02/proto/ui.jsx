@@ -364,19 +364,24 @@ Object.assign(window, {
 });
 
 // Media surfaces are their own playback controls; no visible play/pause labels.
-function TapVideo({title='Video', onLoadedMetadata, style, ...props}) {
+function TapVideo({title='Video', onLoadedMetadata, style, priority=false, ...props}) {
   const ref=React.useRef(null), manual=React.useRef(false);
   const [playing,setPlaying]=React.useState(false);
   React.useEffect(()=>{
-    const video=ref.current;
+    const video=ref.current;let visible=false;
+    video.defaultMuted=true;video.muted=true;video.playsInline=true;
+    const play=()=>{if(visible&&!manual.current&&!document.hidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches)video.play().catch(()=>{});};
     const observer=new IntersectionObserver(([entry])=>{
-      if(entry.isIntersecting&&!manual.current&&!matchMedia('(prefers-reduced-motion: reduce)').matches) video.play().catch(()=>{});
+      visible=entry.isIntersecting;
+      if(visible&&!manual.current&&!document.hidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches) play();
       else video.pause();
     },{threshold:.25});
-    observer.observe(video);return()=>observer.disconnect();
+    const visibility=()=>{if(document.hidden)video.pause();else play()};
+    observer.observe(video);video.addEventListener('loadeddata',play);video.addEventListener('canplay',play);window.addEventListener('pageshow',play);document.addEventListener('visibilitychange',visibility);document.addEventListener('pointerdown',play,{passive:true});
+    return()=>{observer.disconnect();video.removeEventListener('loadeddata',play);video.removeEventListener('canplay',play);window.removeEventListener('pageshow',play);document.removeEventListener('visibilitychange',visibility);document.removeEventListener('pointerdown',play);video.pause()};
   },[props.src]);
   const toggle=()=>{const video=ref.current;manual.current=!video.paused;if(video.paused)video.play().catch(()=>{});else video.pause();};
-  return <video {...props} ref={ref} muted loop playsInline preload="metadata" controls={false} role="button" tabIndex={0}
+  return <video {...props} ref={ref} autoPlay={priority?!matchMedia('(prefers-reduced-motion: reduce)').matches:props.autoPlay} muted loop playsInline preload={priority?'auto':'metadata'} controls={false} disablePictureInPicture={priority} role="button" tabIndex={0}
     aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} onClick={e=>{e.stopPropagation();toggle();}}
     onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();toggle();}}}
     onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onLoadedMetadata={onLoadedMetadata} style={{...style,cursor:'pointer'}}/>;
