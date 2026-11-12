@@ -116,6 +116,17 @@ function RanaTeamPortrait({base}){
  </figure>;
 }
 
+function RanaSetPlan({onInspect}){
+ const [focus,setFocus]=React.useState('all'),[markup,setMarkup]=React.useState('');
+ React.useEffect(()=>{const controller=new AbortController();fetch('assets/ranasthala-set-plan.svg',{signal:controller.signal}).then(response=>{if(!response.ok)throw new Error('Plan unavailable');return response.text()}).then(svg=>setMarkup(svg.replace(/<style>[\s\S]*?<\/style>/g,'').replaceAll('id="grid"','id="rn-plan-grid"').replaceAll('url(#grid)','url(#rn-plan-grid)').replaceAll('id="title"','id="rn-plan-title"').replaceAll('id="desc"','id="rn-plan-desc"').replaceAll('aria-labelledby="title desc"','aria-labelledby="rn-plan-title rn-plan-desc"'))).catch(()=>{});return()=>controller.abort()},[]);
+ const notes={all:'One plan. A shared stage.',stage:'The LED wall and active stage.',camera:'Camera, equipment and viewing direction.',set:'Sand, rocks and the practical border.'};
+ return <figure className="rn-set-layer" id="rn-set-plan" data-focus={focus}>
+  <div className="rn-set-layer-tabs" role="group" aria-label="Set plan layers">{[['all','Full plan'],['stage','Stage'],['camera','Camera'],['set','Practical set']].map(([key,label])=><button type="button" key={key} aria-pressed={focus===key} disabled={!markup} onClick={()=>setFocus(key)}>{label}</button>)}</div>
+  <button className="rn-set-layer-canvas" type="button" aria-label="Expand Ranasthala production floor plan" onClick={()=>onInspect({image:'assets/ranasthala-set-plan.svg',alt:'Ranasthala production floor plan showing the camera, LED wall and practical sand set'})}>{markup?<div dangerouslySetInnerHTML={{__html:markup}}/>:<img src="assets/ranasthala-set-plan.svg" width="900" height="590" alt="Ranasthala production floor plan"/>}</button>
+  <figcaption className="rn-set-layer-note" aria-live="polite">{notes[focus]}</figcaption>
+ </figure>;
+}
+
 function RanaFilmCollection({base}){
  const [active,setActive]=React.useState(0),tabs=React.useRef(null);
  const films=[{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'}];
@@ -133,7 +144,7 @@ function RanaFilmstripChapter({base}){
   <section className="rn-preparation-story" aria-labelledby="rn-preparation-title">
    <Reveal className="rn-bts-heading rn-heading-only"><h2 id="rn-preparation-title">From script<br/><em>to set.</em></h2></Reveal>
    <RanaPreparationPhotos base={bts} onInspect={setSelected}/>
-   <Reveal><figure className="rn-set-plan"><button type="button" aria-label="Expand Ranasthala production floor plan" onClick={()=>setSelected({image:bts+'production-floor-plan.webp',alt:'Ranasthala production floor plan showing the LED wall, practical sand pit, camera position and equipment area'})}><img src={bts+'production-floor-plan.webp'} alt="Ranasthala production floor plan: camera, LED wall, practical sand pit and rock placement" width="1920" height="1434" loading="lazy" decoding="async"/></button><figcaption>Planning the set.</figcaption></figure></Reveal>
+   <Reveal><RanaSetPlan onInspect={setSelected}/></Reveal>
    <Reveal className="rn-film-afterword"><p>A film takes a crew. <em>And a few extra hats.</em></p></Reveal>
   </section>
   <section className="rn-shoot-story" aria-labelledby="rn-shoot-story-title">
@@ -152,6 +163,8 @@ function RanaFilmstripChapter({base}){
 }
 
 const RANA_FILMSTRIP_STYLE=`
+.rn-filmstrip-chapter .rn-set-layer{width:min(100%,800px);margin:32px auto 0!important;padding:18px;border:1px solid var(--hair);border-radius:8px;background:linear-gradient(145deg,#e2bc6206,transparent 70%)}.rn-set-layer-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:9px}.rn-set-layer-tabs button{background:none;border:0;border-bottom:1px solid transparent;padding:7px 11px;font:11px/1.7 'Manrope',Arial,sans-serif;color:var(--dim)}.rn-set-layer-tabs button[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}.rn-set-layer-tabs button:disabled{opacity:.5}.rn-set-layer-canvas{display:block;width:100%;padding:0;border:0;background:transparent;text-align:inherit}.rn-set-layer-canvas>div{aspect-ratio:900/590}.rn-set-layer svg,.rn-set-layer-canvas>img{display:block;width:100%;height:auto}.rn-set-layer svg text{font-family:Arial,sans-serif;fill:#eeeade}.rn-set-layer svg .label{font-size:15px;letter-spacing:1px}.rn-set-layer svg .note{font-size:12px;fill:#a4a79c}.rn-set-layer svg .gold{fill:var(--accent)}.rn-set-layer svg .line{stroke:var(--accent);stroke-width:1.3;fill:none}.rn-set-layer svg .guide{stroke:var(--accent);stroke-width:1;stroke-dasharray:5 6;fill:none;opacity:.45}.rn-set-layer svg .caption{font-size:11px;letter-spacing:2px;fill:#a4a79c}.rn-set-layer [data-layer]{transition:opacity .35s}.rn-set-layer[data-focus=camera] [data-layer]:not([data-layer=camera]),.rn-set-layer[data-focus=stage] [data-layer]:not([data-layer=stage]),.rn-set-layer[data-focus=set] [data-layer]:not([data-layer=set]){opacity:.13}.rn-filmstrip-chapter .rn-set-layer-note{font:italic 400 19px/1.4 var(--serif);color:var(--accent);text-align:center;margin:3px 0 12px}.rn-set-layer button:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+@media(max-width:760px){.rn-filmstrip-chapter .rn-set-layer{padding:7px}.rn-set-layer-tabs{gap:4px}.rn-set-layer-tabs button{padding:7px 8px;font-size:10px}.rn-filmstrip-chapter .rn-set-layer-note{font-size:16px}}
 .rn-filmstrip-chapter .rn-set-plan{width:min(100%,1000px);margin:32px auto 0!important}.rn-set-plan button{display:block;width:100%;padding:0;border:1px solid var(--hair);border-radius:3px;overflow:hidden;background:#fff}.rn-set-plan img{display:block;width:100%;height:auto;object-fit:contain;transform:none!important;scale:1!important;filter:none!important}.rn-filmstrip-chapter .rn-set-plan figcaption{font:italic 400 clamp(18px,2vw,24px)/1.4 var(--serif);color:var(--accent);margin-top:12px;text-align:center}.rn-set-plan button:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
 .rn-prep-photo button{position:relative}.rn-prep-caption{position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);padding:7px 9px;font:10px/1.4 var(--mono);color:var(--accent);background:#090d0bea;border:1px solid var(--hair);opacity:0;translate:0 4px;transition:opacity .2s,translate .2s;pointer-events:none;text-align:left}.rn-prep-photo:hover .rn-prep-caption,.rn-prep-photo:focus-within .rn-prep-caption{opacity:1;translate:0 0}
 .rn-film-tabs{display:flex;gap:24px;flex-wrap:wrap;margin:0 0 22px}.rn-film-tabs button{padding:12px 0;background:none;border:0;border-bottom:1px solid transparent;color:var(--dim);font:12px var(--mono)}.rn-film-tabs button[aria-selected=true]{color:var(--accent);border-color:var(--accent)}

@@ -89,7 +89,7 @@ const PROJECTS = [
 
   },
 
-  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], coverArt:true, hero:'media/projects/Ranasthala/web/ranasthala-cover.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Two environments, brought to life across a three-day XR-stage shoot.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], coverArt:true, caseHero:'media/projects/Ranasthala/web/ranasthala-case-cover-v2.webp', hero:'media/projects/Ranasthala/web/ranasthala-cover.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Two environments, brought to life across a three-day XR-stage shoot.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
