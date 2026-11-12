@@ -364,7 +364,18 @@ Object.assign(window, {
 });
 
 // Media surfaces are their own playback controls; no visible play/pause labels.
-function TapVideo({title='Video', onLoadedMetadata, style, priority=false, ...props}) {
+function FilmSeekBar({current,duration,onSeek,title}){
+ const ready=Number.isFinite(duration)&&duration>0,value=ready?Math.max(0,Math.min(duration,current||0)):0;
+ const clock=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+ return <input className="film-seek-dot" type="range" min="0" max={ready?duration:1} step="0.05" disabled={!ready} value={value} aria-label={'Seek '+title} aria-valuetext={clock(value)+' of '+clock(ready?duration:0)} style={{'--seek-progress':(ready?value/duration*100:0)+'%'}} onPointerDown={e=>e.stopPropagation()} onClick={e=>e.stopPropagation()} onKeyDown={e=>e.stopPropagation()} onChange={e=>onSeek(+e.target.value)}/>;
+}
+function NativeVideoSeek({videoRef,title,onReplay}){
+ const [time,setTime]=React.useState(0),[duration,setDuration]=React.useState(0);
+ React.useEffect(()=>{const v=videoRef.current;if(!v)return;const read=()=>{setTime(v.currentTime||0);setDuration(Number.isFinite(v.duration)?v.duration:0)};read();const events=['loadedmetadata','durationchange','timeupdate','seeked','emptied'];events.forEach(name=>v.addEventListener(name,read));return()=>events.forEach(name=>v.removeEventListener(name,read))},[videoRef]);
+ const seek=seconds=>{const v=videoRef.current;if(!v||!Number.isFinite(v.duration))return;const replay=v.ended;v.currentTime=Math.min(seconds,v.duration);setTime(seconds);if(replay&&seconds<v.duration){onReplay?.();v.play().catch(()=>{})}};
+ return <FilmSeekBar current={time} duration={duration} onSeek={seek} title={title}/>;
+}
+function TapVideo({title='Video', onLoadedMetadata, style, priority=false, seekable=false, ...props}) {
   const ref=React.useRef(null), manual=React.useRef(false);
   const [playing,setPlaying]=React.useState(false);
   React.useEffect(()=>{
@@ -381,10 +392,11 @@ function TapVideo({title='Video', onLoadedMetadata, style, priority=false, ...pr
     return()=>{observer.disconnect();video.removeEventListener('loadeddata',play);video.removeEventListener('canplay',play);window.removeEventListener('pageshow',play);document.removeEventListener('visibilitychange',visibility);document.removeEventListener('pointerdown',play);video.pause()};
   },[props.src]);
   const toggle=()=>{const video=ref.current;manual.current=!video.paused;if(video.paused)video.play().catch(()=>{});else video.pause();};
-  return <video {...props} ref={ref} autoPlay={priority?!matchMedia('(prefers-reduced-motion: reduce)').matches:props.autoPlay} muted loop playsInline preload={priority?'auto':'metadata'} controls={false} disablePictureInPicture={priority} role="button" tabIndex={0}
+  const media=<video {...props} ref={ref} autoPlay={priority?!matchMedia('(prefers-reduced-motion: reduce)').matches:props.autoPlay} muted loop playsInline preload={priority?'auto':'metadata'} controls={false} disablePictureInPicture={priority} role="button" tabIndex={0}
     aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} onClick={e=>{e.stopPropagation();toggle();}}
     onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();toggle();}}}
     onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onLoadedMetadata={onLoadedMetadata} style={{...style,cursor:'pointer'}}/>;
+  return seekable?<div className="seek-video" style={style}>{media}<NativeVideoSeek videoRef={ref} title={title} onReplay={()=>{manual.current=false}}/></div>:media;
 }
 
 let vimeoSdkPromise;
@@ -396,15 +408,17 @@ function loadVimeoSdk(){
 function TapVimeo({id,title='Film',style}){
   const frame=React.useRef(null),surface=React.useRef(null),player=React.useRef(null),manual=React.useRef(false);
   const [playing,setPlaying]=React.useState(false),[muted,setMuted]=React.useState(true),[failed,setFailed]=React.useState(false);
+  const [time,setTime]=React.useState(0),[duration,setDuration]=React.useState(0);
   React.useEffect(()=>{
     let disposed=false,observer;
     loadVimeoSdk().then(Vimeo=>{if(disposed)return;const instance=new Vimeo.Player(frame.current);player.current=instance;
       instance.on('play',()=>{if(manual.current){instance.pause().catch(()=>{});return;}setPlaying(true);});instance.on('pause',()=>setPlaying(false));
-      instance.ready().then(()=>{if(disposed)return;observer=new IntersectionObserver(([entry])=>{
+      instance.on('timeupdate',data=>{if(!disposed){setTime(data.seconds);setDuration(data.duration)}});
+      instance.ready().then(()=>{if(disposed)return;instance.getDuration().then(seconds=>{if(!disposed)setDuration(seconds)}).catch(()=>{});observer=new IntersectionObserver(([entry])=>{
         if(entry.isIntersecting&&!manual.current&&!matchMedia('(prefers-reduced-motion: reduce)').matches)instance.play().catch(()=>{});else instance.pause().catch(()=>{});
       },{threshold:.25});observer.observe(surface.current);}).catch(()=>{if(!disposed)setFailed(true);});
     }).catch(()=>{if(!disposed)setFailed(true);});
-    return()=>{disposed=true;observer?.disconnect();if(player.current){player.current.off('play');player.current.off('pause');player.current=null;}};
+    return()=>{disposed=true;observer?.disconnect();if(player.current){player.current.off('play');player.current.off('pause');player.current.off('timeupdate');player.current=null;}};
   },[id]);
   const toggle=async()=>{const instance=player.current;if(!instance)return;manual.current=playing;try{await(playing?instance.pause():instance.play());}catch{setFailed(true);}};
   const toggleSound=async()=>{try{await player.current.setMuted(!muted);setMuted(!muted);}catch{}};
@@ -412,6 +426,7 @@ function TapVimeo({id,title='Film',style}){
     <iframe ref={frame} src={`https://player.vimeo.com/video/${id}?controls=0&title=0&byline=0&portrait=0&playsinline=1&muted=1&loop=1`} title={title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen loading="lazy" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:0,pointerEvents:'none'}}/>
     <button type="button" onClick={toggle} aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} style={{position:'absolute',inset:0,width:'100%',height:'100%',padding:0,border:0,background:'transparent',cursor:'pointer'}}/>
     <button type="button" onClick={toggleSound} aria-label={muted?'Unmute film':'Mute film'} style={{position:'absolute',bottom:12,right:12,border:0,borderRadius:'50%',width:44,height:44,background:'#111b',color:'#fff',cursor:'pointer'}}>{muted?'🔇':'🔊'}</button>
+    <FilmSeekBar current={time} duration={duration} title={title} onSeek={seconds=>{const instance=player.current;if(!instance)return;const replay=time>=duration-.1;setTime(seconds);instance.setCurrentTime(seconds).then(()=>{if(replay&&seconds<duration){manual.current=false;instance.play().catch(()=>{})}}).catch(()=>{})}}/>
     {failed&&<a href={`https://vimeo.com/${id}`} target="_blank" rel="noopener noreferrer" style={{position:'absolute',bottom:16,left:16,color:'#fff'}}>Watch on Vimeo ↗</a>}
   </div>;
 }

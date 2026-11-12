@@ -710,7 +710,7 @@ function FinalVideo({ v, poster, tone }) {
           {vid ? (
             <TapVimeo id={vid} title={v.cap || v.label || 'Film'} />
           ) : v.src ? (
-            <TapVideo title={v.label || 'Project video'} src={v.src} poster={poster} playsInline preload="metadata" onLoadedMetadata={e=>{const el=e.currentTarget;if(el.videoWidth && el.videoHeight)setNativeRatio(`${el.videoWidth} / ${el.videoHeight}`);}}
+            <TapVideo seekable title={v.label || 'Project video'} src={v.src} poster={poster} playsInline preload="metadata" onLoadedMetadata={e=>{const el=e.currentTarget;if(el.videoWidth && el.videoHeight)setNativeRatio(`${el.videoWidth} / ${el.videoHeight}`);}}
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', maxHeight:'none', aspectRatio:'auto', objectFit: 'contain', border:0, borderRadius:0 }} />
           ) : (
             <div style={{ position: 'absolute', inset: 0 }}>
