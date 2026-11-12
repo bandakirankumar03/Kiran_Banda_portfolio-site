@@ -5,7 +5,7 @@ function ChapterGuide({route,routeKey}){
  const [announced,setAnnounced]=React.useState(null);
  const dragFrame=React.useRef(0),dragY=React.useRef(0);
  const eligible=route.name==='case'||route.name==='about'||route.name==='home';
- React.useEffect(()=>{if(!eligible||!chapters.length)return;setAnnounced(active);const timer=setTimeout(()=>setAnnounced(null),1500);return()=>clearTimeout(timer)},[active,routeKey,chapters.length,eligible]);
+ React.useEffect(()=>{if(!eligible||!chapters.length||active<0){setAnnounced(null);return}setAnnounced(active);const timer=setTimeout(()=>setAnnounced(null),1500);return()=>clearTimeout(timer)},[active,routeKey,chapters.length,eligible]);
  const maxScroll=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
  const scrollToPosition=(top,smooth=true)=>window.scrollTo({top:Math.max(0,Math.min(maxScroll(),top)),behavior:smooth&&!matchMedia('(prefers-reduced-motion:reduce)').matches?'smooth':'instant'});
  React.useEffect(()=>{
@@ -14,20 +14,20 @@ function ChapterGuide({route,routeKey}){
   let frame=0,disposed=false;
   const topOf=el=>el===root?0:Math.max(0,el.getBoundingClientRect().top+scrollY-85);
   const positionOf=item=>typeof item.fraction==="number"?maxScroll()*item.fraction:Math.min(maxScroll(),topOf(item.element));
-  const read=()=>{frame=0;if(disposed)return;const maximum=maxScroll(),now=scrollY;let index=0;targets.current.forEach((item,i)=>{if(now>=positionOf(item)-2)index=i});const starts=targets.current.map(positionOf),next=starts[index+1]??maximum,part=Math.max(0,Math.min(1,(now-starts[index])/Math.max(1,next-starts[index])));setProgress(maximum>0&&now>=maximum-2?100:Math.min(100,(index+part)/Math.max(1,starts.length)*100));setActive(index);setChapters(old=>{const next=targets.current.map((x,i)=>({label:x.label,position:i/targets.current.length*100}));return JSON.stringify(old)===JSON.stringify(next)?old:next});};
+  const read=()=>{frame=0;if(disposed)return;const maximum=maxScroll(),now=scrollY;let index=-1;targets.current.forEach((item,i)=>{if(now>=positionOf(item)-2)index=i});setProgress(maximum?now/maximum*100:0);setActive(index);setChapters(old=>{const next=targets.current.map(x=>({label:x.label,position:maximum?positionOf(x)/maximum*100:0}));return JSON.stringify(old)===JSON.stringify(next)?old:next});};
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(read)};
   const collect=()=>{
    const readable=el=>{const copy=el.cloneNode(true);copy.querySelectorAll('br').forEach(br=>br.replaceWith(' '));return copy.textContent.replace(/\s+/g,' ').trim()};
-   if(route.name==='home'){
-    targets.current=[{label:'Home',element:root},...[
-     ['.home-intro','About me'],['.ongoing-section','In progress'],['.scroll-favourites','A few favourites'],['.home-projects','Selected work'],['.discovery-section','Caught my eye'],['.discovery-events','Looking ahead'],['.home-contact-teaser','Let’s build a world']
-    ].map(([selector,label])=>({label,element:root.querySelector(selector)})).filter(x=>x.element)];
-   }else{
-    const headings=Array.from(root.querySelectorAll('h2,.rpd-category>header h3,.quiet-ai-workflow,.about-photo-collection [data-main-headline]')).filter(el=>el.getClientRects().length&&!el.closest('[role="dialog"],[aria-hidden="true"]'));
-    targets.current=[{label:route.name==='about'?'Profile':'Overview',element:root},...headings.map(element=>{
-     const named=[['.quiet-ai-workflow','AI tools'],['.about-photo-collection','Stills from worlds I’ve walked through'],['.nyc-intro','AI-generated environments'],['.nyc-cast-copy','AI character development'],['.nyc-capture-copy','Motion capture'],['.nyc-stage-title,.rn-volume-opening','Virtual production'],['.rn-reconstruction-studies','Photogrammetry · RealityScan']].find(([selector])=>element.closest(selector));
-     return {label:named?named[1]:readable(element),element};
-    }).filter(x=>x.label&&topOf(x.element)>90)];
+   const named=entries=>entries.map(([selector,label])=>({label,element:root.querySelector(selector)})).filter(x=>x.element);
+   if(route.name==='home')targets.current=named([['.scroll-favourites','Favourites'],['.home-projects','Selected work'],['.discovery-section','Caught my eye']]);
+   else if(route.name==='about')targets.current=named([['#about-experience-title','Experience'],['.life-frames','My life'],['.film-preview','Inspirations']]);
+   else if(route.slug==='ranasthala')targets.current=named([['.rn-reconstruction-studies','Photogrammetry'],['.rn-volume-opening','Virtual production'],['#post-production','Post-production · VFX']]);
+   else if(route.slug==='xr01-chinese-temple')targets.current=named([['.xr-opening','Environment'],['.xr-bridge','Virtual production']]);
+   else if(route.slug==='xr02-1920s-nyc')targets.current=named([['.project-cover','Pre-production'],['.nyc-intro','AI development'],['.nyc-stage-title','Virtual production']]);
+   else{
+    const headings=Array.from(root.querySelectorAll('h2')).filter(el=>el.getClientRects().length&&!el.closest('[role="dialog"],[aria-hidden="true"]'));
+    targets.current=Array.from(new Set(headings.length>3?[headings[0],headings[Math.floor(headings.length/2)],headings[headings.length-1]]:headings)).map(element=>({label:readable(element),element}));
+    if(!targets.current.length)targets.current=[{label:'The film',element:root}];
    }
    targets.current.sort((a,b)=>positionOf(a)-positionOf(b));schedule();
   };
@@ -35,8 +35,8 @@ function ChapterGuide({route,routeKey}){
   const resize=new ResizeObserver(schedule);resize.observe(root);const mutations=new MutationObserver(collect);mutations.observe(root,{childList:true,subtree:true});
   return()=>{disposed=true;cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);document.removeEventListener('load',schedule,true);resize.disconnect();mutations.disconnect()};
  },[routeKey,eligible]);
- const jump=index=>{const target=targets.current[index];if(!target)return;scrollToPosition(index===0?0:typeof target.fraction==="number"?maxScroll()*target.fraction:target.element.getBoundingClientRect().top+scrollY-85)};
- const scrub=e=>{const box=track.current.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientY-box.top)/box.height))*targets.current.length,i=Math.min(targets.current.length-1,Math.floor(p)),at=x=>Math.min(maxScroll(),Math.max(0,x.element.getBoundingClientRect().top+scrollY-85)),start=i===0?0:at(targets.current[i]),end=i+1<targets.current.length?at(targets.current[i+1]):maxScroll();scrollToPosition(start+(end-start)*(p-i),false)};
+ const jump=index=>{const target=targets.current[index];if(!target)return;scrollToPosition(typeof target.fraction==="number"?maxScroll()*target.fraction:target.element.getBoundingClientRect().top+scrollY-85)};
+ const scrub=e=>{const box=track.current.getBoundingClientRect();scrollToPosition((e.clientY-box.top)/box.height*maxScroll(),false)};
  React.useEffect(()=>()=>cancelAnimationFrame(dragFrame.current),[]);
  const begin=e=>{if(e.button!==0||!e.isPrimary)return;e.preventDefault();const marker=e.target.closest('.cg-marker');dragging.current={id:e.pointerId,y:e.clientY,x:e.clientX,moved:false,index:marker?+marker.dataset.index:null};e.currentTarget.setPointerCapture(e.pointerId);setIsDragging(true);setHovered(null);setEngaged(true);scrollToPosition(scrollY,false);if(!marker)scrub(e)};
  const move=e=>{const gesture=dragging.current,box=track.current.getBoundingClientRect();if(!gesture){let nearest=null,delta=18;chapters.forEach((item,i)=>{const d=Math.abs(e.clientY-(box.top+item.position/100*box.height));if(d<delta){nearest=i;delta=d}});setHovered(nearest);return}if(gesture.id!==e.pointerId)return;if(Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>3)gesture.moved=true;if(gesture.index===null||gesture.moved){dragY.current=e.clientY;if(!dragFrame.current)dragFrame.current=requestAnimationFrame(()=>{dragFrame.current=0;scrub({clientY:dragY.current})})}};
@@ -46,7 +46,7 @@ function ChapterGuide({route,routeKey}){
  return <nav className="chapter-guide" aria-label={route.name==='about'?'About page guide':route.name==='home'?'Home page guide':'Case study chapters'} data-design={design}><style>{CHAPTER_GUIDE_STYLE}</style>
   <button className="cg-end" type="button" aria-label="Go to top" onClick={()=>scrollToPosition(0)}>↑</button>
   <div className="cg-track" ref={track} style={{'--page-progress':progress+'%','--guide-stops':chapters.length}} onPointerDown={begin} onPointerMove={move} onPointerUp={finish} onPointerCancel={()=>{dragging.current=false;setIsDragging(false);setEngaged(false);cancelAnimationFrame(dragFrame.current);dragFrame.current=0}} onLostPointerCapture={()=>{dragging.current=false;setIsDragging(false);cancelAnimationFrame(dragFrame.current);dragFrame.current=0}} onPointerEnter={()=>setEngaged(true)} onPointerLeave={()=>{setHovered(null);if(!dragging.current)setEngaged(false)}}><div className="cg-line" aria-hidden="true"/><div className="cg-progress" aria-hidden="true"/>
-   <div className="cg-scrubber" role="slider" tabIndex={0} aria-label="Page position" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)} aria-valuetext={Math.round(progress)+'% · '+chapters[active]?.label} onKeyDown={e=>{let top=scrollY;if(e.key==='Home')top=0;else if(e.key==='End')top=maxScroll();else if(e.key==='ArrowDown')top+=innerHeight*.18;else if(e.key==='ArrowUp')top-=innerHeight*.18;else if(e.key==='PageDown')top+=innerHeight*.8;else if(e.key==='PageUp')top-=innerHeight*.8;else return;e.preventDefault();scrollToPosition(top,false)}}><span className="cg-thumb" aria-hidden="true"/></div>
+   <div className="cg-scrubber" role="slider" tabIndex={0} aria-label="Page position" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)} aria-valuetext={Math.round(progress)+'% · '+(chapters[active]?.label||'Top')} onKeyDown={e=>{let top=scrollY;if(e.key==='Home')top=0;else if(e.key==='End')top=maxScroll();else if(e.key==='ArrowDown')top+=innerHeight*.18;else if(e.key==='ArrowUp')top-=innerHeight*.18;else if(e.key==='PageDown')top+=innerHeight*.8;else if(e.key==='PageUp')top-=innerHeight*.8;else return;e.preventDefault();scrollToPosition(top,false)}}><span className="cg-thumb" aria-hidden="true"/></div>
    {chapters.map((item,i)=><button type="button" className="cg-marker" data-index={i} data-complete={progress>item.position+.3} data-show-label={hovered===i||(hovered===null&&(((engaged||isDragging)&&active===i)||announced===i))} data-highlight={!!item.highlight} key={item.label} aria-label={'Go to '+item.label} aria-current={active===i?'location':undefined} style={{top:item.position+'%'}} onClick={e=>{if(e.detail===0)jump(i)}}><span className="cg-dot"/><span className="cg-label">{item.highlight||item.label}</span></button>)}
   </div>
   <button className="cg-end" type="button" aria-label="Go to bottom" onClick={()=>scrollToPosition(maxScroll())}>↓</button>

@@ -1,5 +1,5 @@
 /* Stable viewport gallery; gestures change projects without moving the page. */
-.chapter-guide .cg-track{width:30px;height:min(calc(var(--guide-stops,8) * 23px),58svh);min-height:150px;touch-action:none;cursor:ns-resize!important}
+.chapter-guide .cg-track{width:30px;height:170px;min-height:0;touch-action:none;cursor:ns-resize!important}
 .chapter-guide .cg-marker{left:6px!important;width:18px!important;height:18px!important;cursor:ns-resize!important}
 .chapter-guide .cg-line,.chapter-guide .cg-progress{left:14px}.chapter-guide .cg-thumb{left:11px;pointer-events:none!important}
 .chapter-guide .cg-marker .cg-dot{width:6px!important;height:6px!important;border:1px solid var(--accent);background:var(--bg)!important;box-shadow:none!important}
@@ -62,3 +62,5 @@
 }
 @media(max-height:600px){.work-selected .ws-header h1{font-size:30px!important}.work-selected .ws-header{padding-bottom:8px!important}.work-selected .focus-gallery .ws-focus-copy p>span{display:none}.work-selected .focus-gallery .ws-focus-copy p em{font-size:20px}.work-selected .focus-gallery .ws-focus-link{padding-block:5px}.work-selected .focus-gallery .ws-focus-link small{display:none}}
 @media(prefers-reduced-motion:reduce){.home-page .favourite-slide,.home-page .favourite-slide.active{transition:none!important}}
+
+@media(max-width:760px){.chapter-guide .cg-track{height:125px}}
