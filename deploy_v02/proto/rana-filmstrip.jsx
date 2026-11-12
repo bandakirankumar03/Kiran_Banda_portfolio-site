@@ -135,6 +135,7 @@ function RanaFilmstripChapter({base}){
    <Reveal className="rn-bts-heading"><h2 id="rn-team-story-title">The people<br/><em>behind the frame.</em></h2><p className="rn-crew-thanks">None of it happens alone.</p></Reveal>
    <Reveal><RanaTeamPortrait base={bts}/></Reveal>
   </section>
+  <RanaPostProduction onInspect={setSelected}/>
   <section className="rn-film-closing" aria-labelledby="rn-film-closing-title"><Reveal className="rn-bts-heading"><h2 id="rn-film-closing-title">Behind<br/><em>the scenes.</em></h2></Reveal><Reveal><RanaBTSFilm base={bts}/></Reveal></section>
   {selected&&<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
  </div>;

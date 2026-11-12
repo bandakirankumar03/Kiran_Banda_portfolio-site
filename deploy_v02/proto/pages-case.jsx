@@ -122,6 +122,7 @@ const PROJECT_TOOL_MARKS = {
   'Claude':{file:'claude.svg'},
   'Meshy AI':{file:'meshy.png'},
   'Weavy AI':{file:'weavy.svg'},
+  'ElevenLabs':{file:'elevenlabs.svg'},
   'Polycam':{file:'polycam.png'},
   'Sketchfab':{file:'sketchfab.svg'},
   'Maya':{file:'maya.svg'},
@@ -140,7 +141,7 @@ const PROJECT_TOOL_MARKS = {
 };
 const PROJECT_TOOLSETS = {
  'xr01-chinese-temple':['Unreal Engine','Gaea','Fab'],
- 'ranasthala':[{name:'Unreal Engine',detail:'PCG'},'Blender','Lightroom CC','RealityScan','Meshy AI','DaVinci Resolve','Weavy AI','Claude'],
+ 'ranasthala':[{name:'Unreal Engine',detail:'PCG'},'Blender','Lightroom CC','RealityScan','Meshy AI','DaVinci Resolve','Weavy AI','Claude',{name:'ElevenLabs',detail:'Music'}],
  'xr02-1920s-nyc':['Unreal Engine','Blender','Sony mocopi','XYN'],
  'rainy-forest':[{name:'Unreal Engine',detail:'PCG · Splines · Ultra Dynamic Sky'},'Gaea'],
  'photogrammetry-archive':['RealityCapture','Polycam','ZBrush','Substance Painter','Marmoset'],
@@ -466,61 +467,30 @@ function RenderComparison({ media, onInspect }) {
   </div>;
 }
 
-function ProjectImageViewer({ media, onClose }) {
-  const dialog = React.useRef(null), canvas = React.useRef(null), image = React.useRef(null);
-  const view = React.useRef({scale:1,x:0,y:0});
-  const drag = React.useRef(null);
-  const [state,setState] = React.useState(view.current);
-  const [dragging,setDragging] = React.useState(false);
-  const update = next => {
-    const box=canvas.current.getBoundingClientRect(), img=image.current;
-    const limitX=Math.max(0,(img.offsetWidth*next.scale-box.width)/2);
-    const limitY=Math.max(0,(img.offsetHeight*next.scale-box.height)/2);
-    const bounded={scale:next.scale,x:Math.max(-limitX,Math.min(limitX,next.x)),y:Math.max(-limitY,Math.min(limitY,next.y))};
-    view.current=bounded; setState(bounded);
-  };
-  const zoom = (factor,x=0,y=0) => {
-    const old=view.current, scale=Math.max(1,Math.min(6,old.scale*factor)), ratio=scale/old.scale;
-    update({scale,x:x-(x-old.x)*ratio,y:y-(y-old.y)*ratio});
-  };
-  React.useEffect(()=>{
-    const element=dialog.current, surface=canvas.current;
-    const overflow=document.body.style.overflow;
-    element.showModal();
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){element.animate([{opacity:0},{opacity:1}],{duration:380,easing:'ease-out'});surface.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:480,easing:'cubic-bezier(.22,1,.36,1)'});}
-    document.body.style.overflow='hidden';
-    const wheel=event=>{
-      event.preventDefault();
-      const box=surface.getBoundingClientRect();
-      const delta=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?box.height:1);
-      zoom(Math.exp(-Math.max(-100,Math.min(100,delta))*.003),event.clientX-box.left-box.width/2,event.clientY-box.top-box.height/2);
-    };
-    const resize=()=>update(view.current);
-    surface.addEventListener('wheel',wheel,{passive:false}); window.addEventListener('resize',resize);
-    return ()=>{surface.removeEventListener('wheel',wheel); window.removeEventListener('resize',resize); element.close(); document.body.style.overflow=overflow;};
-  },[]);
-  const closing=React.useRef(false);
-  const close=()=>{if(closing.current)return;closing.current=true;if(matchMedia('(prefers-reduced-motion: reduce)').matches){onClose();return;}const a=dialog.current.animate([{opacity:1},{opacity:0}],{duration:220,easing:'ease-out',fill:'forwards'});a.onfinish=onClose;};
-  const endDrag=()=>{drag.current=null;setDragging(false);};
-  return <dialog ref={dialog} className="xr-image-dialog" aria-label="Expanded project image" onCancel={e=>{e.preventDefault();close();}}
-    onKeyDown={event=>{
-      if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) {
-        event.preventDefault();
-        if(event.key==='+'||event.key==='=') zoom(1.25);
-        else if(event.key==='-') zoom(.8);
-        else if(event.key==='0') update({scale:1,x:0,y:0});
-        else update({...view.current,x:view.current.x+(event.key==='ArrowLeft'?60:event.key==='ArrowRight'?-60:0),y:view.current.y+(event.key==='ArrowUp'?60:event.key==='ArrowDown'?-60:0)});
-      }
-    }}>
-    <div ref={canvas} className="xr-image-canvas" data-zoomed={state.scale>1} data-dragging={dragging}
-      onDoubleClick={()=>view.current.scale>1?update({scale:1,x:0,y:0}):zoom(2)}
-      onPointerDown={event=>{if(event.button!==0||view.current.scale<=1)return;event.preventDefault();event.currentTarget.setPointerCapture(event.pointerId);drag.current={x:event.clientX,y:event.clientY,view:{...view.current}};setDragging(true);}}
-      onPointerMove={event=>{if(!drag.current)return;update({...drag.current.view,x:drag.current.view.x+event.clientX-drag.current.x,y:drag.current.view.y+event.clientY-drag.current.y});}}
-      onPointerUp={endDrag} onPointerCancel={endDrag} onLostPointerCapture={endDrag}>
-      <img ref={image} src={media.image} alt={media.alt} draggable={false} style={{transform:`translate(${state.x}px,${state.y}px) scale(${state.scale})`}}/>
-    </div>
-    <button type="button" className="xr-image-close" aria-label="Close image" autoFocus onClick={close}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  </dialog>;
+function ProjectImageViewer({media,onClose}){
+ const dialog=React.useRef(null),canvas=React.useRef(null),image=React.useRef(null),origin=React.useRef(null),closing=React.useRef(false),opened=React.useRef(false);
+ const findOrigin=()=>Array.from(document.querySelectorAll('img')).find(el=>!dialog.current?.contains(el)&&(el.getAttribute('src')===media.image||el.src===new URL(media.image,location.href).href)&&el.getBoundingClientRect().width>0);
+ const transform=(from,to)=>`translate(${from.left+from.width/2-to.left-to.width/2}px,${from.top+from.height/2-to.top-to.height/2}px) scale(${from.width/to.width},${from.height/to.height})`;
+ const reveal=()=>{
+  if(!dialog.current?.open||opened.current||!image.current?.complete)return;opened.current=true;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const target=image.current.getBoundingClientRect();
+  if(origin.current&&target.width)image.current.animate([{transform:transform(origin.current,target)},{transform:'none'}],{duration:420,easing:'cubic-bezier(.22,1,.36,1)'});
+ };
+ React.useEffect(()=>{
+  const el=dialog.current,overflow=document.body.style.overflow,trigger=document.activeElement;
+  origin.current=findOrigin()?.getBoundingClientRect();el.showModal();document.body.style.overflow='hidden';canvas.current.focus({preventScroll:true});
+  const frame=requestAnimationFrame(reveal);
+  return()=>{cancelAnimationFrame(frame);el.close();document.body.style.overflow=overflow;trigger?.focus?.({preventScroll:true})};
+ },[]);
+ const close=()=>{
+  if(closing.current)return;closing.current=true;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){onClose();return;}
+  const destination=findOrigin()?.getBoundingClientRect()||origin.current,current=image.current.getBoundingClientRect();
+  if(destination&&current.width){const animation=image.current.animate([{transform:'none'},{transform:transform(destination,current)}],{duration:280,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});animation.onfinish=onClose;}
+  else {const animation=dialog.current.animate([{opacity:1},{opacity:0}],{duration:200,fill:'forwards'});animation.onfinish=onClose;}
+ };
+ return <dialog ref={dialog} className="xr-image-dialog" aria-label="Expanded project image" onCancel={e=>{e.preventDefault();close()}}><div ref={canvas} className="xr-image-canvas" role="button" tabIndex={0} aria-label="Return image to page" onClick={close} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();close()}}} style={{cursor:'zoom-out'}}><img ref={image} src={media.image} alt={media.alt} draggable={false} onLoad={reveal}/></div></dialog>;
 }
 
 function StoryBook({ p, x }) {
@@ -950,7 +920,7 @@ function CaseImageInteraction({routeKey}) {
 
 function ProjectBrief({p}){
  const details={
- 'ranasthala':['Director · Writer · Producer · Cinematographer · Photogrammetry artist · Environment artist','Unreal Engine / Blender / Lightroom CC / RealityScan / Meshy AI / DaVinci Resolve / Weavy AI / Claude','Photogrammetry-led arena / Virtual production filming'],
+ 'ranasthala':['Director · Writer · Producer · Cinematographer · Photogrammetry artist · Environment artist','Unreal Engine / Blender / Lightroom CC / RealityScan / Meshy AI / DaVinci Resolve / Weavy AI / Claude / ElevenLabs (Music)','Photogrammetry-led arena / Virtual production filming'],
  'xr02-1920s-nyc':['Environment artist / Motion capture','Unreal Engine / Blender / Sony mocopi / XYN','Digital environment / Character capture / Stage integration'],
  'rainy-forest':['Solo environment artist','Unreal Engine / Gaea / PCG / Splines / Ultra Dynamic Sky','Terrain / Procedural railway / Atmosphere'],
  'photogrammetry-archive':['Photography / Photogrammetry / Asset presentation','Photogrammetry / Polycam','Surface capture / 3D reconstruction / Interactive assets'],

@@ -1,0 +1,122 @@
+{
+  "exrDisplayTransform": "Linear Rec.709 primaries to sRGB; no creative grade applied. Original EXRs remain untouched.",
+  "files": [
+    {
+      "source": "RNS_Hybrid_VFX_RNS_AIR_3E.jpg_2026-11-10_14-43-27.jpg",
+      "web": "greenscreen-source"
+    },
+    {
+      "source": "RNS_Hybrid_VFX_Gemini 3 (Nano Banana Pro)_2026-11-10_14-44-12.png",
+      "web": "greenscreen-result"
+    },
+    {
+      "source": "RNS_Hybrid_VFX_RNS_AIR_1G_FF.jpg_2026-11-10_14-45-17.jpg",
+      "web": "desert-source"
+    },
+    {
+      "source": "RNS_Hybrid_VFX_Gemini 3 (Nano Banana Pro)_2026-11-10_14-45-26.png",
+      "web": "desert-result"
+    },
+    {
+      "source": "RNS_Hybrid_VFX_Gemini_Generated_Image_294fgp294fgp294f.jpg_2026-11-10_14-46-06.jpg",
+      "web": "storm-result"
+    },
+    {
+      "source": "RNS_Hybrid_VFX_Extract Video Frame_2026-11-10_14-53-09.png",
+      "web": "storm-source"
+    },
+    {
+      "source": "3G_poster_OG_v01.exr",
+      "web": "3g-plate"
+    },
+    {
+      "source": "3G_poster.exr",
+      "web": "3g-final"
+    },
+    {
+      "source": "WhatsApp Image 2026-11-10 at 11.36.49 PM.jpeg",
+      "web": "nuke-workflow"
+    },
+    {
+      "source": "Screenshot 2026-11-11 191613.png",
+      "web": "hybrid-workflow"
+    },
+    {
+      "source": "Character_sheet.png",
+      "web": "character-reference"
+    },
+    {
+      "source": "DRONE_sheet.jpg",
+      "web": "drone-reference"
+    },
+    {
+      "source": "ur_drone_01.png",
+      "web": "drone-close-source"
+    },
+    {
+      "source": "ai_dr_01.png",
+      "web": "drone-close-result"
+    },
+    {
+      "source": "ur_dr02.png",
+      "web": "drone-wide-source"
+    },
+    {
+      "source": "ai_dr02.png",
+      "web": "drone-wide-result"
+    },
+    {
+      "source": "ur_03.png",
+      "web": "courtyard-source"
+    },
+    {
+      "source": "ai_03.png",
+      "web": "courtyard-result"
+    },
+    {
+      "source": "ur_04.png",
+      "web": "doorway-source"
+    },
+    {
+      "source": "ai_04.png",
+      "web": "doorway-result"
+    },
+    {
+      "source": "UR_dr_v01.mp4",
+      "web": "drone-input"
+    },
+    {
+      "source": "ai_dr_v01.mp4",
+      "web": "drone-ai"
+    },
+    {
+      "source": "UR_dr_v02.mp4",
+      "web": "camera-study"
+    },
+    {
+      "source": "org_01.mp4",
+      "web": "storm-input"
+    },
+    {
+      "source": "ai_hb_01.mp4",
+      "web": "storm-ai"
+    },
+    {
+      "source": "3I_wireframe.exr",
+      "web": "3i-wireframe"
+    },
+    {
+      "source": "3I_poster.exr",
+      "web": "3i-final"
+    },
+    {
+      "source": "3I_poster_og.exr",
+      "web": "3i-plate"
+    },
+    {
+      "source": "C:/Users/osmki/Downloads/3G_poster_OG.exr",
+      "web": "3g-plate-updated",
+      "note": "User-supplied original for Ruins Composition; converted to 1920x1080 WebP with linear Rec.709 to sRGB display transform."
+    }
+  ]
+}

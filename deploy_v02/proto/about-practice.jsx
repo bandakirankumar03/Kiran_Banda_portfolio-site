@@ -67,7 +67,7 @@ function OrbitalToolkit({tools,ai=false,variant=1,highlighted,center}){
  const mark=(tool,i)=><button type="button" className={'orbit-tool'+(tool.wide?' orbit-tool-wide':'')+(highlighted?.includes(tool.name)?' is-related':'')} key={tool.name} style={{'--orbit-i':i}} aria-label={tool.name==='RealityCapture'?'RealityScan':tool.name} aria-pressed={paused} onClick={()=>setPaused(p=>!p)}><span className="orbit-tool-drift"><img src={'media/tools/'+tool.file} alt="" aria-hidden="true" width="44" height="44" loading="lazy"/></span><span className="orbit-tool-name">{tool.name==='RealityCapture'?'RealityScan':tool.name}</span></button>;
  const satellites=ai?tools:tools.slice(1),rings=variant===2?[satellites.slice(0,7),satellites.slice(7)]:[satellites];
  const track=(ring,n)=><div className={'orbit-track orbit-track-'+n} key={n}>{ring.map((tool,i)=>{
-  const angle=ai?(-110+i*72)*Math.PI/180:variant===5?i*137.508*Math.PI/180:i/ring.length*Math.PI*2;
+  const angle=ai?(-110+i*360/ring.length)*Math.PI/180:variant===5?i*137.508*Math.PI/180:i/ring.length*Math.PI*2;
   const radius=ai?40:variant===5?22+23*i/(ring.length-1):43;
   return <div className="orbit-position" key={tool.name} style={{left:(50+radius*Math.cos(angle))+'%',top:(50+radius*Math.sin(angle))+'%'}}><div className="orbit-counter"><div className="orbit-upright">{mark(tool,tools.indexOf(tool))}</div></div></div>;
  })}</div>;

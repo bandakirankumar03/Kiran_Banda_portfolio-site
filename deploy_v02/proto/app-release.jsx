@@ -83,6 +83,7 @@ function App() {
             <Nav />
             <div key={route.name+':' +(route.slug || '')} className={'site-page route-arrival site-page-' + route.name+(leaving?' route-leaving':'')} aria-busy={leaving}>{page}</div>
             <FloatingSurfaces routeKey={route.name+':'+(route.slug||'')}/><HeadlineMotion routeKey={route.name+':' +(route.slug || '')}/><SiteScrollMotion routeKey={route.name+':' +(route.slug || '')}/><CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
+            <ChapterGuide route={route} routeKey={route.name+':'+(route.slug||'')}/>
 
           </>
         )}
