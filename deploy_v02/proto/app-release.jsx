@@ -13,6 +13,22 @@ function App() {
     return { name: 'home' };
   };
   const [route, setRoute] = React.useState(parseHash);
+  React.useEffect(()=>{
+    if(route.name==='work')return;
+    let frame=0,target=scrollY;
+    const maximum=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
+    const stop=()=>{cancelAnimationFrame(frame);frame=0;target=scrollY};
+    const step=()=>{const difference=target-scrollY;if(Math.abs(difference)<.8){window.scrollTo({top:target,behavior:'instant'});frame=0;return}window.scrollTo({top:scrollY+difference*.4,behavior:'instant'});frame=requestAnimationFrame(step)};
+    const wheel=e=>{
+      if(document.fullscreenElement||e.defaultPrevented||!e.cancelable||e.ctrlKey||e.metaKey||Math.abs(e.deltaX)>Math.abs(e.deltaY)||!e.deltaY||e.target.closest?.('input,textarea,select,[contenteditable="true"],[role="dialog"],dialog[open],.chapter-guide,.focus-scroll-track'))return;
+      for(let el=e.target;el&&el!==document.body;el=el.parentElement){if(el.scrollHeight>el.clientHeight+2&&/auto|scroll/.test(getComputedStyle(el).overflowY)&&((e.deltaY>0&&el.scrollTop+el.clientHeight<el.scrollHeight-1)||(e.deltaY<0&&el.scrollTop>0)))return}
+      const distance=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1)*1.22;
+      const next=Math.max(0,Math.min(maximum(),(frame?target:scrollY)+distance));if(next===scrollY)return;e.preventDefault();target=next;
+      if(matchMedia('(prefers-reduced-motion:reduce)').matches){window.scrollTo({top:target,behavior:'instant'});return}if(!frame)frame=requestAnimationFrame(step);
+    };
+    window.addEventListener('wheel',wheel,{passive:false});window.addEventListener('pointerdown',stop,{capture:true});window.addEventListener('keydown',stop);
+    return()=>{stop();window.removeEventListener('wheel',wheel);window.removeEventListener('pointerdown',stop,{capture:true});window.removeEventListener('keydown',stop)};
+  },[route.name,route.slug]);
   const [leaving,setLeaving]=React.useState(false);
   const navigationTimer=React.useRef(null);
   const currentRoute=React.useRef(route);

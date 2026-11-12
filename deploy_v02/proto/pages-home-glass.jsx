@@ -484,7 +484,7 @@ function InterestsSection() {
 // ─── Contact teaser (links to /contact) ───
 function ContactTeaser({ go }) {
   return (
-    <div style={{ borderTop: 'none', padding: 'clamp(70px,14vw,140px) var(--pad)', textAlign: 'center' }}>
+    <div className="home-contact-teaser" style={{ borderTop: 'none', padding: 'clamp(70px,14vw,140px) var(--pad)', textAlign: 'center' }}>
       <Reveal delay={120}>
         <div style={{ fontSize: 'clamp(72px, 11vw, 180px)', lineHeight: 0.95, letterSpacing: -4, fontWeight: 300 }}>
           <span style={{ fontStyle: 'italic' }}>let&apos;s build</span><br/>
