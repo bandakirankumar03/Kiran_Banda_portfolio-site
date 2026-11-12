@@ -41,7 +41,8 @@ const RANA_BTS_PHOTOS={
  'workshop-team':'The production design team building practical rocks together'
 };
 
-function RanaBTSFilm({base}){
+function RanaBTSFilm({base,film}){
+ const title=film?.title||'Ranasthala behind the scenes film';
  const video=React.useRef(null),frame=React.useRef(null),manual=React.useRef(false),inView=React.useRef(false);
  const [playing,setPlaying]=React.useState(false),[sound,setSound]=React.useState(false),[progress,setProgress]=React.useState(0);
  React.useEffect(()=>{
@@ -49,20 +50,20 @@ function RanaBTSFilm({base}){
   const update=()=>{if(inView.current&&!document.hidden&&!manual.current&&!reduced.matches)v.play().catch(()=>{});else v.pause()};
   const observer=new IntersectionObserver(([entry])=>{inView.current=entry.isIntersecting;update()},{threshold:.25});
   observer.observe(v);document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
-  return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update)};
+  return()=>{v.pause();observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update)};
  },[]);
  const toggle=()=>{const v=video.current;manual.current=!v.paused;if(v.paused)v.play().catch(()=>{});else v.pause()};
  const toggleSound=()=>{const v=video.current;v.muted=sound;setSound(!sound);if(v.paused){manual.current=false;v.play().catch(()=>{})}};
  const fullscreen=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else frame.current.requestFullscreen?.().catch(()=>{})};
- return <div className="rn-bts-film" ref={frame} role="group" aria-label="Ranasthala behind the scenes film">
-  <video ref={video} src={base+'on-set-polished-wrap.mp4'} poster={base+'on-set-beatcut-poster.webp'} muted={!sound} playsInline preload="metadata" controls={false} role="button" tabIndex={0} aria-label={(playing?'Pause':'Play')+' Ranasthala behind the scenes film'} aria-pressed={playing} onClick={toggle} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}}} onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onEnded={()=>{manual.current=true;setPlaying(false)}} onTimeUpdate={e=>{const v=e.currentTarget;setProgress(v.duration?v.currentTime/v.duration:0)}}/>
+ return <div className="rn-bts-film" ref={frame} role="group" aria-label={title}>
+  <video ref={video} src={film?.src||base+'on-set-polished-wrap.mp4'} poster={film?.poster||base+'on-set-beatcut-poster.webp'} muted={!sound} playsInline preload="metadata" controls={false} role="button" tabIndex={0} aria-label={(playing?'Pause':'Play')+' '+title} aria-pressed={playing} onClick={toggle} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}}} onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onEnded={()=>{manual.current=true;setPlaying(false)}} onTimeUpdate={e=>{const v=e.currentTarget;setProgress(v.duration?v.currentTime/v.duration:0)}}/>
   <div className="rn-bts-film-controls">
-   <button type="button" onClick={toggleSound} aria-label={sound?'Mute BTS soundtrack':'Enable BTS soundtrack'} aria-pressed={sound}>
+   <button type="button" onClick={toggleSound} aria-label={(sound?'Mute ':'Enable ')+title+' soundtrack'} aria-pressed={sound}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M4 9h4l5-4H4z"/><path d="M13 5v14l-5-4"/>{sound?<><path d="M16 8a6 6 0 0 1 0 8M19 5a10 10 0 0 1 0 14"/></>:<path d="m17 9 5 6m0-6-5 6"/>}</svg><span>Sound</span>
    </button>
-   <button type="button" onClick={fullscreen} aria-label="Expand BTS film to full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"/></svg></button>
+   <button type="button" onClick={fullscreen} aria-label={'Expand '+title+' to full screen'}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"/></svg></button>
   </div>
-  <progress className="rn-bts-film-progress" max="1" value={progress} aria-label="BTS film playback progress"/>
+  <progress className="rn-bts-film-progress" max="1" value={progress} aria-label={title+' playback progress'}/>
  </div>;
 }
 

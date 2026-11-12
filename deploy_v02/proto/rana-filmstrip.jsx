@@ -18,15 +18,16 @@ const RANA_TEAM_FRAMES=[
  [71.3,34.9,12.5,47.3]
 ];
 const RANA_FILM_PREP=[
- 'collaborative-planning','script-and-shot-lists','workshop-team','sand-bags','reuse-wardrobe','rocks-in-workshop','reuse-store','making-rocks'
+ 'collaborative-planning','script-and-shot-lists','workshop-team','sand-bags','reuse-wardrobe','rocks-in-workshop','making-rocks'
 ];
+const RANA_PREP_CAPTIONS={'collaborative-planning':'Production meeting','script-and-shot-lists':'Script & schedule','workshop-team':'Teamwork in the workshop','sand-bags':'Sand logistics','reuse-wardrobe':'Costume sourcing','rocks-in-workshop':'Handmade rock props','making-rocks':'Making rocks together'};
 const RANA_PREP_AIR_POSES=[
  [1,0,49,-3,3],[64,1,24,4,2],[7,46,36,-3,3],[47,38,16,4,2],
- [80,43,17,5,2],[1,77,25,3,1],[33,76,27,-4,1],[64,70,34,2,3]
+ [80,43,17,5,2],[1,77,25,3,1],[64,70,34,2,3]
 ];
 const RANA_PREP_AIR_MOBILE=[
  [2,0,96,-2,3],[55,28,43,4,2],[1,30,53,-3,3],[3,49,32,4,2],
- [62,52,35,5,2],[2,70,49,3,1],[53,73,46,-4,1],[16,84,67,2,3]
+ [62,52,35,5,2],[2,70,49,3,1],[16,84,67,2,3]
 ];
 const RANA_FILM_SHOOT=[
  'desert-stage','live-operation','crew-planning','camera-take','slate-notes','costume-prep','rig-camera',
@@ -61,6 +62,7 @@ function RanaStageWorlds({base}){
 
 function RanaFilmStrip({base,files,reverse=false,onInspect,paused=false,duration=78}){
  const root=React.useRef(null),[running,setRunning]=React.useState(false);
+ const pace=value=>root.current?.querySelector('.rn-celluloid-track')?.getAnimations().forEach(animation=>animation.updatePlaybackRate(value));
  React.useEffect(()=>{
   let visible=false;
   const sync=()=>setRunning(visible&&!document.hidden);
@@ -68,7 +70,7 @@ function RanaFilmStrip({base,files,reverse=false,onInspect,paused=false,duration
   observer.observe(root.current);document.addEventListener('visibilitychange',sync);
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync)};
  },[]);
- return <div ref={root} className={'rn-celluloid-viewport'+(reverse?' is-reversed':'')} data-running={running&&!paused} data-image-navigation="" style={{'--film-duration':duration+'s'}}><div className="rn-celluloid-track">
+ return <div ref={root} className={'rn-celluloid-viewport'+(reverse?' is-reversed':'')} data-running={running&&!paused} data-image-navigation="" onPointerEnter={e=>{if(e.pointerType==='mouse')pace(.45)}} onPointerLeave={()=>pace(1)} style={{'--film-duration':duration+'s'}}><div className="rn-celluloid-track">
   {[0,1].map(copy=><div className="rn-celluloid-copy" key={copy} aria-hidden={copy===1}>{files.map(file=>{
    const [width,height]=RANA_FILM_PHOTO_SIZES[file]||[1900,1267];
    return <button type="button" className="rn-celluloid-frame" key={file} style={{'--frame-ratio':width/height}} data-photo-frame="" tabIndex={copy===1?-1:0} aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:base+file+'.webp',alt:RANA_BTS_PHOTOS[file]})}><img src={base+file+'.webp'} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/></button>;
@@ -95,7 +97,7 @@ function RanaPreparationPhotos({base,onInspect}){
  return <Reveal className="rn-prep-gallery-wrap"><div ref={root} className="rn-prep-gallery" data-image-navigation="" onPointerMove={e=>{if(e.pointerType!=='mouse')return;const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--prep-x',((e.clientX-r.left)/r.width-.5)*9+'px');e.currentTarget.style.setProperty('--prep-y',((e.clientY-r.top)/r.height-.5)*7+'px')}} onPointerLeave={e=>{e.currentTarget.style.setProperty('--prep-x','0px');e.currentTarget.style.setProperty('--prep-y','0px')}}>
   {RANA_FILM_PREP.map((file,i)=>{
    const [width,height]=RANA_FILM_PHOTO_SIZES[file]||[1900,1425], [x,y,w,r,z]=RANA_PREP_AIR_POSES[i],[mx,my,mw,mr,mz]=RANA_PREP_AIR_MOBILE[i];
-   return <figure className="rn-prep-photo" key={file} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:base+file+'.webp',alt:RANA_BTS_PHOTOS[file]})}><img src={base+file+'.webp'} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/></button></div></figure>;
+   return <figure className="rn-prep-photo" key={file} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:base+file+'.webp',alt:RANA_BTS_PHOTOS[file]})}><img src={base+file+'.webp'} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/><span className="rn-prep-caption">{RANA_PREP_CAPTIONS[file]}</span></button></div></figure>;
   })}
  </div></Reveal>;
 }
@@ -112,6 +114,13 @@ function RanaTeamPortrait({base}){
    {person&&<div key={person.id} id="rn-team-tooltip" role="tooltip" className="rn-team-tooltip" style={{left:Math.max(22,Math.min(78,person.x))+'%',top:(frame[1]-6)+'%'}}><div><strong>{label(person)}</strong><small>{person.role}</small></div></div>}
   </div>
  </figure>;
+}
+
+function RanaFilmCollection({base}){
+ const [active,setActive]=React.useState(0),tabs=React.useRef(null);
+ const films=[{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'}];
+ const keys=e=>{let next;if(e.key==='ArrowRight')next=(active+1)%films.length;else if(e.key==='ArrowLeft')next=(active+films.length-1)%films.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=films.length-1;else return;e.preventDefault();setActive(next);tabs.current.querySelectorAll('button')[next].focus()};
+ return <div className="rn-film-collection"><div ref={tabs} className="rn-film-tabs" role="tablist" aria-label="Ranasthala videos" onKeyDown={keys}>{films.map((film,i)=><button type="button" role="tab" id={'rn-film-tab-'+i} aria-controls={'rn-film-panel-'+i} aria-selected={active===i} tabIndex={active===i?0:-1} key={film.label} onClick={()=>setActive(i)}>{film.label}</button>)}</div><div role="tabpanel" id={'rn-film-panel-'+active} aria-labelledby={'rn-film-tab-'+active}><RanaBTSFilm key={active} film={films[active]}/></div></div>;
 }
 
 function RanaFilmstripChapter({base}){
@@ -131,17 +140,20 @@ function RanaFilmstripChapter({base}){
    <Reveal><RanaShootReel base={bts} photos={RANA_FILM_SHOOT} onInspect={setSelected} paused={!!selected}/></Reveal>
    <Reveal className="rn-film-afterword"><p>One more role. One more solution. <em>One more take.</em></p></Reveal>
   </section>
+  <RanaPostProduction onInspect={setSelected}/>
   <section className="rn-team-story" aria-labelledby="rn-team-story-title">
    <Reveal className="rn-bts-heading"><h2 id="rn-team-story-title">The people<br/><em>behind the frame.</em></h2><p className="rn-crew-thanks">None of it happens alone.</p></Reveal>
    <Reveal><RanaTeamPortrait base={bts}/></Reveal>
   </section>
-  <RanaPostProduction onInspect={setSelected}/>
-  <section className="rn-film-closing" aria-labelledby="rn-film-closing-title"><Reveal className="rn-bts-heading"><h2 id="rn-film-closing-title">Behind<br/><em>the scenes.</em></h2></Reveal><Reveal><RanaBTSFilm base={bts}/></Reveal></section>
+  <section className="rn-film-closing" aria-labelledby="rn-film-closing-title"><Reveal className="rn-bts-heading"><h2 id="rn-film-closing-title">In <em>motion.</em></h2></Reveal><Reveal><RanaFilmCollection base={base}/></Reveal></section>
   {selected&&<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
  </div>;
 }
 
 const RANA_FILMSTRIP_STYLE=`
+.rn-prep-photo button{position:relative}.rn-prep-caption{position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);padding:7px 9px;font:10px/1.4 var(--mono);color:var(--accent);background:#090d0bea;border:1px solid var(--hair);opacity:0;translate:0 4px;transition:opacity .2s,translate .2s;pointer-events:none;text-align:left}.rn-prep-photo:hover .rn-prep-caption,.rn-prep-photo:focus-within .rn-prep-caption{opacity:1;translate:0 0}
+.rn-film-tabs{display:flex;gap:24px;flex-wrap:wrap;margin:0 0 22px}.rn-film-tabs button{padding:12px 0;background:none;border:0;border-bottom:1px solid transparent;color:var(--dim);font:12px var(--mono)}.rn-film-tabs button[aria-selected=true]{color:var(--accent);border-color:var(--accent)}
+@media(hover:none){.rn-prep-caption{opacity:1;translate:0 0;font-size:9px;padding:5px 7px}}
 .rn-filmstrip-chapter{scroll-margin-top:30px;border-top:0;padding-top:0}
 .rn-filmstrip-chapter .rn-bts-heading{align-items:center}
 .rn-filmstrip-chapter .rn-bts-heading.rn-heading-only{grid-template-columns:1fr}
@@ -183,8 +195,8 @@ const RANA_FILMSTRIP_STYLE=`
 .rn-celluloid-track{display:flex;width:max-content;animation:rn-celluloid-pass var(--film-duration) linear infinite;animation-play-state:paused}
 .rn-celluloid-viewport[data-running=true] .rn-celluloid-track{animation-play-state:running}
 .rn-celluloid-viewport.is-reversed .rn-celluloid-track{animation-direction:reverse}
-.rn-celluloid-viewport:has(:focus-visible) .rn-celluloid-track{animation-play-state:paused}
-@media(hover:hover) and (pointer:fine){.rn-celluloid-viewport:hover .rn-celluloid-track{animation-play-state:paused}}
+.rn-celluloid-viewport:has(:focus-visible) .rn-celluloid-track{animation-play-state:paused!important}
+@media(hover:hover) and (pointer:fine){.rn-celluloid-viewport[data-running=true]:hover .rn-celluloid-track{animation-play-state:running}}
 .rn-celluloid-copy{position:relative;display:flex;gap:10px;padding:20px 10px 20px 0;flex-shrink:0;background:#030604;border-top:1px solid #ffffff15;border-bottom:1px solid #ffffff15}
 .rn-celluloid-copy:before,.rn-celluloid-copy:after{content:'';position:absolute;left:0;right:0;height:8px;z-index:2;pointer-events:none;background:var(--sprocket);mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='31' height='8'%3E%3Crect x='8' width='13' height='8' rx='1.8' fill='black'/%3E%3C/svg%3E");mask-repeat:repeat-x;mask-size:31px 8px}
 .rn-celluloid-copy:before{top:5px}.rn-celluloid-copy:after{bottom:5px}
