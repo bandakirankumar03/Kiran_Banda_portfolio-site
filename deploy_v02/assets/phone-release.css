@@ -64,3 +64,13 @@
 @media(prefers-reduced-motion:reduce){.home-page .favourite-slide,.home-page .favourite-slide.active{transition:none!important}}
 
 @media(max-width:760px){.chapter-guide .cg-track{height:125px}}
+
+/* Fullscreen uses the screen bounds; the video keeps its own proportions. */
+.video-fullscreen-control{position:absolute;right:12px;bottom:30px;z-index:10;display:grid;place-items:center;width:36px;height:36px;padding:8px;border:1px solid #ffffff35;border-radius:50%;background:#080b0bd9;color:#fff;cursor:pointer}
+.video-fullscreen-control:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.tap-vimeo>.video-fullscreen-control{right:64px}
+.rn-bts-film-controls>.video-fullscreen-control{position:static}
+:is(.rn-bts-film,.seek-video,.tap-vimeo):fullscreen{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;min-height:0!important;aspect-ratio:auto!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#000!important;display:block!important;transform:none!important;overflow:hidden!important}
+:is(.rn-bts-film,.seek-video):fullscreen>video,video:fullscreen{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;background:#000!important;transform:none!important;border-radius:0!important}
+.tap-vimeo:fullscreen>iframe{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important}
+:is(.rn-bts-film,.seek-video,.tap-vimeo)::backdrop{background:#000}

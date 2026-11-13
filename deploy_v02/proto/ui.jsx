@@ -376,7 +376,7 @@ function NativeVideoSeek({videoRef,title,onReplay}){
  return <FilmSeekBar current={time} duration={duration} onSeek={seek} title={title}/>;
 }
 function TapVideo({title='Video', onLoadedMetadata, style, priority=false, seekable=false, ...props}) {
-  const ref=React.useRef(null), manual=React.useRef(false);
+  const ref=React.useRef(null), surface=React.useRef(null), manual=React.useRef(false);
   const [playing,setPlaying]=React.useState(false);
   React.useEffect(()=>{
     const video=ref.current;let visible=false;
@@ -396,7 +396,7 @@ function TapVideo({title='Video', onLoadedMetadata, style, priority=false, seeka
     aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} onClick={e=>{e.stopPropagation();toggle();}}
     onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();toggle();}}}
     onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)} onLoadedMetadata={onLoadedMetadata} style={{...style,cursor:'pointer'}}/>;
-  return seekable?<div className="seek-video" style={style}>{media}<NativeVideoSeek videoRef={ref} title={title} onReplay={()=>{manual.current=false}}/></div>:media;
+  return seekable?<div ref={surface} className="seek-video" style={style}>{media}<VideoFullscreenButton surface={surface} video={ref} title={title}/><NativeVideoSeek videoRef={ref} title={title} onReplay={()=>{manual.current=false}}/></div>:media;
 }
 
 let vimeoSdkPromise;
@@ -426,6 +426,7 @@ function TapVimeo({id,title='Film',style}){
     <iframe ref={frame} src={`https://player.vimeo.com/video/${id}?controls=0&title=0&byline=0&portrait=0&playsinline=1&muted=1&loop=1`} title={title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen loading="lazy" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:0,pointerEvents:'none'}}/>
     <button type="button" onClick={toggle} aria-label={`${playing?'Pause':'Play'} ${title}`} aria-pressed={playing} style={{position:'absolute',inset:0,width:'100%',height:'100%',padding:0,border:0,background:'transparent',cursor:'pointer'}}/>
     <button type="button" onClick={toggleSound} aria-label={muted?'Unmute film':'Mute film'} style={{position:'absolute',bottom:12,right:12,border:0,borderRadius:'50%',width:44,height:44,background:'#111b',color:'#fff',cursor:'pointer'}}>{muted?'🔇':'🔊'}</button>
+    <VideoFullscreenButton surface={surface} player={player} title={title}/>
     <FilmSeekBar current={time} duration={duration} title={title} onSeek={seconds=>{const instance=player.current;if(!instance)return;const replay=time>=duration-.1;setTime(seconds);instance.setCurrentTime(seconds).then(()=>{if(replay&&seconds<duration){manual.current=false;instance.play().catch(()=>{})}}).catch(()=>{})}}/>
     {failed&&<a href={`https://vimeo.com/${id}`} target="_blank" rel="noopener noreferrer" style={{position:'absolute',bottom:16,left:16,color:'#fff'}}>Watch on Vimeo ↗</a>}
   </div>;
@@ -448,4 +449,14 @@ function ComparisonWipeControl({value,onChange,...props}){
  onPointerMove={e=>{const g=gesture.current;if(!g||g.id!==e.pointerId)return;if(!g.horizontal){const dx=Math.abs(e.clientX-g.x),dy=Math.abs(e.clientY-g.y);if(dy>dx&&dy>6){gesture.current=null;return;}if(dx<7||dx<=dy)return;g.horizontal=true;e.currentTarget.setPointerCapture(e.pointerId);}if(e.cancelable)e.preventDefault();update(e);}}
  onPointerUp={()=>{gesture.current=null;}} onPointerCancel={()=>{gesture.current=null;}}
  onKeyDown={e=>{let next;if(e.key==='ArrowLeft')next=value-2;else if(e.key==='ArrowRight')next=value+2;else if(e.key==='Home')next=0;else if(e.key==='End')next=100;else return;e.preventDefault();e.stopPropagation();onChange(Math.max(0,Math.min(100,next)));}}/>;
+}
+
+
+function VideoFullscreenButton({surface,video,player,title}){
+ const [full,setFull]=React.useState(false);
+ React.useEffect(()=>{const sync=()=>setFull(document.fullscreenElement===surface.current||document.webkitFullscreenElement===surface.current);document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);return()=>{document.removeEventListener('fullscreenchange',sync);document.removeEventListener('webkitfullscreenchange',sync)}},[]);
+ const toggle=async()=>{
+  try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.webkitFullscreenElement)document.webkitExitFullscreen();else if(surface.current?.requestFullscreen)await surface.current.requestFullscreen();else if(surface.current?.webkitRequestFullscreen)surface.current.webkitRequestFullscreen();else if(video?.current?.webkitEnterFullscreen)video.current.webkitEnterFullscreen();else if(player?.current?.requestFullscreen)await player.current.requestFullscreen();}catch{}
+ };
+ return <button type="button" className="video-fullscreen-control" onClick={e=>{e.stopPropagation();toggle()}} aria-label={(full?'Exit full screen for ':'Expand ')+title+(full?'':' to full screen')} aria-pressed={full}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={full?'M4 8h4V4m8 0v4h4M4 16h4v4m8 0v-4h4':'M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4'}/></svg></button>;
 }

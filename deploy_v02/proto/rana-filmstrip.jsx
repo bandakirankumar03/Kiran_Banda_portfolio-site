@@ -18,16 +18,16 @@ const RANA_TEAM_FRAMES=[
  [71.3,34.9,12.5,47.3]
 ];
 const RANA_FILM_PREP=[
- 'collaborative-planning','script-and-shot-lists','workshop-team','sand-bags','reuse-wardrobe','rocks-in-workshop','making-rocks'
+ 'collaborative-planning','script-and-shot-lists','workshop-team','sand-bags','reuse-wardrobe','handmade-rock-props','making-rocks','arena-practical-model'
 ];
-const RANA_PREP_CAPTIONS={'collaborative-planning':'Production meeting','script-and-shot-lists':'Script & schedule','workshop-team':'Teamwork in the workshop','sand-bags':'Sand logistics','reuse-wardrobe':'Costume sourcing','rocks-in-workshop':'Handmade rock props','making-rocks':'Making rocks together'};
+const RANA_PREP_CAPTIONS={'collaborative-planning':'Production meeting','script-and-shot-lists':'Script & schedule','workshop-team':'Teamwork in the workshop','sand-bags':'Sand logistics','reuse-wardrobe':'Costume sourcing','handmade-rock-props':'Handmade rock props','arena-practical-model':'Practical arena model','making-rocks':'Making rocks together'};
 const RANA_PREP_AIR_POSES=[
  [1,0,49,-3,3],[64,1,24,4,2],[7,46,36,-3,3],[47,38,16,4,2],
- [80,43,17,5,2],[1,77,25,3,1],[64,70,34,2,3]
+ [80,43,17,5,2],[1,77,27,3,1],[66,70,32,2,3],[33,69,29,-2,2]
 ];
 const RANA_PREP_AIR_MOBILE=[
  [2,0,96,-2,3],[55,28,43,4,2],[1,30,53,-3,3],[3,49,32,4,2],
- [62,52,35,5,2],[2,70,49,3,1],[16,84,67,2,3]
+ [62,52,35,5,2],[2,70,49,3,1],[16,84,67,2,3],[3,90,43,-2,2]
 ];
 const RANA_FILM_SHOOT=[
  'desert-stage','live-operation','crew-planning','camera-take','slate-notes','costume-prep','rig-camera',
@@ -37,6 +37,7 @@ const RANA_FILM_SHOOT=[
  'wrap-slate','wrap-keepsakes','shot-list'
 ];
 const RANA_FILM_PHOTO_SIZES={
+ 'handmade-rock-props':[1024,576],'arena-practical-model':[768,600],
  'collaborative-planning':[1900,1425],'script-and-shot-lists':[1275,1700],
  'arena-slate':[1200,1600],'sand-bags':[1350,1800],'slate-notes':[1200,1600],'reuse-wardrobe':[1200,1600],
  'making-rocks':[2200,1650],'workshop-team':[1900,1425],'camera-take':[1900,1425],'temple-haze':[1900,1425],
@@ -96,8 +97,9 @@ function RanaPreparationPhotos({base,onInspect}){
  },[]);
  return <Reveal className="rn-prep-gallery-wrap"><div ref={root} className="rn-prep-gallery" data-image-navigation="" onPointerMove={e=>{if(e.pointerType!=='mouse')return;const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--prep-x',((e.clientX-r.left)/r.width-.5)*9+'px');e.currentTarget.style.setProperty('--prep-y',((e.clientY-r.top)/r.height-.5)*7+'px')}} onPointerLeave={e=>{e.currentTarget.style.setProperty('--prep-x','0px');e.currentTarget.style.setProperty('--prep-y','0px')}}>
   {RANA_FILM_PREP.map((file,i)=>{
+   const source=base+file+(file==='arena-practical-model'?'.svg':'.webp');
    const [width,height]=RANA_FILM_PHOTO_SIZES[file]||[1900,1425], [x,y,w,r,z]=RANA_PREP_AIR_POSES[i],[mx,my,mw,mr,mz]=RANA_PREP_AIR_MOBILE[i];
-   return <figure className="rn-prep-photo" key={file} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:base+file+'.webp',alt:RANA_BTS_PHOTOS[file]})}><img src={base+file+'.webp'} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/><span className="rn-prep-caption">{RANA_PREP_CAPTIONS[file]}</span></button></div></figure>;
+   return <figure className="rn-prep-photo" key={file} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:source,alt:RANA_BTS_PHOTOS[file]})}><img src={source} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/><span className="rn-prep-caption">{RANA_PREP_CAPTIONS[file]}</span></button></div></figure>;
   })}
  </div></Reveal>;
 }
@@ -129,7 +131,7 @@ function RanaSetPlan({onInspect}){
 
 function RanaFilmCollection({base}){
  const [active,setActive]=React.useState(0),tabs=React.useRef(null);
- const films=[{label:'The film',title:'Ranasthala · Film coming soon',comingSoon:true},{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'}];
+ const films=[{label:'Trailer',title:'Ranasthala trailer',src:base+'films/ranasthala-trailer-web.mp4',poster:base+'films/ranasthala-trailer-poster.webp'},{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'},{label:'The film',title:'Ranasthala · Film coming soon',comingSoon:true}];
  const keys=e=>{let next;if(e.key==='ArrowRight')next=(active+1)%films.length;else if(e.key==='ArrowLeft')next=(active+films.length-1)%films.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=films.length-1;else return;e.preventDefault();setActive(next);tabs.current.querySelectorAll('button')[next].focus()};
  return <div className="rn-film-collection"><div ref={tabs} className="rn-film-tabs" role="tablist" aria-label="Ranasthala videos" onKeyDown={keys}>{films.map((film,i)=><button type="button" role="tab" id={'rn-film-tab-'+i} aria-controls={'rn-film-panel-'+i} aria-selected={active===i} tabIndex={active===i?0:-1} key={film.label} onClick={()=>setActive(i)}>{film.label}</button>)}</div><div role="tabpanel" id={'rn-film-panel-'+active} aria-labelledby={'rn-film-tab-'+active}><>{films[active].comingSoon?<div className="rn-film-coming" role="status"><span>Ranasthala / The film</span><h3>One final <em>note.</em></h3><p>Sound design in progress.</p><small>Film coming soon</small></div>:<RanaBTSFilm key={active} film={films[active]}/>}</></div></div>;
 }
@@ -245,7 +247,7 @@ const RANA_FILMSTRIP_STYLE=`
  .rn-filmstrip-chapter .rn-film-afterword p{font-size:20px;margin-top:12px;max-width:29ch}
  .rn-team-tooltip{min-width:130px;padding:9px 11px;gap:8px}.rn-team-tooltip strong{font-size:10px}.rn-team-tooltip small{font-size:8px}
 }
-@media(max-width:600px){.rn-prep-gallery{height:auto;aspect-ratio:1/3;width:100%}.rn-prep-gallery .rn-prep-photo{left:var(--mx);top:var(--my);width:var(--mw);rotate:var(--mr);z-index:var(--mz)}}
+@media(max-width:600px){.rn-prep-gallery{height:auto;aspect-ratio:auto;width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:22px 16px;padding:8px 4px}.rn-prep-gallery .rn-prep-photo{position:relative;left:auto;top:auto;width:100%;rotate:-1deg;z-index:auto}.rn-prep-gallery .rn-prep-photo:nth-child(even){rotate:1deg}.rn-prep-gallery .rn-prep-drift{animation:none!important}}
 @media(prefers-reduced-motion:reduce){.rn-prep-photo,.rn-prep-drift{animation:none!important;transition:none!important;translate:0 0!important}}
 @media(prefers-reduced-motion:reduce){.rn-celluloid-track{animation:none!important}.rn-celluloid-viewport{overflow-x:auto;scrollbar-width:thin}.rn-celluloid-copy:nth-child(2){display:none}.rn-stage-world-button img,.rn-team-person,.rn-team-focus,.rn-team-tooltip,.rn-volume-facts dd{transition:none!important;animation:none!important}.rn-volume-facts dd{translate:none!important;rotate:none!important}}
 `;
