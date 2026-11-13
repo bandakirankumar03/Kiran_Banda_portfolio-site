@@ -432,3 +432,20 @@ function TapVimeo({id,title='Film',style}){
 }
 
 Object.assign(window, { TapVideo, TapVimeo });
+
+
+function jumpToProjectFilm(selector){
+ const target=document.querySelector(selector);
+ if(target){target.style.scrollMarginTop='90px';target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'});}
+}
+
+function ComparisonWipeControl({value,onChange,...props}){
+ const gesture=React.useRef(null);
+ const update=(e)=>{const r=e.currentTarget.getBoundingClientRect();onChange(Math.round(Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100))));};
+ return <div {...props} role="slider" tabIndex={0} aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} aria-orientation="horizontal" data-comparison-wipe="true"
+ style={{position:'absolute',inset:0,width:'100%',height:'100%',zIndex:4,opacity:0,cursor:'ew-resize',touchAction:'pan-y'}}
+ onPointerDown={e=>{if(e.button!==0)return;gesture.current={x:e.clientX,y:e.clientY,id:e.pointerId,horizontal:e.pointerType!=='touch'};if(e.pointerType!=='touch'){e.currentTarget.setPointerCapture(e.pointerId);e.currentTarget.focus({preventScroll:true});update(e);}}}
+ onPointerMove={e=>{const g=gesture.current;if(!g||g.id!==e.pointerId)return;if(!g.horizontal){const dx=Math.abs(e.clientX-g.x),dy=Math.abs(e.clientY-g.y);if(dy>dx&&dy>6){gesture.current=null;return;}if(dx<7||dx<=dy)return;g.horizontal=true;e.currentTarget.setPointerCapture(e.pointerId);}if(e.cancelable)e.preventDefault();update(e);}}
+ onPointerUp={()=>{gesture.current=null;}} onPointerCancel={()=>{gesture.current=null;}}
+ onKeyDown={e=>{let next;if(e.key==='ArrowLeft')next=value-2;else if(e.key==='ArrowRight')next=value+2;else if(e.key==='Home')next=0;else if(e.key==='End')next=100;else return;e.preventDefault();e.stopPropagation();onChange(Math.max(0,Math.min(100,next)));}}/>;
+}

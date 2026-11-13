@@ -1,4 +1,6 @@
 function ProjectCover({p, description, actionLabel, onAction}) {
+  const watchTargets={'ranasthala':'.rn-film-closing','unreal-environment-studies':'.studies-tabs'};
+  if(!onAction&&watchTargets[p.slug]){actionLabel=p.slug==='ranasthala'?'Watch the films':'Watch the showcase';onAction=()=>jumpToProjectFilm(watchTargets[p.slug]);}
   const ref=React.useRef(null);
   const titleRef=React.useRef(null);
   React.useLayoutEffect(()=>{
@@ -51,7 +53,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
       .pc-story h1 em {color:var(--lab-primary,#C1663B);font-weight:400;}
       .pc-bottom {display:flex;align-items:flex-end;justify-content:space-between;gap:32px;}
       .pc-bottom p {font:14px/1.8 Arial,sans-serif;color:var(--ink);max-width:48ch;margin:0;}
-      .pc-action {display:flex;align-items:center;gap:24px;border:0;background:transparent;color:var(--ink);padding:0;cursor:pointer;font:13px var(--mono);white-space:nowrap;}
+      .pc-action {border-bottom:1px solid var(--lab-primary)!important;padding-bottom:8px!important;display:flex;align-items:center;gap:24px;border:0;background:transparent;color:var(--ink);padding:0;cursor:pointer;font:13px var(--mono);white-space:nowrap;}
       .pc-action span {display:grid;place-items:center;width:54px;height:54px;border:1px solid #f2ede360;border-radius:50%;font-size:21px;transition:background .25s,transform .25s;}
       .pc-action:hover span {background:var(--lab-primary,#C1663B);transform:rotate(45deg);}
       .pc-foot {padding-top:18px;font-size:12px;color:var(--dim);}
@@ -72,7 +74,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
     `}</style>
     <div className="pc-image"><div className="pc-image-drift"><div className="pc-image-lens">{(p.caseHero||p.hero) ? <img src={p.caseHero||p.hero} alt={p.title+(p.coverArt?' cover artwork':' environment')} fetchpriority="high"/> : <Scene tone={p.tone} style={{width:'100%',height:'100%'}}/>}</div></div></div><div className="pc-atmosphere" aria-hidden="true"/><div className="pc-grain" aria-hidden="true"/>
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
-    <div className="pc-story"><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}<span aria-hidden="true">↗</span></button>}</div></div>
+    <div className="pc-story"><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}</button>}</div></div>
     <div className="pc-foot"><span>{p.client || 'Selected project'}</span></div>
   </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}</>;
 }
@@ -930,7 +932,7 @@ function CaseImageInteraction({routeKey}) {
 
 function ProjectBrief({p}){
  const details={
- 'ranasthala':['Director · Writer · Producer · Cinematographer · Photogrammetry artist · Environment artist','Unreal Engine / Blender / Lightroom CC / RealityScan / Meshy AI / DaVinci Resolve / Weavy AI / Claude / ElevenLabs (Music)','Photogrammetry-led arena / Virtual production filming'],
+ 'ranasthala':['Director · Story · Photogrammetry · Unreal Environment · Editor','Unreal Engine / Blender / Lightroom CC / RealityScan / Meshy AI / DaVinci Resolve / Weavy AI / Claude / ElevenLabs (Music)','Photogrammetry-led arena / Virtual production filming'],
  'xr02-1920s-nyc':['Environment artist / Motion capture','Unreal Engine / Blender / Sony mocopi / XYN','Digital environment / Character capture / Stage integration'],
  'rainy-forest':['Solo environment artist','Unreal Engine / Gaea / PCG / Splines / Ultra Dynamic Sky','Terrain / Procedural railway / Atmosphere'],
  'photogrammetry-archive':['Photography / Photogrammetry / Asset presentation','Photogrammetry / Polycam','Surface capture / 3D reconstruction / Interactive assets'],

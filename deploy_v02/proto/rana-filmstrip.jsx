@@ -129,9 +129,9 @@ function RanaSetPlan({onInspect}){
 
 function RanaFilmCollection({base}){
  const [active,setActive]=React.useState(0),tabs=React.useRef(null);
- const films=[{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'}];
+ const films=[{label:'The film',title:'Ranasthala · Film coming soon',comingSoon:true},{label:'Unreal showcase',title:'Ranasthala Unreal environment showcase',src:base+'films/unreal-desert-crown-32s.mp4',poster:base+'films/unreal-desert-crown-poster.webp'},{label:'Behind the scenes',title:'Ranasthala behind the scenes film',src:base+'bts/on-set-polished-wrap.mp4',poster:base+'bts/on-set-beatcut-poster.webp'}];
  const keys=e=>{let next;if(e.key==='ArrowRight')next=(active+1)%films.length;else if(e.key==='ArrowLeft')next=(active+films.length-1)%films.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=films.length-1;else return;e.preventDefault();setActive(next);tabs.current.querySelectorAll('button')[next].focus()};
- return <div className="rn-film-collection"><div ref={tabs} className="rn-film-tabs" role="tablist" aria-label="Ranasthala videos" onKeyDown={keys}>{films.map((film,i)=><button type="button" role="tab" id={'rn-film-tab-'+i} aria-controls={'rn-film-panel-'+i} aria-selected={active===i} tabIndex={active===i?0:-1} key={film.label} onClick={()=>setActive(i)}>{film.label}</button>)}</div><div role="tabpanel" id={'rn-film-panel-'+active} aria-labelledby={'rn-film-tab-'+active}><RanaBTSFilm key={active} film={films[active]}/></div></div>;
+ return <div className="rn-film-collection"><div ref={tabs} className="rn-film-tabs" role="tablist" aria-label="Ranasthala videos" onKeyDown={keys}>{films.map((film,i)=><button type="button" role="tab" id={'rn-film-tab-'+i} aria-controls={'rn-film-panel-'+i} aria-selected={active===i} tabIndex={active===i?0:-1} key={film.label} onClick={()=>setActive(i)}>{film.label}</button>)}</div><div role="tabpanel" id={'rn-film-panel-'+active} aria-labelledby={'rn-film-tab-'+active}><>{films[active].comingSoon?<div className="rn-film-coming" role="status"><span>Ranasthala / The film</span><h3>One final <em>note.</em></h3><p>Sound design in progress.</p><small>Film coming soon</small></div>:<RanaBTSFilm key={active} film={films[active]}/>}</></div></div>;
 }
 
 function RanaFilmstripChapter({base}){
@@ -222,7 +222,7 @@ const RANA_FILMSTRIP_STYLE=`
 @keyframes rn-celluloid-pass{to{transform:translateX(-50%)}}
 .rn-filmstrip-chapter .rn-film-afterword p{font:400 italic 25px/1.4 var(--serif);color:var(--dim);margin:20px auto 0;text-align:center;max-width:none}
 .rn-film-afterword em{color:var(--accent)}
-.rn-team-figure{width:min(100%,1080px);margin:0 auto!important}
+.rn-team-figure{width:min(100%,1240px);margin:0 auto!important}
 .rn-team-photo{position:relative;isolation:isolate;border-radius:3px;overflow:hidden}
 .rn-team-photo .rn-team-base-image{width:100%;height:auto;display:block;scale:1!important;transform:none!important;pointer-events:none}
 .rn-team-person{position:absolute;display:block;padding:0;border:0;border-radius:0;background:transparent!important;box-shadow:none!important;filter:none!important;cursor:none!important;outline:0!important}
@@ -232,7 +232,7 @@ const RANA_FILMSTRIP_STYLE=`
 .rn-team-tooltip small{display:block;font:9px/1.5 var(--mono);color:var(--dim);white-space:normal}
 @keyframes rn-team-label{from{opacity:0;translate:0 5px}to{opacity:1;translate:0 0}}
 .rn-filmstrip-chapter .rn-bts-heading .rn-crew-thanks{font:400 italic 25px/1.4 var(--serif);color:var(--accent);margin-top:18px}
-.rn-filmstrip-chapter .rn-film-closing{margin-bottom:0}
+.rn-film-coming{width:100%;min-width:0;aspect-ratio:16/9;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--hair);background:radial-gradient(ellipse at 50% 90%,#c69b4420,transparent 70%),#090b0a;padding:30px 18px}.rn-film-coming>span,.rn-film-coming small{font:10px/1.6 var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}.rn-film-coming h3{font:400 clamp(34px,6vw,76px)/1.1 var(--serif);margin:22px 0 12px}.rn-film-coming em{color:var(--accent)}.rn-film-coming p{font:14px/1.7 var(--mono);color:var(--dim);margin:0 0 24px}.rn-filmstrip-chapter .rn-film-closing{margin-bottom:0}
 @media(max-width:760px){
  .rn-volume-facts{gap:32px;margin-top:5px}.rn-volume-facts>div{gap:12px}.rn-volume-facts dd{font-size:76px;letter-spacing:-3px}.rn-volume-facts dt{font-size:14px}
  .rn-filmstrip-chapter .rn-shoot-story .rn-bts-heading{grid-template-columns:1fr}

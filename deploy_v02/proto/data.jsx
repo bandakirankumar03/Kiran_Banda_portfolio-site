@@ -89,7 +89,7 @@ const PROJECTS = [
 
   },
 
-  {slug:'ranasthala', title:'Ranasthala', role:'Director · Environment Artist · Unreal Engine & Virtual Production Operator', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], coverArt:true, caseHero:'media/projects/Ranasthala/web/ranasthala-case-cover-v2.webp', hero:'media/projects/Ranasthala/web/ranasthala-cover.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Two environments, brought to life across a three-day XR-stage shoot.', breakdown:[]},
+  {slug:'ranasthala', title:'Ranasthala', role:'Director · Story · Photogrammetry · Unreal Environment · Editor', kind:'Virtual Production', kindShort:'VP', tone:'canyon', tags:['Unreal Engine'], coverArt:true, caseHero:'media/projects/Ranasthala/web/ranasthala-case-cover-v2.webp', hero:'media/projects/Ranasthala/web/ranasthala-cover.webp', client:'Master’s final project', tagline:'An arena built from my photogrammetry captures across India. A virtual production film.', blurb:'My master’s final VFX project: a virtual production environment built from architectural scans captured in Hampi and Rajasthan. Two environments, brought to life across a three-day XR-stage shoot.', breakdown:[]},
   // ── Photogrammetry assets (1) ──────────────────────────────
   {
     slug: 'photogrammetry-archive', n: '06', title: 'Photogrammetry Archive', role: 'Photogrammetry · 3D Capture',
@@ -115,7 +115,7 @@ const PROJECT_ORDER=['ranasthala','xr02-1920s-nyc','xr01-chinese-temple','rainy-
 PROJECTS.sort((a,b)=>PROJECT_ORDER.indexOf(a.slug)-PROJECT_ORDER.indexOf(b.slug));
 PROJECTS.forEach((p,i)=>{p.n=String(i+1).padStart(2,'0')});
 const ONGOING = [
-  { title: 'Ranasthala', pct: 60, status: 'Filming', note: 'Assets complete. Filming is now underway on the virtual production stage for my master’s final VFX project.' },
+  { title: 'Ranasthala', pct: 80, status: 'Sound design', note: 'The picture is ready. Only sound design remains.' },
   { title: 'Photogrammetry assets', pct: 30, status: 'Processing', note: 'Capture is complete. The scans are now being processed into usable 3D assets.' },
 ];
 

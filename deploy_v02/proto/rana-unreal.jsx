@@ -6,7 +6,7 @@ function RanaUnrealReveal({frames,label}){
   <div className="ru-reveal-before" style={mode==='Dissolve'?{opacity:position/100}:{clipPath:`inset(0 ${100-position}% 0 0)`}}><img src={RANA_UNREAL_ROOT+frames[0][0]} alt={label+' · '+frames[0][1]} loading="lazy"/></div>
   <span className="ru-reveal-label ru-before-label">{frames[0][1]}</span><span className="ru-reveal-label ru-after-label">{frames[1][1]}</span>
   {mode==='Wipe'&&<div className="ru-reveal-handle" aria-hidden="true"><span>‹ ›</span></div>}
-  <input type="range" min="0" max="100" value={position} onChange={e=>setPosition(+e.target.value)} aria-label={label+' development reveal'} aria-valuetext={position+'% '+frames[0][1]+', '+(100-position)+'% '+frames[1][1]}/>
+  <ComparisonWipeControl value={position} onChange={setPosition} aria-label={label+' development reveal'} aria-valuetext={position+'% '+frames[0][1]+', '+(100-position)+'% '+frames[1][1]}/>
  </div><div className="ru-reveal-foot"><span>Move / drag to reveal</span><div role="group" aria-label={label+' reveal style'}>{['Wipe','Dissolve'].map(x=><button key={x} type="button" onClick={()=>setMode(x)} aria-pressed={mode===x}>{x}</button>)}</div></div></div>;
 }
 
