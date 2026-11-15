@@ -1,32 +1,38 @@
 const RANA_POST_ROOT='media/projects/Ranasthala/web/post/';
 function RanaWipe({before,after,beforeLabel='Original plate',afterLabel='VFX composite',label,video=false,reframed=false}){
- const [position,setPosition]=React.useState(reframed?100:50),[playing,setPlaying]=React.useState(false),[manual,setManual]=React.useState(null);
+ const [position,setPosition]=React.useState(reframed?100:50);
  const frame=React.useRef(null),a=React.useRef(null),b=React.useRef(null);
  React.useEffect(()=>{
   if(!video)return;
-  const first=a.current,second=b.current,reduced=matchMedia('(prefers-reduced-motion:reduce)');
-  let visible=false,disposed=false,starting=false;
+  const first=a.current,second=b.current,videos=[first,second];
+  let visible=false,disposed=false;
+  videos.forEach(v=>{v.defaultMuted=true;v.muted=true;v.playsInline=true;v.loop=true;v.setAttribute('muted','');v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');});
   const update=()=>{
-   const run=visible&&!document.hidden&&(manual===true||(manual===null&&!reduced.matches));
-   if(!run){first.pause();second.pause();setPlaying(false);return;}
-   if(first.readyState<2||second.readyState<2||starting)return;
-   if(!first.paused&&!second.paused)return;
-   starting=true;
-   Promise.all([first.play(),second.play()]).then(()=>{if(!disposed)setPlaying(true)}).catch(()=>{first.pause();second.pause();if(!disposed)setPlaying(false)}).finally(()=>{starting=false});
+   if(disposed)return;
+   videos.forEach(v=>{
+    if(!visible||document.hidden){v.pause();return;}
+    v.muted=true;v.preload='auto';
+    if(v.paused)v.play().catch(()=>{});
+   });
   };
   const sync=()=>{
-   if(first.paused)return;
-   const duration=Math.min(first.duration||Infinity,second.duration||Infinity);
-   if(first.currentTime>=duration-.08||second.ended){first.currentTime=0;second.currentTime=0;update();}
-   else if(Math.abs(first.currentTime-second.currentTime)>.1)second.currentTime=first.currentTime;
+   if(!visible||document.hidden||first.paused||second.paused||first.seeking||second.seeking)return;
+   const duration=Math.min(first.duration,second.duration);
+   if(Number.isFinite(duration)&&duration>.25&&(first.currentTime>=duration-.08||second.currentTime>=duration-.08)){first.currentTime=0;second.currentTime=0;}
+   else if(Math.abs(first.currentTime-second.currentTime)>.2)second.currentTime=first.currentTime;
   };
-  const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{threshold:.2});observer.observe(frame.current);
-  first.addEventListener('canplay',update);second.addEventListener('canplay',update);
-  document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
-  const timer=setInterval(sync,100);
-  return()=>{disposed=true;clearInterval(timer);observer.disconnect();first.removeEventListener('canplay',update);second.removeEventListener('canplay',update);document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update);first.pause();second.pause()};
- },[video,before,after,manual]);
- const media=(src,ref,description)=>video?<video ref={ref} src={RANA_POST_ROOT+src+'.mp4'} poster={RANA_POST_ROOT+src+'.webp'} muted playsInline preload="metadata" aria-label={description}/>:<img src={RANA_POST_ROOT+src+'.webp'} alt={description} loading="lazy" draggable={false}/>;
+  const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{threshold:.05});observer.observe(frame.current);
+  const readyEvents=['loadedmetadata','loadeddata','canplay','ended'];
+  videos.forEach(v=>readyEvents.forEach(name=>v.addEventListener(name,update)));
+  // Retry within a user gesture when mobile autoplay was initially denied.
+  const gestures=['pointerdown','touchstart','keydown'];
+  gestures.forEach(name=>document.addEventListener(name,update,{passive:true}));
+  document.addEventListener('visibilitychange',update);window.addEventListener('pageshow',update);
+  const timer=setInterval(sync,200);
+  return()=>{disposed=true;clearInterval(timer);observer.disconnect();videos.forEach(v=>{readyEvents.forEach(name=>v.removeEventListener(name,update));v.pause()});gestures.forEach(name=>document.removeEventListener(name,update));document.removeEventListener('visibilitychange',update);window.removeEventListener('pageshow',update)};
+ },[video,before,after]);
+
+ const media=(src,ref,description)=>video?<video ref={ref} src={RANA_POST_ROOT+src+'.mp4'} poster={RANA_POST_ROOT+src+'.webp'} muted autoPlay loop playsInline preload="metadata" controls={false} disablePictureInPicture aria-label={description}/>:<img src={RANA_POST_ROOT+src+'.webp'} alt={description} loading="lazy" draggable={false}/>;
  return <div className={'rp-comparison'+(reframed?' rp-reframed':'')} ref={frame}>
   <div className="rp-wipe" data-image-navigation="" style={{'--wipe':position+'%'}} onPointerEnter={e=>{if(reframed&&e.pointerType==='mouse'&&matchMedia('(hover:hover)').matches)setPosition(0)}} onPointerLeave={e=>{if(reframed&&e.pointerType==='mouse')setPosition(100)}} onPointerMove={e=>{if(!reframed&&e.pointerType==='mouse'&&!e.buttons&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const r=e.currentTarget.getBoundingClientRect();setPosition(Math.round(Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100))))}}}>
    {media(after,b,afterLabel+' · '+label)}
@@ -34,7 +40,7 @@ function RanaWipe({before,after,beforeLabel='Original plate',afterLabel='VFX com
    <span className="rp-wipe-label rp-label-left">{reframed&&position===100?afterLabel:beforeLabel}</span><span className="rp-wipe-label rp-label-right">{reframed?'Hover / tap':afterLabel}</span>
    {reframed?<button className="rp-swap" type="button" aria-label={'Toggle '+label+' plate and composite'} aria-pressed={position===100} onClick={()=>setPosition(position===100?0:100)}/>:<><div className="rp-divider" aria-hidden="true"><span>‹ ›</span></div><ComparisonWipeControl value={position} onChange={setPosition} aria-label={label+' comparison wipe'} aria-valuetext={position+'% '+beforeLabel+', '+(100-position)+'% '+afterLabel}/></>}
   </div>
-  <div className="rp-media-foot"><span>{reframed?'Hover / tap':'Drag to reveal'} <span aria-hidden="true">↔</span></span>{video?<button className="rp-play" type="button" onClick={()=>setManual(!playing)} aria-label={(playing?'Pause':'Play')+' '+label+' comparison'} aria-pressed={playing}>{playing?<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10"/></svg>:<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg>}</button>:<span>Plate / result</span>}</div>
+  <div className="rp-media-foot"><span>{reframed?'Hover / tap':'Drag to reveal'} <span aria-hidden="true">↔</span></span>{!video&&<span>Plate / result</span>}</div>
  </div>;
 }
 function RanaVFXExample({items,kind,onInspect}){
