@@ -74,3 +74,19 @@
 :is(.rn-bts-film,.seek-video):fullscreen>video,video:fullscreen{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;background:#000!important;transform:none!important;border-radius:0!important}
 .tap-vimeo:fullscreen>iframe{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important}
 :is(.rn-bts-film,.seek-video,.tap-vimeo)::backdrop{background:#000}
+
+/* Compact phone cards leave room to browse the next project. */
+@media(max-width:600px){
+ .work-selected .ws-header h1{font-size:clamp(32px,9vw,48px)!important}
+ .work-selected .ws-header{padding-bottom:10px!important}
+ .work-selected .focus-gallery{gap:10px;flex:0 1 auto;height:calc(86px + clamp(200px,40svh,330px))}
+ .work-selected .focus-gallery .ws-focus-list{flex-basis:76px}
+ .work-selected .focus-gallery .ws-focus-link{flex:0 0 clamp(148px,44vw,188px);padding:10px 12px}
+ .work-selected .focus-gallery .ws-focus-link>span{font-size:clamp(14px,4vw,16px);line-height:1.15;letter-spacing:-.25px}
+ .work-selected .focus-gallery .ws-focus-link small{font-size:7px;margin-top:4px}
+ .work-selected .focus-gallery .ws-focus-stage{height:min(clamp(200px,40svh,330px),calc(100% - 86px))!important}
+ .work-selected .focus-gallery .ws-focus-copy{padding:16px;gap:10px}
+ .work-selected .focus-gallery .ws-focus-copy p em{font-size:clamp(19px,5vw,22px);margin-bottom:6px}
+ .work-selected .focus-gallery .ws-focus-copy p>span{font-size:11px;line-height:1.5}
+ .work-selected .focus-gallery .focus-explore{padding:9px 12px;font-size:8px}
+}

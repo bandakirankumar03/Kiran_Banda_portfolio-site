@@ -46,18 +46,26 @@ const RANA_FILM_PHOTO_SIZES={
 };
 
 function RanaStageWorlds({base}){
- const [active,setActive]=React.useState(0);
+ const [active,setActive]=React.useState(0),[running,setRunning]=React.useState(false),[paused,setPaused]=React.useState(false),root=React.useRef(null);
+ React.useEffect(()=>{
+  let visible=false;const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  const update=()=>setRunning(visible&&!document.hidden&&!reduced.matches);
+  const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{threshold:.15});observer.observe(root.current);
+  document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
+  return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update)};
+ },[]);
+ React.useEffect(()=>{if(!running||paused)return;const timer=setTimeout(()=>setActive(i=>(i+1)%3),4200);return()=>clearTimeout(timer)},[active,running,paused]);
  const scenes=[
   {name:'Empty stage',src:base+'vp-stage-calibration-level.webp',alt:'The empty XR stage displaying its calibration grid, without cast or crew'},
   {name:'Arena',src:base+'vp-stage-environment-level.webp',alt:'The original Ranasthala arena photograph from the matched empty-stage and environment pair'},
   {name:'Hallway',src:base+'bts/temple-wide.webp',alt:'The second, shadowed hallway environment on the LED stage, without cast or crew'}
  ];
  const change=d=>setActive(i=>(i+d+scenes.length)%scenes.length);
- return <div className="rn-stage-worlds" data-image-navigation="">
+ return <div className="rn-stage-worlds" ref={root} data-image-navigation="">
   <button type="button" className="rn-stage-world-button" data-photo-frame="" onClick={()=>change(1)} aria-label={'Show '+scenes[(active+1)%scenes.length].name.toLowerCase()+' on the XR stage'} onKeyDown={e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();change(e.key==='ArrowRight'?1:-1)}}}>
    {scenes.map((scene,i)=><img key={scene.name} src={scene.src} alt={scene.alt} aria-hidden={active!==i} className={active===i?'is-current':''} loading={i===0?'eager':'lazy'}/>)}
   </button>
-  <div className="rn-stage-world-labels" role="group" aria-label="XR stage environments">{scenes.map((scene,i)=><button key={scene.name} type="button" aria-pressed={active===i} onClick={()=>setActive(i)}>{scene.name}</button>)}</div>
+  <div className="rn-stage-world-labels" role="group" aria-label="XR stage environments">{scenes.map((scene,i)=><button key={scene.name} type="button" aria-pressed={active===i} onClick={()=>setActive(i)}>{scene.name}</button>)}<button type="button" className="rn-stage-auto" aria-label={(paused?'Resume':'Pause')+' automatic stage rotation'} aria-pressed={paused} onClick={()=>setPaused(v=>!v)}><svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{paused?<path d="m7 4 8 6-8 6Z"/>:<path d="M7 4v12M13 4v12"/>}</svg></button></div>
  </div>;
 }
 
@@ -165,6 +173,7 @@ function RanaFilmstripChapter({base}){
 }
 
 const RANA_FILMSTRIP_STYLE=`
+.rn-stage-world-labels .rn-stage-auto{display:grid;place-items:center;min-width:30px;min-height:30px;padding:5px;border:1px solid var(--hair);border-radius:50%;color:var(--accent)}
 .rn-filmstrip-chapter .rn-set-layer{width:min(100%,800px);margin:32px auto 0!important;padding:18px;border:1px solid var(--hair);border-radius:8px;background:linear-gradient(145deg,#e2bc6206,transparent 70%)}.rn-set-layer-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:9px}.rn-set-layer-tabs button{background:none;border:0;border-bottom:1px solid transparent;padding:7px 11px;font:11px/1.7 'Manrope',Arial,sans-serif;color:var(--dim)}.rn-set-layer-tabs button[aria-pressed=true]{color:var(--accent);border-color:var(--accent)}.rn-set-layer-tabs button:disabled{opacity:.5}.rn-set-layer-canvas{display:block;width:100%;padding:0;border:0;background:transparent;text-align:inherit}.rn-set-layer-canvas>div{aspect-ratio:900/590}.rn-set-layer svg,.rn-set-layer-canvas>img{display:block;width:100%;height:auto}.rn-set-layer svg text{font-family:Arial,sans-serif;fill:#eeeade}.rn-set-layer svg .label{font-size:15px;letter-spacing:1px}.rn-set-layer svg .note{font-size:12px;fill:#a4a79c}.rn-set-layer svg .gold{fill:var(--accent)}.rn-set-layer svg .line{stroke:var(--accent);stroke-width:1.3;fill:none}.rn-set-layer svg .guide{stroke:var(--accent);stroke-width:1;stroke-dasharray:5 6;fill:none;opacity:.45}.rn-set-layer svg .caption{font-size:11px;letter-spacing:2px;fill:#a4a79c}.rn-set-layer [data-layer]{transition:opacity .35s}.rn-set-layer[data-focus=camera] [data-layer]:not([data-layer=camera]),.rn-set-layer[data-focus=stage] [data-layer]:not([data-layer=stage]),.rn-set-layer[data-focus=set] [data-layer]:not([data-layer=set]){opacity:.13}.rn-filmstrip-chapter .rn-set-layer-note{font:italic 400 19px/1.4 var(--serif);color:var(--accent);text-align:center;margin:3px 0 12px}.rn-set-layer button:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
 @media(max-width:760px){.rn-filmstrip-chapter .rn-set-layer{padding:7px}.rn-set-layer-tabs{gap:4px}.rn-set-layer-tabs button{padding:7px 8px;font-size:10px}.rn-filmstrip-chapter .rn-set-layer-note{font-size:16px}}
 .rn-filmstrip-chapter .rn-set-plan{width:min(100%,1000px);margin:32px auto 0!important}.rn-set-plan button{display:block;width:100%;padding:0;border:1px solid var(--hair);border-radius:3px;overflow:hidden;background:#fff}.rn-set-plan img{display:block;width:100%;height:auto;object-fit:contain;transform:none!important;scale:1!important;filter:none!important}.rn-filmstrip-chapter .rn-set-plan figcaption{font:italic 400 clamp(18px,2vw,24px)/1.4 var(--serif);color:var(--accent);margin-top:12px;text-align:center}.rn-set-plan button:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
