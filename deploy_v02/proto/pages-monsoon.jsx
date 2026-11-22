@@ -43,7 +43,7 @@ function MonsoonCasePage({p,prev,next,go}) {
  <Reveal className="ms-gallery"><div className="ms-heading"><div><span className="ms-eyebrow">The finished environment</span><h2>Around the <em>valley.</em></h2></div></div><div className="ms-valley-panels">{[3,0,2,1,4,5].map(i=><figure key={i} data-active={featuredView===i} onMouseEnter={()=>setFeaturedView(i)} onFocus={()=>setFeaturedView(i)}><img src={shot(i+9)} alt={angles[i]} loading="lazy"/></figure>)}</div></Reveal>
  <Reveal className="ms-credit"><div><span className="ms-eyebrow">What I learned</span><h2>More control.<br/><em>More room to explore.</em></h2><p>This project helped me develop confidence with PCG and splines: building a scene that I could keep refining, while using composition and lighting to hold the original idea together.</p></div><div><span className="ms-eyebrow">Asset credits</span><p>I created the terrain in Gaea and assembled, lit and presented the environment in Unreal. Trees and other supporting assets came from Fab; the train came from Sketchfab. AI-assisted assets were explored in Meshy, and Dynamic Sky supported the sky and atmosphere.</p></div></Reveal>
  <section id="monsoon-environment" style={{paddingTop:64,scrollMarginTop:30}}><div className="ms-heading"><div><span className="ms-eyebrow">Unreal environment</span><h2>The landscape <em>in motion.</em></h2></div></div><FinalVideo v={{label:"Unreal environment",vimeo:"1233906166",aspectRatio:"426 / 240",cap:"Monsoon Station · Unreal environment",clickToPlay:true}} poster={p.hero} tone={p.tone}/></section>
- </main><CaseFooterNav prev={prev} next={next} go={go}/>
+ </main><CaseFooterNav p={p} prev={prev} next={next} go={go}/>
  </article>;
 }
 

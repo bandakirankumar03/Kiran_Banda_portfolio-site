@@ -115,8 +115,8 @@ const PROJECT_ORDER=['ranasthala','xr02-1920s-nyc','xr01-chinese-temple','rainy-
 PROJECTS.sort((a,b)=>PROJECT_ORDER.indexOf(a.slug)-PROJECT_ORDER.indexOf(b.slug));
 PROJECTS.forEach((p,i)=>{p.n=String(i+1).padStart(2,'0')});
 const ONGOING = [
-  { title: 'Ranasthala', pct: 80, status: 'Sound design', note: 'The picture is ready. Only sound design remains.' },
-  { title: 'Photogrammetry assets', pct: 30, status: 'Processing', note: 'Capture is complete. The scans are now being processed into usable 3D assets.' },
+  { title: 'Ranasthala', pct: 80, status: 'Sound design in progress', note: 'The picture is ready. Now shaping the sound.' },
+  { title: 'AI + 3DGS for virtual production', pct: null, status: 'Research in progress', note: 'Researching how AI and 3D Gaussian splatting connect to virtual production.' },
 ];
 
 // interests: tech + events the artist follows

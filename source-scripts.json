@@ -1,6 +1,9 @@
 [
   "proto/data.jsx",
   "proto/ui.jsx",
+  "proto/field-to-frame.jsx",
+  "proto/rana-production-map.jsx",
+  "proto/rana-quick-preview.jsx",
   "proto/intro.jsx",
   "proto/pages-home-glass.jsx",
   "proto/pages-work.jsx",

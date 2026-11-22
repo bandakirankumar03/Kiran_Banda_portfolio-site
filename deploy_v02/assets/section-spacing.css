@@ -1,0 +1,3 @@
+/* Space separates chapters; borders remain on actual controls and media cards. */
+.case-cinematic :is(section,main,.shared-project-brief,.case-footer-nav,.rn-meta,.rn-production-chapter,.ru-spec-ribbon,.ru-performance>div,.rn-celluloid-copy,.rpm-readout,.field-frame-primer),.credential-summary,.home-page .radar-list,.home-page .radar-item{border-top:0!important;border-bottom:0!important}
+.case-cinematic .ms-photo-grid figcaption{border-top:0!important;border-bottom:0!important}

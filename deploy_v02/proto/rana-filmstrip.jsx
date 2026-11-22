@@ -46,7 +46,7 @@ const RANA_FILM_PHOTO_SIZES={
 };
 
 function RanaStageWorlds({base}){
- const [active,setActive]=React.useState(0),[running,setRunning]=React.useState(false),[paused,setPaused]=React.useState(false),root=React.useRef(null);
+ const [active,setActive]=React.useState(0),[running,setRunning]=React.useState(false),[paused,setPaused]=React.useState(false),[note,setNote]=React.useState(null),root=React.useRef(null);
  React.useEffect(()=>{
   let visible=false;const reduced=matchMedia('(prefers-reduced-motion:reduce)');
   const update=()=>setRunning(visible&&!document.hidden&&!reduced.matches);
@@ -54,18 +54,19 @@ function RanaStageWorlds({base}){
   document.addEventListener('visibilitychange',update);reduced.addEventListener('change',update);
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',update);reduced.removeEventListener('change',update)};
  },[]);
- React.useEffect(()=>{if(!running||paused)return;const timer=setTimeout(()=>setActive(i=>(i+1)%3),4200);return()=>clearTimeout(timer)},[active,running,paused]);
+ React.useEffect(()=>{if(!running||paused||note!==null)return;const timer=setTimeout(()=>setActive(i=>(i+1)%3),4200);return()=>clearTimeout(timer)},[active,running,paused,note]);
  const scenes=[
   {name:'Empty stage',src:base+'vp-stage-calibration-level.webp',alt:'The empty XR stage displaying its calibration grid, without cast or crew'},
   {name:'Arena',src:base+'vp-stage-environment-level.webp',alt:'The original Ranasthala arena photograph from the matched empty-stage and environment pair'},
   {name:'Hallway',src:base+'bts/temple-wide.webp',alt:'The second, shadowed hallway environment on the LED stage, without cast or crew'}
  ];
- const change=d=>setActive(i=>(i+d+scenes.length)%scenes.length);
+ const change=d=>{setNote(null);setActive(i=>(i+d+scenes.length)%scenes.length)};
  return <div className="rn-stage-worlds" ref={root} data-image-navigation="">
+  <div className="rn-stage-world-frame" onPointerLeave={e=>{if(e.pointerType==='mouse')setNote(null)}} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setNote(null)}}>
   <button type="button" className="rn-stage-world-button" data-photo-frame="" onClick={()=>change(1)} aria-label={'Show '+scenes[(active+1)%scenes.length].name.toLowerCase()+' on the XR stage'} onKeyDown={e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();change(e.key==='ArrowRight'?1:-1)}}}>
    {scenes.map((scene,i)=><img key={scene.name} src={scene.src} alt={scene.alt} aria-hidden={active!==i} className={active===i?'is-current':''} loading={i===0?'eager':'lazy'}/>)}
-  </button>
-  <div className="rn-stage-world-labels" role="group" aria-label="XR stage environments">{scenes.map((scene,i)=><button key={scene.name} type="button" aria-pressed={active===i} onClick={()=>setActive(i)}>{scene.name}</button>)}<button type="button" className="rn-stage-auto" aria-label={(paused?'Resume':'Pause')+' automatic stage rotation'} aria-pressed={paused} onClick={()=>setPaused(v=>!v)}><svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{paused?<path d="m7 4 8 6-8 6Z"/>:<path d="M7 4v12M13 4v12"/>}</svg></button></div>
+  </button><ProductionDecisions scene={scenes[active].name} selected={note} onSelect={setNote}/></div>
+  <div className="rn-stage-world-labels" role="group" aria-label="XR stage environments">{scenes.map((scene,i)=><button key={scene.name} type="button" aria-pressed={active===i} onClick={()=>{setNote(null);setActive(i)}}>{scene.name}</button>)}<button type="button" className="rn-stage-auto" aria-label={(paused?'Resume':'Pause')+' automatic stage rotation'} aria-pressed={paused} onClick={()=>setPaused(v=>!v)}><svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{paused?<path d="m7 4 8 6-8 6Z"/>:<path d="M7 4v12M13 4v12"/>}</svg></button></div>
  </div>;
 }
 

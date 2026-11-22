@@ -1,7 +1,7 @@
 // proto/intro.jsx — entrance: 4-stage logo build (wireframe → solid → texture → lit).
 // On done, fades out to reveal the site behind.
 
-function Intro({ onEnter }) {
+function Intro({ onEnter, onReveal }) {
   // stage indices:
   //  0 = pre (palette background)
   //  1 = wireframe (logo line-art, scanlines, grid)
@@ -10,6 +10,8 @@ function Intro({ onEnter }) {
   //  4 = lit (palette ink + soft halo)
   //  5 = pull-back / fade (logo shrinks, viewfinder corners pull in, fade)
   const [stage, setStage] = React.useState(0);
+  const [fading,setFading]=React.useState(false);
+  const revealCallback=React.useRef(onReveal);revealCallback.current=onReveal;
 
   React.useEffect(() => {
     const seq = [
@@ -18,11 +20,20 @@ function Intro({ onEnter }) {
       [1700, 3],  // texture
       [2500, 4],  // lit
       [3500, 5],  // pull back
-      [4400, 6],  // done
     ];
     const timers = seq.map(([t, s]) => setTimeout(() => setStage(s), t));
     return () => timers.forEach(clearTimeout);
   }, []);
+
+  React.useEffect(()=>{
+    if(stage!==5)return;
+    let started=false,finish;
+    const video=document.querySelector('.home-background-video');
+    const reveal=()=>{if(started)return;started=true;setFading(true);revealCallback.current?.();finish=setTimeout(()=>setStage(6),950);};
+    if(!video||video.readyState>=2)reveal();else video.addEventListener('loadeddata',reveal,{once:true});
+    const fallback=setTimeout(reveal,1800);
+    return()=>{clearTimeout(fallback);clearTimeout(finish);video?.removeEventListener('loadeddata',reveal);};
+  },[stage]);
 
   React.useEffect(() => {
     if (stage === 6) {
@@ -33,7 +44,7 @@ function Intro({ onEnter }) {
 
   // skip on click / key
   React.useEffect(() => {
-    const skip = () => setStage(6);
+    const skip = () => setStage(s=>s<5?5:s);
     const onKey = (e) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') skip(); };
     window.addEventListener('click', skip);
     window.addEventListener('keydown', onKey);
@@ -46,7 +57,7 @@ function Intro({ onEnter }) {
     <div className="site-intro" style={{
       position: 'fixed', inset: 0, zIndex: 1000,
       background: 'var(--bg)',
-      opacity: stage >= 6 ? 0 : 1, transition: 'opacity .8s ease',
+      opacity: fading || stage >= 6 ? 0 : 1, transition: 'opacity .9s ease',
       pointerEvents: stage >= 6 ? 'none' : 'auto',
       overflow: 'hidden', cursor: 'none',
     }}>
@@ -75,11 +86,11 @@ function Intro({ onEnter }) {
       )}
 
       {/* Center stage */}
-      <div style={{
+      <div className="intro-center" style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexDirection: 'column', gap: 36,
       }}>
-        <div style={{
+        <div className="intro-logo-stage" style={{
           filter: stage >= 4 ? 'drop-shadow(0 0 20px color-mix(in srgb,var(--accent) 30%,transparent))' : 'none',
           position: 'relative', width: 'min(480px, calc(100vw - 64px))', height: 'auto', aspectRatio: '12 / 7',
           transform: stage >= 5 ? 'scale(0.42) translateY(-18vh)' : 'scale(1)',
@@ -197,7 +208,7 @@ function Intro({ onEnter }) {
       </div>
 
       {/* corner timestamps */}
-      <div style={{
+      <div className="intro-corner" style={{
         position: 'absolute', top: 24, left: 28,
         fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 45%,transparent)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
@@ -207,7 +218,7 @@ function Intro({ onEnter }) {
         scene · 01<br/>
         {new Date().getFullYear()}
       </div>
-      <div style={{
+      <div className="intro-corner" style={{
         position: 'absolute', top: 24, right: 28, textAlign: 'right',
         fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'color-mix(in srgb,var(--ink) 45%,transparent)',
         letterSpacing: 2, textTransform: 'uppercase', lineHeight: 1.7,
@@ -220,6 +231,9 @@ function Intro({ onEnter }) {
 
       <style>{`
         @media(max-width:680px){
+ .site-intro{inset:max(72px,16svh) 18px auto!important;height:min(440px,68svh);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:8px;box-shadow:0 25px 100px #0009}
+ .intro-center{gap:24px!important}.intro-logo-stage{width:min(230px,58vw)!important}
+ .intro-corner{font-size:8px!important;letter-spacing:1px!important;top:15px!important}
  .intro-progress-labels{width:calc(100% - 40px);min-width:0!important;gap:10px!important;font-size:10px!important;letter-spacing:1px!important;flex-wrap:wrap}
  .intro-progress-labels>span:first-child{order:0}.intro-progress-labels>span:last-child{order:1;margin-left:auto}.intro-stages{order:2;width:100%;justify-content:space-between;gap:6px!important;font-size:9px!important}
  .intro-progress-track{width:calc(100% - 40px)!important;margin-top:-18px!important}

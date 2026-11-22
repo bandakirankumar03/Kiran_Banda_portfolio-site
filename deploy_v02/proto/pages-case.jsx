@@ -1,4 +1,4 @@
-function ProjectCover({p, description, actionLabel, onAction}) {
+function ProjectCover({p, description, actionLabel, onAction, afterBrief}) {
   const watchTargets={'ranasthala':'.rn-film-closing','unreal-environment-studies':'.studies-tabs'};
   if(!onAction&&watchTargets[p.slug]){actionLabel=p.slug==='ranasthala'?'Watch the films':'Watch the showcase';onAction=()=>jumpToProjectFilm(watchTargets[p.slug]);}
   const ref=React.useRef(null);
@@ -76,7 +76,7 @@ function ProjectCover({p, description, actionLabel, onAction}) {
     <div className="pc-top"><a href="#/work">← All work</a><span>Environment / {p.year}</span></div>
     <div className="pc-story"><h1 ref={titleRef}><span className="pc-title-line">{words.join(' ')}</span><em className="pc-title-line">{last.replace(/\.$/,'')}.</em></h1><div className="pc-bottom"><p>{description || p.tagline}</p>{onAction&&<button className="pc-action" onClick={onAction}>{actionLabel}</button>}</div></div>
     <div className="pc-foot"><span>{p.client || 'Selected project'}</span></div>
-  </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}</>;
+  </header>{p.slug!=='xr01-chinese-temple'&&<ProjectBrief p={p}/>}{afterBrief}</>;
 }
 
 // proto/pages-case.jsx — project page: hero + metadata, editorial process book, film, closing, prev/next.
@@ -114,7 +114,6 @@ function SectionLabel({ children, note }) {
     <Reveal>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 28 }}>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--accent)', letterSpacing: 2, textTransform: 'uppercase' }}>{children}</div>
-        <div style={{ flex: 1, height: 1, background: 'var(--hair)' }}></div>
         {note ? <div style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--dim)', letterSpacing: 1.5, textTransform: 'uppercase' }}>{note}</div> : null}
       </div>
     </Reveal>
@@ -325,7 +324,7 @@ function TimelineBlock({ ph, rows, flip }) {
       {rows.map(([k, v], i) => (
         <div key={i} style={{
           display: 'flex', justifyContent: 'space-between', gap: 24, alignItems: 'baseline',
-          borderTop: '1px solid var(--hair)', padding: '18px 0',
+          borderTop: 'none', padding: '18px 0',
           fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 1.6, textTransform: 'uppercase',
         }}>
           <span style={{ color: 'var(--lab-muted,#cfc9bd)' }}>{k}</span>
@@ -752,7 +751,6 @@ function ClosingNote({ text, title }) {
   return (
     <Reveal>
       <div style={{ padding: '110px 0 90px', maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
-        <div style={{ width: 1, height: 56, background: 'var(--accent)', opacity: 0.5, margin: '0 auto 40px' }}></div>
         <div style={{
           fontFamily: 'var(--serif)', fontStyle: 'italic', fontWeight: 300,
           fontSize: 'clamp(30px, 3.4vw, 50px)', lineHeight: 1.35, letterSpacing: -0.8,
@@ -767,7 +765,7 @@ function ClosingNote({ text, title }) {
 }
 
 // prev / next with thumbnails
-function CaseFooterNav({ prev, next, go }) {
+function CaseFooterNav({ p, prev, next, go }) {
   const item = (label, pp, right) => (
     <div className="case-footer-item" {...useCursorLabel(pp.title.toLowerCase(), 'link')} onClick={() => go({ name: 'case', slug: pp.slug })}
       style={{ display: 'flex', alignItems: 'center', gap: 22, cursor: 'none', flexDirection: right ? 'row-reverse' : 'row' }}>
@@ -786,10 +784,10 @@ function CaseFooterNav({ prev, next, go }) {
     </div>
   );
   return (
-    <div className="case-footer-nav" style={{ borderTop: '1px solid var(--hair)', padding: '32px var(--pad) clamp(48px,8vw,90px)', display: 'flex', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+    <><ProjectTakeaway p={p}/><div className="case-footer-nav" style={{ borderTop: 'none', padding: '32px var(--pad) clamp(48px,8vw,90px)', display: 'flex', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
       {item('previous', prev, false)}
       {item('next', next, true)}
-    </div>
+    </div></>
   );
 }
 
@@ -842,7 +840,7 @@ function XRCasePage({p,x,prev,next,go}) {
       <StoryBook p={p} x={x}/>
       <div id="xr-screening" className="xr-screening"><div className="xr-screening-heading"><h2>The finished work.</h2><span className="xr-kicker">Film / environment / on set</span></div><StoryFilms p={p} x={x}/></div>
     </main>
-    <CaseFooterNav prev={prev} next={next} go={go}/>
+    <CaseFooterNav p={p} prev={prev} next={next} go={go}/>
   </div>;
 }
 
@@ -907,7 +905,7 @@ function CasePage({ slug }) {
         {x.spreads ? <p style={{textAlign:'center',fontFamily:'var(--serif)',fontStyle:'italic',fontSize:'clamp(22px,3vw,32px)',lineHeight:1.5,maxWidth:780,margin:'24px auto 44px'}}>{x.closing}</p> : <ClosingNote text={x.closing} title={p.title} />}
       </div>
 
-      <CaseFooterNav prev={prev} next={next} go={go} />
+      <CaseFooterNav p={p} prev={prev} next={next} go={go} />
     </div>
   );
 }

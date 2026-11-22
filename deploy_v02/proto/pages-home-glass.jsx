@@ -43,6 +43,25 @@ function ProjectHighlights(){
   return <section className="scroll-favourites" data-active-project={HOME_HIGHLIGHTS[active].slug} ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt} decoding="async"/></button></article>)}</div></div></section>;
 }
 
+function HomeReelVideo({src,poster,onError}) {
+  const ref=React.useRef(null);
+  React.useEffect(()=>{
+    const video=ref.current;let disposed=false,visible=true;
+    video.defaultMuted=true;video.muted=true;video.playsInline=true;
+    video.setAttribute('webkit-playsinline','');
+    const play=()=>{if(!disposed&&visible&&!document.hidden){video.muted=true;video.play().catch(()=>{});}};
+    const visibility=()=>{if(document.hidden)video.pause();else play();};
+    const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible)play();else video.pause();},{threshold:.01});
+    observer.observe(video);
+    ['loadeddata','canplay'].forEach(event=>video.addEventListener(event,play));
+    window.addEventListener('pageshow',play);document.addEventListener('visibilitychange',visibility);
+    document.addEventListener('pointerdown',play,{passive:true});document.addEventListener('touchstart',play,{passive:true});
+    play();
+    return()=>{disposed=true;observer.disconnect();['loadeddata','canplay'].forEach(event=>video.removeEventListener(event,play));window.removeEventListener('pageshow',play);document.removeEventListener('visibilitychange',visibility);document.removeEventListener('pointerdown',play);document.removeEventListener('touchstart',play);video.pause();};
+  },[src]);
+  return <video ref={ref} className="home-background-video" src={src} poster={poster} autoPlay muted loop playsInline controls={false} disablePictureInPicture disableRemotePlayback preload="auto" aria-hidden="true" tabIndex={-1} onError={onError} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',pointerEvents:'none'}}/>;
+}
+
 // ─── Fullscreen demo reel hero — pure visual, no overlay text ─
 function ReelHero() {
   // ──────────────────────────────────────────────────────────────
@@ -57,8 +76,10 @@ function ReelHero() {
   //   ③ Set HERO_VIDEO below to 'media/pages/home/reel-environments-v3.mp4'
   // ──────────────────────────────────────────────────────────────
   const HERO_VIMEO  = '';                              // e.g. 'https://vimeo.com/123456789'
-  const HERO_VIDEO  = 'media/pages/home/reel-environments-v3.mp4';                              // set to 'media/pages/home/reel-environments-v3.mp4' AFTER uploading the file
-  const HERO_POSTER = 'media/pages/home/reel-environments-v3.jpg';                              // set to 'media/pages/home/reel-environments-v3.jpg' AFTER uploading (optional)
+  const bp = useBP();
+  const isMobile = bp === 'mobile';
+  const HERO_VIDEO  = isMobile ? 'media/pages/home/reel-ranasthala-v4-portrait.mp4' : 'media/pages/home/reel-ranasthala-v4.mp4';
+  const HERO_POSTER = isMobile ? 'media/pages/home/reel-ranasthala-v4-portrait.jpg' : 'media/pages/home/reel-ranasthala-v4.jpg';
 
   const heroVimeoId = (() => {
     if (!HERO_VIMEO) return null;
@@ -91,11 +112,8 @@ function ReelHero() {
   const vh = typeof window !== 'undefined' ? window.innerHeight : 900;
   // hold fullscreen for ~2 viewports of scroll, then ease out just before the page content arrives
   const holdOut = Math.min(1, Math.max(0, (scrollY - vh * 0.55) / (vh * 0.4)));
-  const bp = useBP();
-  const isMobile = bp === 'mobile';
-  // on mobile, keep the reel a landscape strip instead of a full-height portrait crop
-  const outerHeight = isMobile ? 'auto' : '165vh';
-  const innerHeight = isMobile ? '56.25vw' : '100vh';
+  const outerHeight = isMobile ? '100svh' : '165vh';
+  const innerHeight = isMobile ? '100svh' : '100vh';
 
   return (
     <div className="home-reel" style={{ height: outerHeight, position: 'relative', zIndex: 1, background: '#0b0b0c' }}>
@@ -121,7 +139,7 @@ function ReelHero() {
                   pointerEvents: 'none',
                 }} />
             ) : (
-              <TapVideo title="Homepage reel" priority src={HERO_VIDEO} autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches} loop muted playsInline
+              <HomeReelVideo src={HERO_VIDEO}
                 poster={(HERO_POSTER && !posterFailed) ? HERO_POSTER : undefined}
                 onError={() => setMediaFailed(true)}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
@@ -148,6 +166,7 @@ function ReelHero() {
       </div>
 
       <style>{`
+        .home-background-video::-webkit-media-controls,.home-background-video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
         @keyframes reelDrift { 0% { transform: scale(1.1) translateX(-1.5%); } 100% { transform: scale(1.1) translateX(1.5%); } }
         @keyframes bobY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
       `}</style>
@@ -390,12 +409,12 @@ function OngoingCard({ o }) {
       </div>
 
       <div style={{ position: 'relative', fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: 1, color: 'var(--dim)', display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase', marginBottom: 8 }}>
-        <span>{o.status || o.eta}</span><span style={{ color: 'var(--accent)' }}>{o.pct}%</span>
+        <span>{o.status || o.eta}</span>{Number.isFinite(o.pct)&&<span style={{ color: 'var(--accent)' }}>{o.pct}%</span>}
       </div>
-      <div className="ongoing-track" role="progressbar" aria-label={`${o.title}: ${o.status || o.eta}`} aria-valuenow={o.pct} aria-valuemin={0} aria-valuemax={100}>
+      {Number.isFinite(o.pct)&&<div className="ongoing-track" role="progressbar" aria-label={`${o.title}: ${o.status || o.eta}`} aria-valuenow={o.pct} aria-valuemin={0} aria-valuemax={100}>
         <div className="ongoing-fill" style={{ width: `${o.pct}%` }} />
         <span className="ongoing-dot" aria-hidden="true" style={{ left: `${o.pct}%` }} />
-      </div>
+      </div>}
     </div>
   );
 }

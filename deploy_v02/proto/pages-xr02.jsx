@@ -171,7 +171,7 @@ function NYCCasePage({p,x,prev,next,go}) {
         <div id="nyc-film" className="nyc-bts"><div className="nyc-bts-heading"><h2>The finished work.</h2><span className="nyc-eyebrow">Film / environment / on set</span></div><StoryFilms p={p} x={x}/></div>
       </div>
     </main>
-    <CaseFooterNav prev={prev} next={next} go={go}/>
+    <CaseFooterNav p={p} prev={prev} next={next} go={go}/>
     {selected&&<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
   </article>;
 }

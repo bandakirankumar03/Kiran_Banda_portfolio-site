@@ -3,6 +3,7 @@
 function App() {
   // intro sequence shown once per session (reset on hard reload by default)
   const [introDone, setIntroDone] = React.useState(() => sessionStorage.getItem('kb-intro-done') === '1');
+  const [introRevealing,setIntroRevealing] = React.useState(false);
 
   const parseHash = () => {
     const h = (window.location.hash || '').replace(/^#/, '');
@@ -82,7 +83,7 @@ function App() {
   else if (route.name === 'case')    page = <CasePage key={route.slug} slug={route.slug} />;
   else page = <HomePage />;
 
-  React.useEffect(()=>{const replay=()=>setIntroDone(false);window.addEventListener('kb-replay-intro',replay);return()=>window.removeEventListener('kb-replay-intro',replay);},[]);
+  React.useEffect(()=>{const replay=()=>{setIntroDone(false);setIntroRevealing(false)};window.addEventListener('kb-replay-intro',replay);return()=>window.removeEventListener('kb-replay-intro',replay);},[]);
 
   const enterSite = React.useCallback(() => {
     sessionStorage.setItem('kb-intro-done', '1');
@@ -93,16 +94,14 @@ function App() {
     <RouteCtx.Provider value={{ route, go }}>
       <CursorCtx.Provider value={{ label, mode, setLabel, setMode }}>
         <CursorStudio />
-        {!introDone && <Intro onEnter={enterSite} />}
-        {introDone && (
-          <>
+        {!introDone && <Intro onEnter={enterSite} onReveal={()=>setIntroRevealing(true)} />}
+          <div className="site-reveal" inert={!introDone?'':undefined} aria-hidden={!introDone?true:undefined} style={{opacity:introDone||introRevealing?1:.22,filter:introDone?'none':introRevealing?'blur(0px)':'blur(8px)',transition:'opacity 900ms ease,filter 1100ms ease'}}>
             <Nav />
             <div key={route.name+':' +(route.slug || '')} className={'site-page route-arrival site-page-' + route.name+(leaving?' route-leaving':'')} aria-busy={leaving}>{page}</div>
             <FloatingSurfaces routeKey={route.name+':'+(route.slug||'')}/><HeadlineMotion routeKey={route.name+':' +(route.slug || '')}/><SiteScrollMotion routeKey={route.name+':' +(route.slug || '')}/><CaseImageInteraction routeKey={route.name+':' +(route.slug || '')}/>
             <ChapterGuide route={route} routeKey={route.name+':'+(route.slug||'')}/>
 
-          </>
-        )}
+          </div>
       </CursorCtx.Provider>
     </RouteCtx.Provider>
   );

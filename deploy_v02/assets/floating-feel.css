@@ -1,0 +1,11 @@
+.site-page .float-frame{transition:box-shadow .55s cubic-bezier(.2,.65,.2,1)}
+.site-page .float-frame.float-engaged{box-shadow:0 18px 35px -25px #000c,0 3px 17px -14px #e0bd7244}
+.site-page .float-action{transition:color .3s,text-shadow .4s,box-shadow .4s}
+.site-page .float-action.float-engaged{text-shadow:0 2px 16px #e0bd7226}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .work-selected .focus-gallery .ws-focus-stage.float-surface.ambient-float{translate:calc(var(--float-x,0px)) calc(var(--float-y,0px) + var(--ambient-y,0px))!important}
+}
+/* These surfaces keep exact coordinates for comparisons, seeking and dragging. */
+.site-page :is(.rana-production-map,.rp-wipe,.ru-reveal-frame,.nyc-comparison,.xr-comparison-frame,.rn-stage-worlds,.seek-video,.tap-vimeo,.rn-bts-film) :is(img,video,.float-surface){--float-x:0px!important;--float-y:0px!important;--float-tilt:0deg!important}
+.site-page :is(dialog[open],:fullscreen) .float-surface{translate:0 0!important;rotate:none!important}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.site-page .float-frame.float-engaged{box-shadow:none}.site-page .float-action.float-engaged{text-shadow:none}.work-selected .focus-gallery .ws-focus-stage.float-surface.ambient-float{translate:0 0!important}}
