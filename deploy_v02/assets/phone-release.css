@@ -90,3 +90,8 @@
  .work-selected .focus-gallery .ws-focus-copy p>span{font-size:11px;line-height:1.5}
  .work-selected .focus-gallery .focus-explore{padding:9px 12px;font-size:8px}
 }
+
+/* All chapter markers share the same center, including phone and capsule guides. */
+.chapter-guide .cg-marker{left:50%!important;translate:-50% 0;width:28px!important;height:28px!important}
+.chapter-guide .cg-line,.chapter-guide .cg-progress{left:50%;translate:-50% 0}
+.chapter-guide .cg-thumb{left:50%;translate:-50% 0}

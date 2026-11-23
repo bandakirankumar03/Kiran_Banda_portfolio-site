@@ -56,7 +56,7 @@ function Intro({ onEnter, onReveal }) {
   return (
     <div className="site-intro" style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: 'var(--bg)',
+      background: '#000',
       opacity: fading || stage >= 6 ? 0 : 1, transition: 'opacity .9s ease',
       pointerEvents: stage >= 6 ? 'none' : 'auto',
       overflow: 'hidden', cursor: 'none',
@@ -231,8 +231,8 @@ function Intro({ onEnter, onReveal }) {
 
       <style>{`
         @media(max-width:680px){
- .site-intro{inset:max(72px,16svh) 18px auto!important;height:min(440px,68svh);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:8px;box-shadow:0 25px 100px #0009}
- .intro-center{gap:24px!important}.intro-logo-stage{width:min(230px,58vw)!important}
+ .site-intro{inset:0!important;width:100%;height:100dvh;border:0;border-radius:0;box-shadow:none}
+ .intro-center{gap:28px!important}.intro-logo-stage{width:min(340px,78vw)!important}
  .intro-corner{font-size:8px!important;letter-spacing:1px!important;top:15px!important}
  .intro-progress-labels{width:calc(100% - 40px);min-width:0!important;gap:10px!important;font-size:10px!important;letter-spacing:1px!important;flex-wrap:wrap}
  .intro-progress-labels>span:first-child{order:0}.intro-progress-labels>span:last-child{order:1;margin-left:auto}.intro-stages{order:2;width:100%;justify-content:space-between;gap:6px!important;font-size:9px!important}

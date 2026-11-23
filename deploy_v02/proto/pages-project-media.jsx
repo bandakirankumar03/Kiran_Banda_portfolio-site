@@ -167,8 +167,8 @@ function RanaVPComparison({base}){
 function RanaBuildFilm({base}){
  const ref=React.useRef(null),manual=React.useRef(false);const [playing,setPlaying]=React.useState(false);
  const toggle=()=>{const v=ref.current;if(!v)return;if(v.paused){manual.current=false;v.play().catch(()=>{});}else{manual.current=true;v.pause();}};
- React.useEffect(()=>{const v=ref.current;v.defaultPlaybackRate=16/3;v.playbackRate=16/3;const o=new IntersectionObserver(([e])=>{if(e.isIntersecting&&!manual.current&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)v.play().catch(()=>{});else if(!e.isIntersecting)v.pause();},{threshold:.2});o.observe(v);return()=>o.disconnect();},[]);
- return <div className="rn-build-film"><video ref={ref} src={base+'claude-build-loop.mp4'} muted loop playsInline preload="metadata" role="button" tabIndex={0} aria-label={(playing?'Pause':'Play')+' Claude Opus 5.5 arena build video at sixteen times speed'} onClick={toggle} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}}} onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)}/></div>;
+ React.useEffect(()=>{const v=ref.current;v.defaultPlaybackRate=1;v.playbackRate=1;const o=new IntersectionObserver(([e])=>{if(e.isIntersecting&&!manual.current&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)v.play().catch(()=>{});else if(!e.isIntersecting)v.pause();},{threshold:.2});o.observe(v);return()=>o.disconnect();},[]);
+ return <div className="rn-build-film"><video ref={ref} src={base+'claude-build-rapid.mp4'} muted loop playsInline preload="metadata" role="button" tabIndex={0} aria-label={(playing?'Pause':'Play')+' Claude-assisted arena blockout timelapse'} onClick={toggle} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}}} onPlay={()=>setPlaying(true)} onPause={()=>setPlaying(false)}/></div>;
 }
 
 function RanaUnrealGallery({base}){

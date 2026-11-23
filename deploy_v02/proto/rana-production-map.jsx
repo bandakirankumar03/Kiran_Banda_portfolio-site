@@ -7,10 +7,10 @@ const RANA_PIPELINE_NODES=[
 ];
 
 function RanaProductionMap({variant=4}){
- const [selected,setSelected]=React.useState('pre'),[hovered,setHovered]=React.useState(null),[tapped,setTapped]=React.useState(null),[running,setRunning]=React.useState(false),[reduced,setReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
+ const [hovered,setHovered]=React.useState(null),[tapped,setTapped]=React.useState(null),[running,setRunning]=React.useState(false),[reduced,setReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
  const [geometry,setGeometry]=React.useState({width:1,height:1,paths:[]});
- const root=React.useRef(null),cards=React.useRef({}),measureFrame=React.useRef(0),lightFrame=React.useRef(0);
- const active=hovered||selected,current=RANA_PIPELINE_NODES.find(node=>node.id===active);
+ const root=React.useRef(null),cards=React.useRef({}),measureFrame=React.useRef(0),lightFrame=React.useRef(0),measureLayout=React.useRef(()=>{});
+ const active=hovered||tapped,current=RANA_PIPELINE_NODES.find(node=>node.id===active);
  React.useLayoutEffect(()=>{
   const graph=root.current;let disposed=false;
   const measure=()=>{
@@ -22,11 +22,14 @@ function RanaProductionMap({variant=4}){
    const paths=pairs.map(([from,side,to,end])=>{const a=port(from,side),b=port(to,end);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;const points=[a.x,a.y,...(['top','bottom'].includes(side)?[a.x,my,b.x,my]:[mx,a.y,mx,b.y]),b.x,b.y].map(round);return {from,to,a:{x:round(a.x),y:round(a.y)},b:{x:round(b.x),y:round(b.y)},d:`M${points[0]} ${points[1]} C${points[2]} ${points[3]} ${points[4]} ${points[5]} ${points[6]} ${points[7]}`}});
    const next={width:round(box.width),height:round(box.height),paths};setGeometry(old=>JSON.stringify(old)===JSON.stringify(next)?old:next);
   };
+  measureLayout.current=measure;
   const schedule=()=>{if(!measureFrame.current)measureFrame.current=requestAnimationFrame(measure)};
   const observer=new ResizeObserver(schedule);observer.observe(graph);Object.values(cards.current).forEach(card=>observer.observe(card));
   window.addEventListener('resize',schedule);document.fonts?.ready.then(()=>{if(!disposed)schedule()});measure();
   return()=>{disposed=true;observer.disconnect();window.removeEventListener('resize',schedule);cancelAnimationFrame(measureFrame.current);cancelAnimationFrame(lightFrame.current)};
  },[]);
+ React.useEffect(()=>{let frame=0,start=performance.now();const tick=()=>{measureLayout.current();if(performance.now()-start<450)frame=requestAnimationFrame(tick)};tick();return()=>cancelAnimationFrame(frame)},[active,reduced]);
+ React.useEffect(()=>{const dismiss=e=>{if(!e.target.closest('.rpm-node'))setTapped(null)};document.addEventListener('pointerdown',dismiss);return()=>document.removeEventListener('pointerdown',dismiss)},[]);
  React.useEffect(()=>{
   let visible=false;const media=matchMedia('(prefers-reduced-motion:reduce)');
   const update=()=>{setRunning(visible&&!document.hidden);setReduced(media.matches)};
@@ -41,9 +44,9 @@ function RanaProductionMap({variant=4}){
  };
  const key=(e,index)=>{
   let next;if(['ArrowRight','ArrowDown'].includes(e.key))next=(index+1)%5;else if(['ArrowLeft','ArrowUp'].includes(e.key))next=(index+4)%5;else if(e.key==='Home')next=0;else if(e.key==='End')next=4;else return;
-  e.preventDefault();setSelected(RANA_PIPELINE_NODES[next].id);setTapped(RANA_PIPELINE_NODES[next].id);cards.current[RANA_PIPELINE_NODES[next].id]?.focus();
+  e.preventDefault();cards.current[RANA_PIPELINE_NODES[next].id]?.focus();
  };
- const card=(node,index)=><button key={node.id} ref={el=>cards.current[node.id]=el} type="button" className={'rpm-node rpm-'+node.id} data-node={node.id} data-reveal={hovered===node.id||tapped===node.id} aria-label={'Explore '+node.name+' in the pipeline'} aria-pressed={active===node.id} onPointerEnter={e=>{if(e.pointerType==='mouse')setHovered(node.id)}} onPointerLeave={()=>setHovered(null)} onPointerMove={light} onFocus={()=>setHovered(node.id)} onBlur={()=>setHovered(null)} onClick={()=>{setSelected(node.id);setTapped(node.id)}} onKeyDown={e=>key(e,index)}>
+ const card=(node,index)=><button key={node.id} ref={el=>cards.current[node.id]=el} type="button" className={'rpm-node rpm-'+node.id} data-node={node.id} data-reveal={hovered===node.id||tapped===node.id} aria-label={'Explore '+node.name+' in the pipeline'} aria-pressed={active===node.id} onPointerEnter={e=>{if(e.pointerType==='mouse')setHovered(node.id)}} onPointerLeave={()=>{setHovered(null);if(matchMedia('(hover:hover)').matches)setTapped(null)}} onPointerMove={light} onFocus={()=>setHovered(node.id)} onBlur={()=>{setHovered(null);setTapped(null)}} onClick={()=>{if(!matchMedia('(hover:hover)').matches)setTapped(node.id)}} onKeyDown={e=>key(e,index)}>
   <span className="rpm-node-copy"><span className="rpm-number">{node.number}</span><strong>{node.name}</strong>{node.id==='post'?<span className="rpm-post-tools">{['CGI + AI VFX','Editing','Sound','AI music'].map(tool=><span key={tool}>{tool}</span>)}</span>:<span className="rpm-detail">{node.detail}</span>}</span>
   <img className="rpm-photo" src={'media/projects/Ranasthala/web/'+node.image} alt="" aria-hidden="true" loading="lazy" width="64" height="40"/>
  </button>;
@@ -55,6 +58,6 @@ function RanaProductionMap({variant=4}){
    <div className={'rpm-vp-group'+(['pre','shoot'].includes(active)?' is-active':'')}><span className="rpm-vp-label">03 / Virtual production</span><div className="rpm-vp-nodes">{card(RANA_PIPELINE_NODES[2],2)}{card(RANA_PIPELINE_NODES[3],3)}</div></div>
    {card(RANA_PIPELINE_NODES[4],4)}
   </div>
-  <div className="rpm-readout" aria-live="polite"><span>{current.number} / {current.name}</span><p>{current.note}</p></div>
+  <div className={'rpm-readout'+(!current?' is-idle':'')} aria-live="polite"><span>{current?current.number+' / '+current.name:'\u00a0'}</span><p>{current?.note||'\u00a0'}</p></div>
  </section>;
 }
