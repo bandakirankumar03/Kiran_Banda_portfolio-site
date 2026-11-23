@@ -95,3 +95,4 @@
 .chapter-guide .cg-marker{left:50%!important;translate:-50% 0;width:28px!important;height:28px!important}
 .chapter-guide .cg-line,.chapter-guide .cg-progress{left:50%;translate:-50% 0}
 .chapter-guide .cg-thumb{left:50%;translate:-50% 0}
+@media(max-width:760px){html{overflow-x:clip}.chapter-guide{width:30px!important;right:2px}}

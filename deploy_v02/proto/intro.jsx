@@ -231,7 +231,7 @@ function Intro({ onEnter, onReveal }) {
 
       <style>{`
         @media(max-width:680px){
- .site-intro{inset:0!important;width:100%;height:100dvh;border:0;border-radius:0;box-shadow:none}
+ .site-intro{inset:0!important;width:100vw;height:100dvh;border:0;border-radius:0;box-shadow:none}
  .intro-center{gap:28px!important}.intro-logo-stage{width:min(340px,78vw)!important}
  .intro-corner{font-size:8px!important;letter-spacing:1px!important;top:15px!important}
  .intro-progress-labels{width:calc(100% - 40px);min-width:0!important;gap:10px!important;font-size:10px!important;letter-spacing:1px!important;flex-wrap:wrap}
