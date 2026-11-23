@@ -208,8 +208,15 @@
 .hobby-expand-frame{background:transparent;transition:flex .75s cubic-bezier(.22,1,.36,1)}
 .hobby-expand-frame img{object-fit:contain;object-position:center;scale:1!important;transform:none!important}
 .hobby-expand-frame:focus-visible{flex:1.15}
-@media(hover:hover) and(pointer:fine){.hobby-expand-frame:hover{flex:1.15}}
+@media (hover:hover) and (pointer:fine){.hobby-expand-frame:hover{flex:1.15}}
 @media(max-width:700px){.hobby-accordion{height:350px}.hobby-expand-frame,.hobby-expand-frame:focus-visible,.hobby-expand-frame:hover{flex:0 0 70%}.hobby-expand-frame img{object-fit:contain}}
 .still-location{position:absolute;right:7px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;color:var(--bg);font:500 9px/1.2 var(--mono);letter-spacing:.4px;white-space:nowrap;pointer-events:none}
 @media(max-width:600px){.still-location{font-size:8px;right:7px}}
 @media(prefers-reduced-motion:reduce){.hobby-expand-frame{transition:none}}
+
+/* Original expanding photo proportions, with a continuous hand-off. */
+.site-page .life-frames .hobby-expand-frame{flex:1;transition:flex-grow .85s cubic-bezier(.25,.65,.25,1),box-shadow .55s ease;touch-action:auto}
+.life-frames .hobby-expand-frame img{pointer-events:none;transition:opacity .85s ease}
+@media (hover:hover) and (pointer:fine){.life-frames .hobby-expand-frame:hover{flex:1}.life-frames .hobby-expand-frame[data-life-active=true],.life-frames .hobby-expand-frame:focus-visible{flex:2.5}}
+@media(max-width:700px){.life-frames .hobby-accordion{scroll-snap-type:x proximity;touch-action:pan-x pan-y pinch-zoom}.site-page .life-frames .hobby-expand-frame,.site-page .life-frames .hobby-expand-frame:hover,.site-page .life-frames .hobby-expand-frame:focus-visible{flex:0 0 70%}}
+@media(prefers-reduced-motion:reduce){.site-page .life-frames .hobby-expand-frame,.site-page .life-frames .hobby-expand-frame img{transition:none}}

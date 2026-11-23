@@ -389,27 +389,27 @@ function HobbiesSection() {
     {label:'Music, art, culture & reading',categories:['Music & art','Reading','Culture'],featured:'media/pages/about/selected/cultural-celebration.webp'},
     {label:'Fitness, yoga & surfing',categories:['Fitness & yoga'],featured:'media/pages/about/selected/img_5953.webp'}
   ];
-  const [paused,setPaused]=React.useState(false);
+  const [paused,setPaused]=React.useState(false),[hovered,setHovered]=React.useState(null);
   return <section className="about-journal-section life-frames">
     <h2 className="about-section-title">Life <em>outside the frame.</em></h2>
     <p data-heading-caption className="life-caption">Travelling, cooking, tasting something new, and finding adventure in the everyday.</p>
-    <div className="hobby-accordion">{groups.map((g,i)=><HobbyFrame key={g.label} group={g} index={i} paused={paused} onToggle={()=>setPaused(v=>!v)}/>)}</div>
+    <div className="hobby-accordion" onPointerMove={e=>{if(e.pointerType!=='mouse'||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;const r=e.currentTarget.getBoundingClientRect();setHovered(Math.max(0,Math.min(groups.length-1,Math.floor((e.clientX-r.left)/r.width*groups.length))))}} onPointerLeave={()=>setHovered(null)}>{groups.map((g,i)=><HobbyFrame key={g.label} group={g} index={i} active={hovered===i} paused={paused} onToggle={()=>setPaused(v=>!v)}/>)}</div>
   </section>;
 }
-function HobbyFrame({group,index,paused,onToggle}) {
+function HobbyFrame({group,index,active,paused,onToggle}) {
   const [photos]=React.useState(()=>{const items=shuffleLifePhotos(LIFE_PHOTOS.filter(p=>group.categories.includes(p.category)));return group.featured?[...items.filter(p=>p.image===group.featured),...items.filter(p=>p.image!==group.featured)]:items;});
-  const [current,setCurrent]=React.useState(0);
+  const [current,setCurrent]=React.useState(0),[engaged,setEngaged]=React.useState(false);
   const frame=React.useRef(null);
   React.useEffect(()=>{
     const motion=matchMedia('(prefers-reduced-motion: reduce)');
     let timer;
-    const start=()=>{clearInterval(timer);if(paused||motion.matches||photos.length<2)return;
+    const start=()=>{clearInterval(timer);if(paused||engaged||motion.matches||photos.length<2)return;
       timer=setInterval(()=>{const r=frame.current?.getBoundingClientRect();if(!document.hidden&&r&&r.bottom>0&&r.top<innerHeight)setCurrent(n=>(n+1)%photos.length);},1800+index*130);
     };
     start();motion.addEventListener('change',start);
     return()=>{clearInterval(timer);motion.removeEventListener('change',start);};
-  },[paused,photos.length,index]);
-  return <button ref={frame} type="button" className="hobby-expand-frame" onClick={onToggle} aria-pressed={paused} aria-label={group.label}>
+  },[paused,engaged,photos.length,index]);
+  return <button ref={frame} type="button" className="hobby-expand-frame" data-life-active={active} onPointerEnter={e=>{if(e.pointerType==='mouse')setEngaged(true)}} onPointerLeave={()=>setEngaged(false)} onFocus={()=>setEngaged(true)} onBlur={()=>setEngaged(false)} onClick={onToggle} aria-pressed={paused} aria-label={group.label}>
     {photos.map((p,i)=><img key={p.image} className={i===current?'is-current':''} src={p.image} alt={i===current?p.cap:''} aria-hidden={i!==current} loading="lazy"/>)}
   </button>;
 }

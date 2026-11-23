@@ -15,6 +15,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
  const first=Math.min(initialIndex,list.length-1);
  const [index,setIndex]=React.useState(first),[dragging,setDragging]=React.useState(false);
  const indexRef=React.useRef(first),gesture=React.useRef(null),rail=React.useRef(null),gallery=React.useRef(null),scrollTrack=React.useRef(null),scrollPin=React.useRef(null),indicator=React.useRef(null),suppressClick=React.useRef(0);
+ const railInteracting=React.useRef(false),railIdle=React.useRef(0),railFrame=React.useRef(0);
  const p=list[index]||list[0];
  const summary=FOCUS_PROJECT_SUMMARIES[p.slug];
  const select=React.useCallback(i=>{const next=Math.max(0,Math.min(list.length-1,i));if(gallery.current)gallery.current.dataset.direction=next>=indexRef.current?'next':'previous';indexRef.current=next;setIndex(next)},[list.length]);
@@ -22,19 +23,23 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
   const el=rail.current,bar=indicator.current;
   const place=()=>{const active=el?.querySelector('[data-active="true"]');if(!active||!bar)return;
    bar.style.setProperty('--bar-x',active.offsetLeft+'px');bar.style.setProperty('--bar-y',active.offsetTop+'px');bar.style.width=active.offsetWidth+'px';bar.style.height=active.offsetHeight+'px';
-   if(el.scrollWidth>el.clientWidth+2){const box=el.getBoundingClientRect(),r=active.getBoundingClientRect();if(r.left<box.left||r.right>box.right)el.scrollTo({left:active.offsetLeft-(el.clientWidth-active.offsetWidth)/2,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}
+   if(!railInteracting.current&&el.scrollWidth>el.clientWidth+2){const box=el.getBoundingClientRect(),r=active.getBoundingClientRect();if(r.left<box.left||r.right>box.right)el.scrollTo({left:active.offsetLeft-(el.clientWidth-active.offsetWidth)/2,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}
   };
   place();const observer=new ResizeObserver(place);observer.observe(el);return()=>observer.disconnect();
  },[index]);
+ React.useEffect(()=>()=>{clearTimeout(railIdle.current);cancelAnimationFrame(railFrame.current)},[]);
+ const railStart=()=>{if(!matchMedia('(max-width:800px)').matches)return;railInteracting.current=true;clearTimeout(railIdle.current);rail.current.scrollTo({left:rail.current.scrollLeft,behavior:'instant'})};
+ const railEnd=()=>{clearTimeout(railIdle.current);railIdle.current=setTimeout(()=>{railInteracting.current=false},220)};
+ const railScroll=()=>{if(!railInteracting.current||!matchMedia('(max-width:800px)').matches)return;railEnd();if(railFrame.current)return;railFrame.current=requestAnimationFrame(()=>{railFrame.current=0;const el=rail.current,box=el.getBoundingClientRect(),center=box.left+box.width/2;let nearest=0,distance=Infinity;el.querySelectorAll('[data-focus-index]').forEach((item,i)=>{const r=item.getBoundingClientRect(),delta=Math.abs(r.left+r.width/2-center);if(delta<distance){distance=delta;nearest=i}});suppressClick.current=performance.now()+450;select(nearest)})};
  React.useEffect(()=>{
   const el=scrollTrack.current,bodyOverflow=document.body.style.overflow,htmlOverflow=document.documentElement.style.overflow;
   document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';window.scrollTo({top:0,behavior:'instant'});
   const size=()=>{const nav=document.querySelector('.site-nav');document.documentElement.style.setProperty('--work-top',(nav?nav.getBoundingClientRect().bottom+10:90)+'px')};size();window.addEventListener('resize',size);
   let total=0,last=0,lastStep=-180,touch=null;
   const wheel=e=>{if(e.ctrlKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;e.preventDefault();const now=performance.now();if(now-last>180)total=0;last=now;total+=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);if(now-lastStep<180&&Math.abs(total)<200)return;if(Math.abs(total)>=35){const steps=Math.abs(total)>=240?Math.max(1,Math.round(Math.abs(total)/140)):1;select(indexRef.current+Math.sign(total)*steps);lastStep=now;total=0}};
-  const startTouch=e=>{if(e.touches.length!==1){touch=null;return}touch={x:e.touches[0].clientX,y:e.touches[0].clientY}};
+  const startTouch=e=>{if(e.touches.length!==1){touch=null;return}touch={x:e.touches[0].clientX,y:e.touches[0].clientY,rail:!!e.target.closest('.ws-focus-list')}};
   const moveTouch=e=>{if(!touch||e.touches.length!==1)return;const dx=e.touches[0].clientX-touch.x,dy=e.touches[0].clientY-touch.y;if(Math.abs(dy)>Math.abs(dx)&&e.cancelable)e.preventDefault()};
-  const endTouch=e=>{if(!touch)return;const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;touch=null;if(Math.abs(dy)>28&&Math.abs(dy)>Math.abs(dx)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dy<0?1:-1)*(Math.abs(dy)>=180?Math.max(1,Math.round(Math.abs(dy)/140)):1))}};
+  const endTouch=e=>{if(!touch)return;const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y,fromRail=touch.rail;touch=null;if(Math.abs(dy)>28&&Math.abs(dy)>Math.abs(dx)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dy<0?1:-1)*(Math.abs(dy)>=180?Math.max(1,Math.round(Math.abs(dy)/140)):1))}else if(!fromRail&&Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)*1.2){suppressClick.current=performance.now()+450;select(indexRef.current+(dx<0?1:-1))}};
   el.addEventListener('wheel',wheel,{passive:false});el.addEventListener('touchstart',startTouch,{passive:true});el.addEventListener('touchmove',moveTouch,{passive:false});el.addEventListener('touchend',endTouch,{passive:true});
   return()=>{document.body.style.overflow=bodyOverflow;document.documentElement.style.overflow=htmlOverflow;window.removeEventListener('resize',size);el.removeEventListener('wheel',wheel);el.removeEventListener('touchstart',startTouch);el.removeEventListener('touchmove',moveTouch);el.removeEventListener('touchend',endTouch)};
  },[list.length,select]);
@@ -56,7 +61,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
  const settle=e=>['--focus-x','--focus-y','--focus-rx','--focus-ry'].forEach(k=>e.currentTarget.style.setProperty(k,k.includes('rx')||k.includes('ry')?'0deg':'0px'));
  return <section className="focus-scroll-track" ref={scrollTrack} style={{'--focus-stops':Math.max(0,list.length-1)}}><div className="focus-scroll-pin" ref={scrollPin}><div className="ws-focus focus-gallery" ref={gallery} data-motion={motion} data-dragging={dragging}>
   <style>{FOCUS_GALLERY_CSS}</style>
-  <div className="ws-focus-list" ref={rail} role="group" aria-label="Projects" onPointerDown={start} onPointerMove={e=>{move(e);floatBar(e)}} onPointerLeave={resetBar} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish} onKeyDown={keys} onClickCapture={e=>{if(performance.now()<suppressClick.current){e.preventDefault();e.stopPropagation()}}}>
+  <div className="ws-focus-list" ref={rail} role="group" aria-label="Projects" onTouchStart={railStart} onTouchEnd={railEnd} onTouchCancel={railEnd} onScroll={railScroll} onWheel={e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY))railStart()}} onPointerDown={start} onPointerMove={e=>{move(e);floatBar(e)}} onPointerLeave={resetBar} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish} onKeyDown={keys} onClickCapture={e=>{if(performance.now()<suppressClick.current){e.preventDefault();e.stopPropagation()}}}>
    <div className="focus-selection-bar" ref={indicator} aria-hidden="true"/>
    {list.map((item,i)=>{const distance=Math.abs(i-index);return <a className="ws-focus-link" onFocus={()=>select(i)} onPointerEnter={e=>{if(e.pointerType==='mouse'&&!gesture.current)select(i)}} key={item.slug} href={'#/case/'+item.slug} data-focus-index={i} data-active={index===i} data-distance={distance} style={{'--name-opacity':[1,.52,.26,.1,.045,.025,.015][Math.min(distance,6)],'--name-scale':1-Math.min(distance,4)*.012,'--name-depth':Math.min(distance,4)*-3+'px'}} aria-current={index===i?'true':undefined} aria-label={item.title} draggable="false"><span>{item.title}</span><small>{item.kind}</small></a>})}
   </div>
@@ -65,7 +70,7 @@ function WorkFocusGallery({list,motion='2',initialIndex=0}){
    <div className="focus-shade"/>
    <div className="ws-focus-copy" key={p.slug}><p>{summary?<><em>{summary[0]}</em><span>{summary[1]}</span></>:p.tagline}</p><a className="focus-explore" href={'#/case/'+p.slug} aria-label={'Explore '+p.title}><span>Explore the project</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
   </article>
- </div><div className="work-step-controls"><button type="button" aria-label="Previous project" disabled={index===0} onClick={()=>seek(index-1)}>←</button><span aria-live="polite">{String(index+1).padStart(2,'0')} / {String(list.length).padStart(2,'0')}</span><button type="button" aria-label="Next project" disabled={index===list.length-1} onClick={()=>seek(index+1)}>→</button></div></div></section>
+ </div><div className="work-step-controls"><button type="button" aria-label="Previous project" disabled={index===0} onClick={()=>seek(index-1)}>←</button><button type="button" aria-label="Next project" disabled={index===list.length-1} onClick={()=>seek(index+1)}>→</button></div></div></section>
 }
 const FOCUS_GALLERY_CSS=`
 .work-selected{max-width:1680px;margin:auto}.work-selected .ws-header{padding:clamp(28px,4vw,48px) var(--pad) 38px;display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:30px}.work-selected .ws-header h1{font:400 clamp(64px,8vw,124px)/.98 var(--serif);letter-spacing:-.055em;margin:0}.work-selected .ws-header h1 em{font-weight:400;color:var(--accent)}.work-selected .ws-content{padding:8px var(--pad) 75px;min-height:580px}

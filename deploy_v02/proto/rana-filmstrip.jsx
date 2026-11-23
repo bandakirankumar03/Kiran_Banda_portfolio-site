@@ -104,11 +104,11 @@ function RanaPreparationPhotos({base,onInspect}){
   document.addEventListener('visibilitychange',sync);
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync)};
  },[]);
- return <Reveal className="rn-prep-gallery-wrap"><div ref={root} className="rn-prep-gallery" data-image-navigation="" onPointerMove={e=>{if(e.pointerType!=='mouse')return;const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--prep-x',((e.clientX-r.left)/r.width-.5)*9+'px');e.currentTarget.style.setProperty('--prep-y',((e.clientY-r.top)/r.height-.5)*7+'px')}} onPointerLeave={e=>{e.currentTarget.style.setProperty('--prep-x','0px');e.currentTarget.style.setProperty('--prep-y','0px')}}>
+ return <Reveal className="rn-prep-gallery-wrap"><div ref={root} className="rn-prep-gallery" data-image-navigation="">
   {RANA_FILM_PREP.map((file,i)=>{
    const source=base+file+(file==='arena-practical-model'?'.svg':'.webp');
    const [width,height]=RANA_FILM_PHOTO_SIZES[file]||[1900,1425], [x,y,w,r,z]=RANA_PREP_AIR_POSES[i],[mx,my,mw,mr,mz]=RANA_PREP_AIR_MOBILE[i];
-   return <figure className="rn-prep-photo" key={file} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:source,alt:RANA_BTS_PHOTOS[file]})}><img src={source} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/><span className="rn-prep-caption">{RANA_PREP_CAPTIONS[file]}</span></button></div></figure>;
+   return <figure className="rn-prep-photo" key={file} onPointerMove={e=>{if(e.pointerType!=='mouse'||matchMedia('(prefers-reduced-motion:reduce)').matches)return;const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--prep-x',((e.clientX-r.left)/r.width-.5)*6+'px');e.currentTarget.style.setProperty('--prep-y',((e.clientY-r.top)/r.height-.5)*4+'px')}} onPointerLeave={e=>{e.currentTarget.style.setProperty('--prep-x','0px');e.currentTarget.style.setProperty('--prep-y','0px')}} style={{'--ax':x+'%','--ay':y+'%','--aw':w+'%','--ar':r+'deg','--az':z,'--mx':mx+'%','--my':my+'%','--mw':mw+'%','--mr':mr+'deg','--mz':mz}}><div className="rn-prep-drift"><button type="button" data-photo-frame="" data-image-navigation="" aria-label={RANA_BTS_PHOTOS[file]} onClick={()=>onInspect({image:source,alt:RANA_BTS_PHOTOS[file]})}><img src={source} alt={RANA_BTS_PHOTOS[file]} width={width} height={height} loading="lazy" decoding="async" draggable={false}/><span className="rn-prep-caption">{RANA_PREP_CAPTIONS[file]}</span></button></div></figure>;
   })}
  </div></Reveal>;
 }
@@ -205,12 +205,12 @@ const RANA_FILMSTRIP_STYLE=`
 .rn-prep-photo button{display:block;width:100%;height:auto;border:0;padding:0;border-radius:3px;background:transparent;cursor:none!important}
 .rn-prep-photo img{display:block;width:100%;height:auto;object-fit:contain;pointer-events:none;user-select:none;scale:1!important;transform:none!important;filter:none!important;border-radius:2px;box-shadow:0 18px 30px -22px #0009}
 .rn-prep-photo button:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
-.rn-prep-drift{animation:rn-prep-drift 7s ease-in-out infinite alternate;animation-play-state:paused}
+.rn-prep-drift{animation:none!important}
 .rn-prep-gallery[data-running=true] .rn-prep-drift{animation-play-state:running}
 .rn-prep-photo:nth-child(2) .rn-prep-drift,.rn-prep-photo:nth-child(5) .rn-prep-drift{animation-delay:-3s;animation-duration:8s}
 .rn-prep-photo:nth-child(3) .rn-prep-drift,.rn-prep-photo:nth-child(6) .rn-prep-drift{animation-delay:-5s;animation-duration:9s}
 .rn-prep-gallery:has(:focus-visible) .rn-prep-drift,body:has(dialog[open]) .rn-prep-drift{animation-play-state:paused!important}
-@media(hover:hover) and(pointer:fine){.rn-prep-gallery:hover .rn-prep-drift{animation-play-state:paused}.rn-prep-gallery:has(button:hover) .rn-prep-photo{opacity:.7}.rn-prep-gallery .rn-prep-photo:has(button:hover),.rn-prep-gallery .rn-prep-photo:focus-within{opacity:1;scale:1.07;translate:var(--prep-x) calc(var(--prep-y) - 9px);z-index:20}}
+@media (hover:hover) and (pointer:fine){.rn-prep-gallery .rn-prep-photo:has(button:hover),.rn-prep-gallery .rn-prep-photo:focus-within{scale:1.07;translate:var(--prep-x) calc(var(--prep-y) - 9px);z-index:20}}
 @keyframes rn-prep-drift{from{translate:0 -4px}to{translate:0 5px}}
 @media(max-width:900px) and(min-width:601px){.rn-prep-gallery{height:760px}}
 .rn-film-ribbons{display:grid;gap:24px;overflow:hidden;padding:26px 0;--film-height:clamp(175px,18vw,265px);--sprocket:color-mix(in srgb,var(--ink) 38%,transparent)}

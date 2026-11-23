@@ -20,7 +20,7 @@ const FLOAT_MOTION_GROUPS={
  frames:'.scene-surface,.favourite-photo,.hobby-expand-frame,.film-print,[data-photo-frame],.discovery-media,.ws-focus-stage,.about-split-lenses .lens-surface,.ru-cinema-main,.ru-cinema-previews button,.pg-photo,.rn-team-figure,.qf-pocket,.qf-glances,.qf-ribbon,.qf-ticket',
  actions:'.pc-action,.focus-explore,.project-watch-link,.qf-watch,.qf-explore,.qf-return',
  text:'h3,h4,p,.work-filter,.quiet-practice li,.portrait-side-note,.learning-hover',
- blocked:'.site-nav,.chapter-guide,.pc-image,.home-reel,.portrait-studies,.orbital-toolkit,.quiet-focus-list,dialog,[role="dialog"],.rana-production-map,.rp-wipe,.ru-reveal-frame,.nyc-comparison,.xr-comparison-frame,.rn-stage-worlds,.rn-prep-gallery,.rn-film-ribbons,.seek-video,.tap-vimeo,.rn-bts-film,.shared-films,.rn-film-collection,.qf-player,.software-marks,.tool-logo'
+ blocked:'.site-nav,.chapter-guide,.pc-image,.home-reel,.portrait-studies,.orbital-toolkit,.quiet-focus-list,dialog,[role="dialog"],.rana-production-map,.ai-workflow,.rp-wipe,.ru-reveal-frame,.nyc-comparison,.xr-comparison-frame,.rn-stage-worlds,.rn-prep-gallery,.rn-film-ribbons,.seek-video,.tap-vimeo,.rn-bts-film,.shared-films,.rn-film-collection,.qf-player,.software-marks,.tool-logo'
 };
 
 function AmbientFloat({routeKey}){

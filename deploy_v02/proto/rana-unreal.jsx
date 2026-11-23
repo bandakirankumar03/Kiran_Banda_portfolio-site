@@ -1,4 +1,12 @@
 const RANA_UNREAL_ROOT='media/projects/Ranasthala/web/unreal-new/';
+function RanaEnvironmentBreakdown(){
+ const stages=[4,8,10,12,15,23,28,33,42,45,55],base='media/projects/Ranasthala/web/';
+ const [stage,setStage]=React.useState(0);
+ React.useEffect(()=>{if(new URLSearchParams(location.search).get('preview')!=='environment-breakdown')return;let alive=true;const show=()=>{if(alive)document.querySelector('.ru-claude')?.scrollIntoView({block:'start',behavior:'instant'})};document.fonts?.ready.then(show);const timer=setTimeout(show,350);return()=>{alive=false;clearTimeout(timer)}},[]);
+ const label=stage===0?'Blockout':stage===stages.length-1?'Final environment':'Arena development';
+ const reveal=e=>{if(e.pointerType!=='mouse'||e.buttons)return;const box=e.currentTarget.getBoundingClientRect();setStage(Math.max(0,Math.min(stages.length-1,Math.floor((e.clientX-box.left)/box.width*stages.length))))};
+ return <section className="ru-environment-breakdown" aria-labelledby="ru-breakdown-heading" data-image-navigation=""><div className="ru-heading"><h2 id="ru-breakdown-heading">Building <em>the arena.</em></h2><p>Blockout to final environment.</p></div><div className="ru-breakdown-frame" onPointerMove={reveal}>{stages.map((n,i)=><img key={n} className={'ru-breakdown-image'+(i===stage?' is-current':'')} src={base+'breakdown-highresscreenshot'+String(n).padStart(5,'0')+'.webp'} alt={i===0?'Arena blockout':i===stages.length-1?'Final arena environment':'Arena development'} aria-hidden={stage!==i} loading="lazy" draggable={false}/>)}<ComparisonWipeControl value={stage/(stages.length-1)*100} onChange={v=>setStage(Math.round(v/100*(stages.length-1)))} aria-label="Arena development" aria-valuetext={label}/></div><div className="ru-breakdown-control"><input className="ru-breakdown-range" type="range" min="0" max={stages.length-1} step="1" value={stage} aria-label="Arena development stage" aria-valuetext={label} onChange={e=>setStage(+e.target.value)} style={{'--breakdown-progress':stage/(stages.length-1)*100+'%'}}/></div></section>;
+}
 function RanaUnrealReveal({frames,label}){
  const [position,setPosition]=React.useState(50),[mode,setMode]=React.useState('Wipe');
  return <div className="ru-reveal"><div className={'ru-reveal-frame '+(mode==='Dissolve'?'is-dissolve':'')} style={{'--reveal':position+'%'}} onPointerMove={e=>{if(e.pointerType==='mouse'&&!e.buttons&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const box=e.currentTarget.getBoundingClientRect();setPosition(Math.round(Math.max(0,Math.min(100,(e.clientX-box.left)/box.width*100))))}}}>
@@ -7,7 +15,7 @@ function RanaUnrealReveal({frames,label}){
   <span className="ru-reveal-label ru-before-label">{frames[0][1]}</span><span className="ru-reveal-label ru-after-label">{frames[1][1]}</span>
   {mode==='Wipe'&&<div className="ru-reveal-handle" aria-hidden="true"><span>‹ ›</span></div>}
   <ComparisonWipeControl value={position} onChange={setPosition} aria-label={label+' development reveal'} aria-valuetext={position+'% '+frames[0][1]+', '+(100-position)+'% '+frames[1][1]}/>
- </div><div className="ru-reveal-foot"><span>Move / drag to reveal</span><div role="group" aria-label={label+' reveal style'}>{['Wipe','Dissolve'].map(x=><button key={x} type="button" onClick={()=>setMode(x)} aria-pressed={mode===x}>{x}</button>)}</div></div></div>;
+ </div><div className="ru-reveal-foot"><div role="group" aria-label={label+' reveal style'}>{['Wipe','Dissolve'].map(x=><button key={x} type="button" onClick={()=>setMode(x)} aria-pressed={mode===x}>{x}</button>)}</div></div></div>;
 }
 
 function RanaUnrealChapter(){
@@ -33,8 +41,9 @@ function RanaUnrealChapter(){
   return()=>{observer.disconnect();document.removeEventListener('visibilitychange',visibility);media.removeEventListener('change',motion)};
  },[]);
  React.useEffect(()=>{if(!cinemaVisible||cinemaFocus||cinemaPaused||cinemaReduced||selected)return;const timer=setTimeout(()=>setCinematic(i=>(i+1)%films.length),3000);return()=>clearTimeout(timer)},[cinematic,cinemaVisible,cinemaFocus,cinemaPaused,cinemaReduced,selected]);
- return <div className="ru-chapter" data-image-navigation=""><style>{RANA_UNREAL_STYLE+RANA_CLAUDE_STYLE}</style>
-  <section className="ru-claude"><div className="ru-heading"><h2>Built with <em>Claude.</em></h2><p>I used Claude via MCP to build the full arena blockout, reducing manual setup.</p></div><RanaBuildFilm base="media/projects/Ranasthala/web/"/></section>
+ return <div className="ru-chapter" data-image-navigation=""><style>{RANA_UNREAL_STYLE+RANA_CLAUDE_STYLE+RANA_BREAKDOWN_STYLE}</style>
+  <section className="ru-claude"><div className="ru-heading"><h2 className="ru-claude-title" aria-label="Built with Claude">Built with <img className="ru-claude-mark" src="media/tools/claude.svg" width="44" height="44" alt="" aria-hidden="true"/></h2><p>I used Claude via MCP to build the full arena blockout, reducing manual setup.</p></div><RanaBuildFilm base="media/projects/Ranasthala/web/"/></section>
+  <RanaEnvironmentBreakdown/>
   <section className="ru-development" aria-labelledby="ru-development-heading"><div className="ru-heading"><h2 id="ru-development-heading">From blockout<br/><em>to atmosphere.</em></h2><p>Unreal Engine · environment development.</p></div>
    <div className="ru-tabs" role="group" aria-label="Unreal development comparisons">{comparisons.map((item,i)=><button type="button" key={item.name} aria-pressed={comparison===i} onClick={()=>changeComparison(i)}>{item.name}</button>)}</div>
    <RanaUnrealReveal key={current.name} frames={current.frames} label={current.name}/>
@@ -46,7 +55,7 @@ function RanaUnrealChapter(){
   </section>
   <section ref={cinemaRef} className="ru-cinematics" aria-labelledby="ru-cinema-heading" onFocusCapture={()=>setCinemaFocus(true)} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setCinemaFocus(false)}}><div className="ru-heading"><h2 id="ru-cinema-heading">Light. Scale.<br/><em>Story.</em></h2><p>Cinematic views · arena and hallway.</p></div>
    <div className="ru-cinema-layout"><button type="button" className="ru-cinema-main" aria-label={'Expand cinematic · '+films[cinematic][1]} onClick={()=>inspect(...films[cinematic])}>{films.map(([file,title],i)=><img key={file} src={RANA_UNREAL_ROOT+file} alt={title} aria-hidden={cinematic!==i} className={cinematic===i?'is-current':''} loading="lazy"/>)}</button><div className="ru-cinema-previews">{[1,2].map(d=>{const i=(cinematic+d)%films.length;return <button key={d} type="button" aria-label={'Preview '+films[i][1]} onClick={()=>setCinematic(i)}><img src={RANA_UNREAL_ROOT+films[i][0]} alt={films[i][1]} loading="lazy"/></button>})}</div></div>
-   <div className="ru-cinema-foot"><span><b>{String(cinematic+1).padStart(2,'0')} / {films.length}</b>{films[cinematic][1]}</span><div><button type="button" aria-label={cinemaPaused?'Resume automatic cinematic rotation':'Pause automatic cinematic rotation'} aria-pressed={cinemaPaused} onClick={()=>setCinemaPaused(v=>!v)}>{cinemaPaused?'▷':'Ⅱ'}</button><button type="button" aria-label="Previous cinematic view" onClick={()=>changeCinema(-1)}>←</button><button type="button" aria-label="Next cinematic view" onClick={()=>changeCinema(1)}>→</button></div></div>
+   <div className="ru-cinema-foot"><span>{films[cinematic][1]}</span><div><button type="button" aria-label={cinemaPaused?'Resume automatic cinematic rotation':'Pause automatic cinematic rotation'} aria-pressed={cinemaPaused} onClick={()=>setCinemaPaused(v=>!v)}>{cinemaPaused?'▷':'Ⅱ'}</button><button type="button" aria-label="Previous cinematic view" onClick={()=>changeCinema(-1)}>←</button><button type="button" aria-label="Next cinematic view" onClick={()=>changeCinema(1)}>→</button></div></div>
   </section>
   {selected&&<ProjectImageViewer media={selected} onClose={()=>setSelected(null)}/>}
  </div>;
@@ -59,4 +68,19 @@ const RANA_UNREAL_STYLE=`
 @media(prefers-reduced-motion:reduce){.ru-chapter *{animation:none!important;transition:none!important}}
 `;
 
-const RANA_CLAUDE_STYLE=`.ru-claude{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(24px,4vw,64px);align-items:center}.ru-claude .rn-build-film{overflow:hidden;border-radius:5px;box-shadow:0 20px 50px -25px #000}.ru-claude video{width:100%;display:block;aspect-ratio:1120/868;object-fit:contain}.ru-claude .ru-heading p{max-width:40ch;line-height:1.75}@media(max-width:760px){.ru-claude{grid-template-columns:1fr;gap:22px}}`;
+const RANA_CLAUDE_STYLE=`.ru-claude{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(24px,4vw,64px);align-items:center}.ru-claude .rn-build-film{overflow:hidden;border-radius:5px;box-shadow:0 20px 50px -25px #000}.ru-claude video{width:100%;display:block;aspect-ratio:1120/868;object-fit:contain}.ru-claude .ru-claude-mark{display:block;width:clamp(36px,3.7vw,52px)!important;height:auto;aspect-ratio:1;object-fit:contain;margin:0;flex:none;filter:none!important;transform:none!important}.ru-claude .ru-claude-title{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.ru-claude .ru-heading p{max-width:40ch;line-height:1.75}@media(max-width:760px){.ru-claude{grid-template-columns:1fr;gap:22px}}`;
+
+const RANA_BREAKDOWN_STYLE=`
+.ru-breakdown-frame{position:relative;aspect-ratio:16/9;background:#080d0a;overflow:hidden;border-radius:5px;cursor:ew-resize;touch-action:pan-y}
+.ru-breakdown-frame .ru-breakdown-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;opacity:0;pointer-events:none;transform:none!important;translate:none!important;scale:1!important;filter:none!important;animation:none!important;transition:opacity .16s ease!important}
+.ru-breakdown-frame .ru-breakdown-image.is-current{opacity:1}
+.ru-breakdown-control{display:flex;align-items:center;gap:15px;margin-top:14px;font:11px/1.6 var(--mono);color:var(--dim)}
+.ru-breakdown-control>span{flex:none}.ru-breakdown-range{appearance:none;-webkit-appearance:none;display:block;width:100%;min-width:0;height:26px;margin:0;background:transparent;cursor:ew-resize;touch-action:pan-y}
+.ru-breakdown-range::-webkit-slider-runnable-track{height:2px;background:linear-gradient(to right,var(--accent) var(--breakdown-progress),var(--hair) var(--breakdown-progress));border-radius:2px}
+.ru-breakdown-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:10px;height:10px;background:var(--accent);border:0;border-radius:50%;margin-top:-4px;box-shadow:0 0 0 4px #e0bd7212}
+.ru-breakdown-range::-moz-range-track{height:2px;background:var(--hair)}.ru-breakdown-range::-moz-range-progress{height:2px;background:var(--accent)}.ru-breakdown-range::-moz-range-thumb{width:10px;height:10px;background:var(--accent);border:0;border-radius:50%}
+.ru-breakdown-range:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
+.ru-breakdown-caption{display:flex;justify-content:space-between;gap:15px;margin-top:4px;font:11px/1.6 var(--mono);color:var(--dim)}.ru-breakdown-caption>span:first-child{color:var(--accent)}
+@media(max-width:760px){.ru-breakdown-caption,.ru-breakdown-control{font-size:9px}.ru-breakdown-caption{flex-wrap:wrap;gap:5px}.ru-breakdown-control{gap:11px}.ru-claude .ru-claude-title{gap:12px}}
+@media(prefers-reduced-motion:reduce){.ru-breakdown-frame .ru-breakdown-image{transition:none!important}}
+`;

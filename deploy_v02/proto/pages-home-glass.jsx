@@ -25,12 +25,21 @@ const HOME_HIGHLIGHTS = [
   { project: 'Monsoon Station', slug: 'rainy-forest', topic: 'The final render', title: 'Finding the atmosphere.', description: 'My favourite view of Monsoon Station: the railway winding through the trees, with mountain light pulling the whole scene together.', image: 'monsoon-station/web/highresscreenshot00008.webp', alt: 'A final Unreal render of Monsoon Station, with railway bridges, forest and sunlit mountains.' },
 ];
 
+// Native page scrolling drives each phone story; horizontal swipes jump one stop.
+function usePhoneStoryScroll(track,pin,count,onSelect){
+ const callback=React.useRef(onSelect),last=React.useRef(0);callback.current=onSelect;
+ React.useEffect(()=>{let frame=0;const read=()=>{frame=0;if(!matchMedia('(max-width:800px)').matches||!track.current||!pin.current)return;const box=track.current.getBoundingClientRect(),travel=Math.max(1,track.current.offsetHeight-pin.current.offsetHeight),position=Math.max(0,Math.min(count-1,-box.top/travel*(count-1)));let next=last.current;while(next<count-1&&position>next+.58)next++;while(next>0&&position<next-.58)next--;if(next!==last.current){last.current=next;callback.current(next)}};const schedule=()=>{if(!frame)frame=requestAnimationFrame(read)};const observer=new ResizeObserver(schedule);if(track.current)observer.observe(track.current);if(pin.current)observer.observe(pin.current);window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);read();return()=>{cancelAnimationFrame(frame);observer.disconnect();window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule)}},[count]);
+ return index=>{const next=Math.max(0,Math.min(count-1,index));if(!track.current||!pin.current)return;const travel=Math.max(1,track.current.offsetHeight-pin.current.offsetHeight);window.scrollTo({top:scrollY+track.current.getBoundingClientRect().top+travel*next/(count-1),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'})};
+}
+function useStorySwipe(next){const gesture=React.useRef(null),callback=React.useRef(next);callback.current=next;return {onTouchStart:e=>{if(e.touches.length===1)gesture.current={x:e.touches[0].clientX,y:e.touches[0].clientY}},onTouchEnd:e=>{const start=gesture.current;gesture.current=null;if(!start||!e.changedTouches.length)return;const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)*1.2)callback.current(dx<0?1:-1)},onTouchCancel:()=>gesture.current=null};}
+
 function ProjectHighlights(){
-  const ref=React.useRef(null),activeRef=React.useRef(0);
-  const [active,setActive]=React.useState(0),[paused,setPaused]=React.useState(false);
+  const ref=React.useRef(null),pin=React.useRef(null),activeRef=React.useRef(0);
+  const [active,setActive]=React.useState(0);
+  const goTo=usePhoneStoryScroll(ref,pin,HOME_HIGHLIGHTS.length,setActive),swipe=useStorySwipe(d=>{if(matchMedia('(max-width:800px)').matches)goTo(active+d)});
   React.useEffect(()=>{
     let frame=0;
-    const update=()=>{frame=0;if(paused||!ref.current)return;const r=ref.current.getBoundingClientRect(),pin=ref.current.querySelector('.favourites-pin');
+    const update=()=>{frame=0;if(matchMedia('(max-width:800px)').matches||!ref.current)return;const r=ref.current.getBoundingClientRect(),pin=ref.current.querySelector('.favourites-pin');
       // Use the stable pinned height, not the phone browser's changing toolbar height.
       const travel=Math.max(1,ref.current.offsetHeight-pin.offsetHeight),position=Math.max(0,Math.min(HOME_HIGHLIGHTS.length,-r.top/travel*HOME_HIGHLIGHTS.length));
       let next=activeRef.current;while(next<HOME_HIGHLIGHTS.length-1&&position>next+1.06)next++;while(next>0&&position<next-.06)next--;
@@ -39,8 +48,8 @@ function ProjectHighlights(){
     const tick=()=>{if(!frame)frame=requestAnimationFrame(update);};
     window.addEventListener('scroll',tick,{passive:true});window.addEventListener('resize',tick);update();
     return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',tick);window.removeEventListener('resize',tick);};
-  },[paused]);
-  return <section className="scroll-favourites" data-active-project={HOME_HIGHLIGHTS[active].slug} ref={ref} aria-label="A few favourites"><div className="favourites-pin"><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><button className="favourite-photo" onClick={()=>setPaused(v=>!v)} tabIndex={i===active?0:-1} aria-pressed={paused} aria-label={paused?'Resume scroll highlights':'Hold this highlight'}><img src={'media/projects/'+item.image} alt={item.alt} decoding="async"/></button></article>)}</div></div></section>;
+  },[]);
+  return <section className="scroll-favourites" data-active-project={HOME_HIGHLIGHTS[active].slug} data-active-index={active} ref={ref} aria-label="A few favourites"><div className="favourites-pin" ref={pin} {...swipe}><div className="favourites-heading"><h2>A few <em>favourites.</em></h2></div><div className="favourites-stage">{HOME_HIGHLIGHTS.map((item,i)=><article key={item.slug} className={'favourite-slide '+(i===active?'active':'')} aria-hidden={i!==active} inert={i!==active?'':undefined}><div className="favourite-copy"><span>{item.project} / {item.topic}</span><h3>{item.title}</h3><p>{item.description}</p><a href={'#/case/'+item.slug} tabIndex={i===active?0:-1}>Explore the project ↗</a></div><div className="favourite-photo"><img src={'media/projects/'+item.image} alt={item.alt} decoding="async" draggable={false}/></div></article>)}</div></div></section>;
 }
 
 function HomeReelVideo({src,poster,onError}) {
@@ -435,8 +444,11 @@ const DISCOVERY_EVENTS = [
 ];
 
 function InterestsSection() {
-  const root=React.useRef(null),video=React.useRef(null);
+  const root=React.useRef(null),video=React.useRef(null),story=React.useRef(null),pin=React.useRef(null);
   const [active,setActive]=React.useState(0),[visible,setVisible]=React.useState(false);
+  const goTo=usePhoneStoryScroll(story,pin,DISCOVERIES.length,setActive);
+  const choose=i=>{setActive(i);if(matchMedia('(max-width:800px)').matches)goTo(i)};
+  const swipe=useStorySwipe(d=>choose(Math.max(0,Math.min(DISCOVERIES.length-1,active+d))));
   const [hovered,setHovered]=React.useState(false),[focused,setFocused]=React.useState(false),[paused,setPaused]=React.useState(false);
   const [reduced,setReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
   React.useEffect(()=>{
@@ -448,11 +460,6 @@ function InterestsSection() {
     document.addEventListener('visibilitychange',visibility);
     return()=>{observer.disconnect();media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility)};
   },[]);
-  React.useEffect(()=>{
-    if(!visible||hovered||focused||paused||reduced)return;
-    const timer=setTimeout(()=>setActive(i=>(i+1)%DISCOVERIES.length),4600);
-    return()=>clearTimeout(timer);
-  },[active,visible,hovered,focused,paused,reduced]);
   React.useEffect(()=>{
     const el=video.current;if(!el)return;
     if(active===1&&visible&&!paused&&!reduced)el.play().catch(()=>{});else el.pause();
@@ -466,25 +473,27 @@ function InterestsSection() {
   const settle=e=>{e.currentTarget.style.setProperty('--discovery-x','0px');e.currentTarget.style.setProperty('--discovery-y','0px')};
   return <section ref={root} className="discovery-section" aria-labelledby="discovery-title" data-active-discovery={DISCOVERIES[active].id}
     onFocusCapture={e=>setFocused(!!e.target.closest('.discovery-index,.discovery-credit'))} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget))setFocused(false)}}>
+    <div className="discovery-scroll-track" ref={story}><div className="discovery-pin" ref={pin}>
     <h2 id="discovery-title">Caught my <em>eye.</em></h2>
     <div className="discovery-layout">
-      <div className="discovery-visual" onPointerMove={float} onPointerLeave={settle}>
-        <button className="discovery-media" onClick={()=>setPaused(v=>!v)} aria-pressed={paused} aria-label={paused?'Resume discoveries':'Pause discoveries'}>
+      <div className="discovery-visual" {...swipe} onPointerMove={float} onPointerLeave={settle}>
+        <div className="discovery-media">
           {DISCOVERIES.map((item,i)=><span key={item.id} className={'discovery-frame'+(i===active?' is-current':'')} aria-hidden={i!==active}>
             {item.video?<video ref={video} src={'assets/radar/'+item.video} loop muted playsInline preload="metadata" aria-label={item.alt}/>:<img src={'assets/radar/'+item.image} alt={item.alt} loading="lazy" decoding="async" width="1100" height="700"/>}
           </span>)}
           <span className="discovery-glass" aria-hidden="true"/>
-        </button>
+        </div>
         <a className="discovery-credit" href={DISCOVERIES[active].href} target="_blank" rel="noopener noreferrer">{DISCOVERIES[active].source}<span aria-hidden="true">↗</span></a>
       </div>
       <div className="discovery-index" aria-label="Things I’m following">
-        {DISCOVERIES.map((item,i)=><a key={item.id} className={'discovery-entry'+(i===active?' is-current':'')} href={item.href} target="_blank" rel="noopener noreferrer"
-          onPointerEnter={e=>{if(e.pointerType==='mouse'){setActive(i);setHovered(true)}}} onPointerLeave={()=>setHovered(false)} onFocus={()=>setActive(i)} aria-label={item.title+' — '+item.source+' (opens in a new tab)'}>
+        {DISCOVERIES.map((item,i)=><button type="button" key={item.id} className={'discovery-entry'+(i===active?' is-current':'')} onClick={()=>choose(i)} aria-pressed={active===i}
+          onPointerEnter={e=>{if(e.pointerType==='mouse'){setActive(i);setHovered(true)}}} onPointerLeave={()=>setHovered(false)} onFocus={()=>{if(matchMedia('(hover:hover)').matches)setActive(i)}} aria-label={item.title+' — '+item.source}>
           <span className="discovery-name">{item.title}<span aria-hidden="true">↗</span></span>
           <span className="discovery-note">{item.note}</span>
-        </a>)}
+        </button>)}
       </div>
     </div>
+    </div></div>
     <aside className="discovery-events" aria-labelledby="discovery-events-title">
       <h3 id="discovery-events-title">Looking ahead, <em>2027.</em></h3>
       <div className="discovery-events-list">
