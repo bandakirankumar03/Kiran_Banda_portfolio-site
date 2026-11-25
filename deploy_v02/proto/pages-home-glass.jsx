@@ -211,7 +211,7 @@ function HomeIntro() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <div className="home-intro-title" style={{ fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 300, maxWidth: 1300 }}>
+          <div className="home-intro-title" style={{ fontFamily: "'Lora', Georgia, serif", fontSize: bp === 'mobile' ? 'clamp(36px, 10.5vw, 64px)' : 'clamp(56px, 8vw, 120px)', lineHeight: bp === 'mobile' ? 1.08 : 0.98, letterSpacing: bp === 'mobile' ? '-.04em' : -3, fontWeight: 400, maxWidth: 1300 }}>
             I build the <span style={{ fontStyle: 'italic', color: 'var(--lab-primary,#C1663B)' }}>worlds</span> I imagine,<br/>
             rendered in real time.
           </div>
