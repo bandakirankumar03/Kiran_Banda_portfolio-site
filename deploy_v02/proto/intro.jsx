@@ -96,6 +96,7 @@ function Intro({ onEnter, onReveal }) {
           transform: stage >= 5 ? 'scale(0.42) translateY(-18vh)' : 'scale(1)',
           transition: 'transform 1.1s cubic-bezier(.6,.0,.2,1)',
         }}>
+          <img className="intro-mineral-logo" src="proto/logo-mineral-intro.svg" alt="Kiran Banda" style={{position:'absolute',inset:40,width:'calc(100% - 80px)',height:'calc(100% - 80px)',objectFit:'contain',opacity:stage>=1?1:0,transition:'opacity .5s ease'}}/>
           {/* viewfinder brackets */}
           {[
             { top: 0, left: 0 }, { top: 0, right: 0 },
@@ -106,10 +107,10 @@ function Intro({ onEnter, onReveal }) {
             return (
               <div key={i} style={{
                 position: 'absolute', ...c, width: 38, height: 38,
-                borderTop: isTop ? '1.5px solid var(--accent)' : 'none',
-                borderBottom: !isTop ? '1.5px solid var(--accent)' : 'none',
-                borderLeft: isLeft ? '1.5px solid var(--accent)' : 'none',
-                borderRight: !isLeft ? '1.5px solid var(--accent)' : 'none',
+                borderTop: isTop ? '1.5px solid var(--special)' : 'none',
+                borderBottom: !isTop ? '1.5px solid var(--special)' : 'none',
+                borderLeft: isLeft ? '1.5px solid var(--special)' : 'none',
+                borderRight: !isLeft ? '1.5px solid var(--special)' : 'none',
                 opacity: stage >= 1 && stage < 5 ? 1 : 0,
                 transform: `translate(${isLeft ? '-6px' : '6px'}, ${isTop ? '-6px' : '6px'}) ` +
                            (stage >= 1 ? 'translate(0,0)' : ''),

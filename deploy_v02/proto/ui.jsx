@@ -268,10 +268,11 @@ function Nav() {
     { k: 'work',    l: 'Work' },
     { k: 'about',   l: 'About' },
     { k: 'contact', l: 'Contact' },
+    { k: 'resume', l: 'Résumé', href: 'documents/Kiran_Banda_Resume_2026.pdf' },
   ];
   return (
     <React.Fragment>
-    <div className="site-nav" ref={navRef} onPointerMove={floatNav} onPointerLeave={settleNav} style={{
+    <div className="site-nav" ref={navRef} onPointerLeave={settleNav} style={{
       display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', flexWrap: 'nowrap',
       padding: bp === 'mobile' ? '6px 16px' : 'clamp(6px,1.5vw,8px) var(--pad)',
       fontFamily: 'var(--mono)', fontSize: bp === 'mobile' ? 13 : 14, letterSpacing: bp === 'mobile' ? 0.8 : 1.5,
@@ -294,7 +295,7 @@ function Nav() {
       </button>
       <div style={{ display: 'flex', gap: bp === 'mobile' ? 10 : 'clamp(10px, 2.2vw, 28px)', borderRadius: 175, flexShrink: 0 }}>
         {items.map((i) => (
-          <NavLink key={i.k} className="nav-menu-item" onClick={() => go({ name: i.k })}
+          <NavLink key={i.k} className="nav-menu-item" href={i.href||'#/'+i.k} target={i.href?'_blank':undefined} rel={i.href?'noopener noreferrer':undefined} onClick={i.href?undefined:() => go({ name: i.k })}
             style={{ color: route.name === i.k ? 'var(--accent)' : 'var(--lab-ink,#f2ede3)',
               borderBottom: route.name === i.k ? `1px solid var(--accent)` : 'none', paddingBottom: 2, whiteSpace: 'nowrap' }}>
             {i.l}
@@ -328,6 +329,7 @@ function Footer() {
     { k: 'work',    l: 'Work' },
     { k: 'about',   l: 'About' },
     { k: 'contact', l: 'Contact' },
+    { k: 'resume', l: 'Résumé', href: 'documents/Kiran_Banda_Resume_2026.pdf' },
   ];
   return (
     <div style={{
@@ -348,7 +350,7 @@ function Footer() {
         textAlign: useBP() === 'mobile' ? 'center' : 'left',
       }}>
         <span>Kiran Banda · © 2026</span>
-        <NavLink style={{ textAlign: 'center', display: 'block' }}>bandakirankumar03@gmail.com</NavLink>
+        <NavLink href="mailto:bandakirankumar03@gmail.com" style={{ textAlign: 'center', display: 'block' }}>bandakirankumar03@gmail.com</NavLink>
         <div style={{ display: 'flex', gap: 'clamp(12px,3vw,22px)', justifyContent: useBP() === 'mobile' ? 'center' : 'flex-end', flexWrap: 'wrap' }}>
           {['LinkedIn', 'Polycam'].map((s) => (
             <NavLink key={s} href={s === 'LinkedIn' ? 'https://www.linkedin.com/in/kiran-kumar-banda' : s === 'Polycam' ? 'https://poly.cam/@kiranBanda03' : undefined} target="_blank" rel="noopener noreferrer">{s}</NavLink>

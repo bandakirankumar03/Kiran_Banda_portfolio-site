@@ -5,6 +5,8 @@
   "proto/rana-production-map.jsx",
   "proto/rana-quick-preview.jsx",
   "proto/intro.jsx",
+  "proto/brand-system-review.jsx",
+  "proto/home-name-reveal.jsx",
   "proto/pages-home-glass.jsx",
   "proto/pages-work.jsx",
   "proto/pages-xr02.jsx",
@@ -12,6 +14,7 @@
   "proto/pages-photogrammetry.jsx",
   "proto/rana-assets.jsx",
   "proto/rana-unreal.jsx",
+  "proto/portfolio-refinement.jsx",
   "proto/pages-project-media.jsx",
   "proto/rana-production.jsx",
   "proto/rana-post.jsx",
@@ -25,5 +28,6 @@
   "proto/site-polish.jsx",
   "proto/portrait-options.jsx",
   "proto/chapter-guide.jsx",
+  "proto/signature-palette.jsx",
   "proto/app-release.jsx"
 ]

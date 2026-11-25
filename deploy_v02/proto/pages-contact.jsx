@@ -61,7 +61,7 @@ function ContactPage() {
               Whether it&apos;s a VP shoot, a cinematic piece, or just a conversation about moss and displacement maps — I&apos;d love to hear about it. I reply within a day. Twice on weekends.
             </div>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 14, lineHeight: 1.9, color: 'var(--dim)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 32 }}>
-              <div><span style={{ color: 'var(--dim)' }}>email&nbsp;&nbsp;</span><span style={{ color: 'var(--ink)' }}>bandakirankumar03@gmail.com</span></div>
+              <div><span style={{ color: 'var(--dim)' }}>email&nbsp;&nbsp;</span><a href="mailto:bandakirankumar03@gmail.com" className="contact-email" style={{color:'var(--ink)'}}>bandakirankumar03@gmail.com</a></div>
               <div><span style={{ color: 'var(--dim)' }}>based&nbsp;&nbsp;</span><span style={{ color: 'var(--ink)' }}>Savannah, GA · USA</span></div>
             </div>
 

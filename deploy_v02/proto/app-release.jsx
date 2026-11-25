@@ -93,7 +93,7 @@ function App() {
   return (
     <RouteCtx.Provider value={{ route, go }}>
       <CursorCtx.Provider value={{ label, mode, setLabel, setMode }}>
-        <CursorStudio />
+        <CursorStudio /><SignaturePaletteReview/><BrandSystemReview/>
         {!introDone && <Intro onEnter={enterSite} onReveal={()=>setIntroRevealing(true)} />}
           <div className="site-reveal" inert={!introDone?'':undefined} aria-hidden={!introDone?true:undefined} style={{opacity:introDone||introRevealing?1:.22,filter:introDone?'none':introRevealing?'blur(0px)':'blur(8px)',transition:'opacity 900ms ease,filter 1100ms ease'}}>
             <Nav />

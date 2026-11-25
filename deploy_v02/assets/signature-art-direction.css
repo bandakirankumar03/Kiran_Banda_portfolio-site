@@ -1,0 +1,24 @@
+/* One signature color, a consistent editorial serif, and practical body typography. */
+:root{--serif:'Cormorant Garamond',Georgia,serif;--sans:'Manrope',Arial,sans-serif;--signature:#94B9C6;--signature-rgb:148,185,198}
+body{font-family:var(--sans)}
+.site-page :is(h1,h2,h3,h4){font-weight:500}
+.site-page :is(.ru-heading h2,.rn-copy h2,.rpd h2,.rag h2,.about-section-title,.cts-heading h2){font-weight:500!important}
+.site-page :is(.ru-technical .ru-heading h2,.rpd-category h3){font-family:'Manrope',Arial,sans-serif!important;letter-spacing:-.04em!important;font-weight:500!important}
+.site-page :is(.ru-technical .ru-heading h2 em,.rpd-category h3 em){font-style:normal}
+.site-page p{font-family:var(--sans)}
+/* Retain floating photos, but replace broad reflective panels with quieter surfaces. */
+.site-nav{background:color-mix(in srgb,var(--bg) 92%,transparent)!important;border-color:color-mix(in srgb,var(--ink) 16%,transparent)!important;box-shadow:none!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+.site-nav:before{display:none!important}.site-nav a:hover{text-shadow:none!important}
+.site-page .focus-selection-bar{background:color-mix(in srgb,var(--accent) 5%,var(--bg))!important;box-shadow:none!important;backdrop-filter:none!important}
+.site-page .ongoing-card{background:color-mix(in srgb,var(--ink) 3%,var(--bg))!important;box-shadow:none!important}
+.site-page .rpm-node{box-shadow:inset 0 1px 0 #ffffff0b,0 10px 28px #0002!important}
+.site-page .rpm-node:hover{box-shadow:inset 0 1px 0 #ffffff13,0 16px 34px #0003!important}
+/* Mineral blue is reserved for the name and the capture-to-stage story. Gold stays primary. */
+:root[data-art-direction="mineral"] .home-name-reveal[data-signature] .hnr-name em{color:var(--signature)!important}
+:root[data-art-direction="mineral"] .portrait-scene-copy h1 em{color:var(--signature)!important}
+:root[data-art-direction="mineral"] .cts-tabs button:last-child[aria-selected=true]{color:var(--signature);border-color:var(--signature);background:rgba(var(--signature-rgb),.055)}
+:root[data-art-direction="mineral"] .map-traveler circle:first-child{stroke:var(--signature);fill:rgba(var(--signature-rgb),.08)}
+:root[data-art-direction="mineral"] .map-traveler circle:last-child{fill:var(--signature)}
+.signature-palette-review{position:fixed;z-index:925;right:var(--pad);top:110px;bottom:auto;display:flex;align-items:center;gap:16px;padding:10px 14px;background:#0a0e0df0;border:1px solid #ffffff20;border-radius:10px;color:var(--ink);box-shadow:0 8px 24px #0004}
+.signature-palette-review>span{font:12px var(--mono);color:var(--dim)}.signature-palette-review>div{display:flex;gap:6px}.signature-palette-review button{display:flex;align-items:center;gap:8px;min-height:40px;padding:8px 10px;border:1px solid transparent;background:none;border-radius:5px;font:12px var(--mono);color:var(--dim);cursor:pointer}.signature-palette-review button[aria-pressed=true]{color:var(--ink);border-color:#ffffff40}.signature-palette-review i{width:9px;height:9px;display:block;border-radius:50%}.palette-gold{background:var(--accent)}.palette-mineral{background:var(--signature)}
+@media(max-width:800px){.signature-palette-review{left:var(--pad);right:var(--pad);top:84px;bottom:auto;display:block;padding:10px}.signature-palette-review>span{display:block;margin-bottom:6px;font-size:11px}.signature-palette-review>div{justify-content:space-between}.signature-palette-review button{font-size:11px;min-height:40px;padding:6px 8px}.site-page .ru-technical .ru-heading h2{font-size:34px!important}}

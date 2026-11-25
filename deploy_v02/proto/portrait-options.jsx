@@ -53,6 +53,6 @@ function PortraitStudies(){
 function PortraitRoles(){
  const [index,setIndex]=React.useState(0);const [reduced,setReduced]=React.useState(()=>matchMedia('(prefers-reduced-motion:reduce)').matches);
  React.useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion:reduce)');const changed=()=>setReduced(mq.matches);mq.addEventListener('change',changed);return()=>mq.removeEventListener('change',changed)},[]);
- React.useEffect(()=>{if(reduced)return;const timer=setInterval(()=>{if(!document.hidden)setIndex(v=>(v+1)%ROLES.length)},3400);return()=>clearInterval(timer)},[reduced]);
- return <div className="portrait-roles" aria-label={'My creative practice: '+ROLES.join(', ')}>{reduced?<p className="portrait-roles-static">{ROLES.join(' · ')}</p>:ROLES.map((role,i)=><span className={'portrait-role-word'+(i===index?' is-current':'')} key={role} aria-hidden="true">{role}</span>)}</div>
+ React.useEffect(()=>{if(reduced)return;const timer=setInterval(()=>{if(!document.hidden)setIndex(v=>(v+1)%2)},3400);return()=>clearInterval(timer)},[reduced]);
+ return <div className="portrait-roles" aria-label="Unreal Environment Artist / Virtual Production">{reduced?<p className="portrait-roles-static">{'Unreal Environment Artist / Virtual Production'}</p>:['Unreal Environment Artist','Virtual Production'].map((role,i)=><span className={'portrait-role-word'+(i===index?' is-current':'')} key={role} aria-hidden="true">{role}</span>)}</div>
 }

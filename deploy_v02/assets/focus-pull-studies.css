@@ -1,0 +1,32 @@
+/* Five typographic directions, all driven by the same short scroll focus pull. */
+.home-name-reveal[data-direction="5"][data-focus] .hnr-identity{display:flex;flex-direction:column;align-items:center;filter:blur(var(--name-blur));transform:translate3d(0,var(--name-y),0) scale(var(--name-scale));text-align:center;bottom:21svh}
+.home-name-reveal[data-direction="5"][data-focus] .hnr-role{opacity:var(--role-p);font-size:13px;line-height:1.8;letter-spacing:.08em;margin:0 0 23px;max-width:50ch;color:#e2e5de}
+.home-name-reveal[data-direction="5"][data-focus] .hnr-name{font-size:clamp(74px,9vw,134px);font-weight:400;line-height:1.05;letter-spacing:-.045em;text-shadow:0 5px 40px #0007}
+/* Velvet: the closest, most refined version of the selected original. */
+.home-name-reveal[data-focus="1"] .hnr-shade{background:linear-gradient(0deg,#020504e8,transparent 86%)}
+.home-name-reveal[data-focus="1"] .hnr-name em{color:#e0bc68}
+/* Premiere: a vertical film-title composition with the role arriving last. */
+.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-identity{top:25svh;bottom:13svh;justify-content:center}
+.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-name{order:-1;font-size:clamp(92px,12.6vw,182px);line-height:.88;margin-bottom:35px}
+.home-name-reveal[data-focus="2"] .hnr-name>span,.home-name-reveal[data-focus="2"] .hnr-name em{display:block}.home-name-reveal[data-focus="2"] .hnr-name em{font-style:normal;color:#e1c780;font-weight:300}
+.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-role{font-size:12px;text-transform:uppercase;letter-spacing:.15em;margin:0;max-width:48ch}
+.home-name-reveal[data-focus="2"] .hnr-shade{background:radial-gradient(ellipse at 50% 55%,#020504c7,transparent 85%)}
+/* Afterglow: a warmer signature, held low and to the left. */
+.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-identity{align-items:flex-start;text-align:left;bottom:13svh}
+.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-name{order:-1;font-size:clamp(72px,8.5vw,126px);margin-bottom:22px;color:#eee5cd;text-shadow:0 0 38px #ddaa4520,0 5px 35px #0008}
+.home-name-reveal[data-focus="3"] .hnr-name em{color:#edc96f}.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-role{margin:0;letter-spacing:.06em}
+.home-name-reveal[data-focus="3"] .hnr-shade{background:radial-gradient(ellipse at 20% 78%,#b0762633,transparent 58%),linear-gradient(0deg,#050604ed,transparent 95%)}
+/* Lens drift: subtle lateral movement through depth, no idle floating. */
+.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-identity{align-items:flex-start;text-align:left;bottom:23svh;left:12vw;right:var(--pad);transform:translate3d(var(--focus-drift),var(--name-y),0) scale(var(--name-scale))}
+.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-name{order:-1;font-size:clamp(70px,8.8vw,130px);margin-bottom:24px}.home-name-reveal[data-focus="4"] .hnr-name>span{font-style:italic}.home-name-reveal[data-focus="4"] .hnr-name em{font-style:normal;color:#e4c579}.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-role{margin:0;letter-spacing:.12em;max-width:39ch}
+.home-name-reveal[data-focus="4"] .hnr-shade{background:linear-gradient(90deg,#030705cc,transparent 95%),linear-gradient(0deg,#030705a0,transparent 88%)}
+/* Opening title: tracking and word spacing settle with the lens. */
+.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-identity{bottom:15svh}
+.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-name{font-size:clamp(80px,10.6vw,158px);letter-spacing:calc(-.045em + var(--focus-tracking))}
+.home-name-reveal[data-focus="5"] .hnr-name>span{display:inline-block;transform:translateX(calc(var(--focus-word)*-1))}.home-name-reveal[data-focus="5"] .hnr-name em{display:inline-block;transform:translateX(var(--focus-word));color:#ead29b}
+.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-role{text-transform:uppercase;letter-spacing:.17em;font-size:12px;margin-bottom:28px}
+.home-name-reveal[data-focus="5"] .hnr-shade{background:linear-gradient(0deg,#020504f0,transparent 94%)}
+@media(max-width:800px){.home-name-reveal[data-direction="5"][data-focus] .hnr-name{font-size:clamp(43px,12.6vw,73px);white-space:nowrap}.home-name-reveal[data-direction="5"][data-focus] .hnr-role{font-size:12px;max-width:29ch;letter-spacing:.04em;line-height:1.8}.home-name-reveal[data-direction="5"][data-focus] .hnr-identity{bottom:21svh}.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-identity{top:29svh;bottom:14svh}.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-name{font-size:clamp(82px,25vw,132px);margin-bottom:30px}.home-name-reveal[data-direction="5"][data-focus="2"] .hnr-role{font-size:11px;max-width:28ch;letter-spacing:.1em}.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-identity{bottom:14svh}.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-name{font-size:clamp(43px,12.4vw,70px);margin-bottom:18px}.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-identity{left:var(--pad);bottom:22svh}.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-name{font-size:clamp(42px,12vw,70px);margin-bottom:20px}.home-name-reveal[data-direction="5"][data-focus="4"] .hnr-role{max-width:28ch}.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-identity{bottom:16svh}.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-name{font-size:clamp(43px,12.7vw,75px)}.home-name-reveal[data-direction="5"][data-focus="5"] .hnr-role{font-size:11px;max-width:29ch;letter-spacing:.1em;margin-bottom:25px}}
+.home-name-reveal[data-reduced="true"][data-focus] .hnr-identity,.home-name-reveal[data-reduced="true"][data-focus] .hnr-name>span,.home-name-reveal[data-reduced="true"][data-focus] .hnr-name em{transform:none!important;filter:none!important}.home-name-reveal[data-reduced="true"][data-focus] .hnr-name{letter-spacing:-.045em!important}
+.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-role{max-width:62ch}
+@media(max-width:800px){.home-name-reveal[data-direction="5"]:is([data-focus="2"],[data-focus="5"]) .hnr-role{max-width:none}.home-name-reveal:is([data-focus="2"],[data-focus="5"]) .hnr-role-break{display:block}.home-name-reveal[data-direction="5"][data-focus="3"] .hnr-role{max-width:29ch}}

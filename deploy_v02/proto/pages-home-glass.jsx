@@ -174,6 +174,7 @@ function ReelHero() {
         )}
       </div>
 
+      <HomeNameReveal/>
       <style>{`
         .home-background-video::-webkit-media-controls,.home-background-video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
         @keyframes reelDrift { 0% { transform: scale(1.1) translateX(-1.5%); } 100% { transform: scale(1.1) translateX(1.5%); } }

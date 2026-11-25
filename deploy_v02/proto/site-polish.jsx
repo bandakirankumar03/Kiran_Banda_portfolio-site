@@ -3,7 +3,7 @@ const AI_TOOL_LOGOS=[{"name": "Claude", "file": "claude.svg", "wide": false}, {"
 function HeadlineMotion({routeKey}){
  React.useLayoutEffect(()=>{
   const page=document.querySelector('.site-page');if(!page)return;
-  const selectors='h1,h2,[data-main-headline],.home-intro-title,.about-title';
+  const selectors=':not(*)';
   const nodes=[...page.querySelectorAll(selectors)];nodes.forEach(el=>el.classList.add('headline-reactive'));
   const mq=matchMedia('(prefers-reduced-motion:reduce)'),fine=matchMedia('(hover:hover) and (pointer:fine)');let active=null,raf=0,pending;
   const reset=()=>{if(active){active.style.setProperty('--headline-x','0px');active.style.setProperty('--headline-y','0px');active=null}};
@@ -19,8 +19,8 @@ const FLOAT_MOTION_GROUPS={
  cards:'.work-index-row,.ongoing-card,.study-card,.experience-card,[data-card],.radar-item,.ru-tech-card,.rn-inspiration-grid figure,.nyc-character-grid figure,.ms-valley-panels figure,.case-footer-item',
  frames:'.scene-surface,.favourite-photo,.hobby-expand-frame,.film-print,[data-photo-frame],.discovery-media,.ws-focus-stage,.about-split-lenses .lens-surface,.ru-cinema-main,.ru-cinema-previews button,.pg-photo,.rn-team-figure,.qf-pocket,.qf-glances,.qf-ribbon,.qf-ticket',
  actions:'.pc-action,.focus-explore,.project-watch-link,.qf-watch,.qf-explore,.qf-return',
- text:'h3,h4,p,.work-filter,.quiet-practice li,.portrait-side-note,.learning-hover',
- blocked:'.site-nav,.chapter-guide,.pc-image,.home-reel,.portrait-studies,.orbital-toolkit,.quiet-focus-list,dialog,[role="dialog"],.rana-production-map,.ai-workflow,.rp-wipe,.ru-reveal-frame,.nyc-comparison,.xr-comparison-frame,.rn-stage-worlds,.rn-prep-gallery,.rn-film-ribbons,.seek-video,.tap-vimeo,.rn-bts-film,.shared-films,.rn-film-collection,.qf-player,.software-marks,.tool-logo'
+ text:':not(*)',
+ blocked:'.capture-to-stage,.rana-journey,.gate-decision-evidence,.site-nav,.chapter-guide,.pc-image,.home-reel,.portrait-studies,.orbital-toolkit,.quiet-focus-list,dialog,[role="dialog"],.rana-production-map,.ai-workflow,.rp-wipe,.ru-reveal-frame,.nyc-comparison,.xr-comparison-frame,.rn-stage-worlds,.rn-prep-gallery,.rn-film-ribbons,.seek-video,.tap-vimeo,.rn-bts-film,.shared-films,.rn-film-collection,.qf-player,.software-marks,.tool-logo'
 };
 
 function AmbientFloat({routeKey}){

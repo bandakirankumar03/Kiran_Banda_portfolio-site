@@ -1,0 +1,88 @@
+/* A complete four-token palette: background, basic text, primary gold, special accent. */
+html[data-brand-system]{--bg:#090D0B!important;--ink:#F4F0E5!important;--accent:#E2BC62!important;--lab-primary:#E2BC62!important;--lab-accent:#E2BC62!important;--lab-ink:#F4F0E5!important;--accent-rgb:226,188,98!important}
+html[data-brand-system="slate"]{--special:#97A9D8}html[data-brand-system="teal"]{--special:#8DB7B6}html[data-brand-system="sage"]{--special:#AFC29C}html[data-brand-system="lilac"]{--special:#B6A8CE}html[data-brand-system="clay"]{--special:#D3A08B}
+html:root[data-restored-font="lora"]{--serif:'Lora',Georgia,serif!important}
+html:root[data-restored-font="champagne"]{--serif:'Cormorant Garamond',Georgia,serif!important}
+html:root[data-restored-font="lora"] .home-name-reveal[data-signature] .hnr-name{font-family:'Lora',Georgia,serif!important;font-size:clamp(68px,9.4vw,150px)!important;font-weight:400!important}
+html:root[data-restored-font="champagne"] .home-name-reveal[data-signature] .hnr-name{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(76px,10.4vw,168px)!important;font-weight:500!important}
+html[data-brand-system] .home-name-reveal[data-signature] .hnr-name{color:var(--ink)!important;text-shadow:none!important}
+html[data-brand-system] .home-name-reveal[data-signature] .hnr-name em,html[data-brand-system] .portrait-scene-copy h1 em{color:var(--accent)!important;text-shadow:none!important}
+html[data-brand-system] .home-name-reveal .hnr-role{color:var(--ink)!important}
+/* The special color repeats consistently through navigation and exploration states. */
+html[data-brand-system] .site-nav .nav-menu-item{border-bottom-color:var(--special)!important}
+html[data-brand-system] .focus-selection-bar:before{background:var(--special)!important;box-shadow:none!important}
+html[data-brand-system] .chapter-guide .cg-thumb,html[data-brand-system] .chapter-guide .cg-progress{background:var(--special)!important}
+html[data-brand-system] .chapter-guide .cg-marker[aria-current=location] .cg-dot{border-color:var(--special)!important;background:var(--special)!important}
+html[data-brand-system] :is(.cts-tabs button[aria-selected=true],.rn-film-tabs button[aria-selected=true],.ru-tabs button[aria-pressed=true],.journey-cities button[aria-pressed=true]){color:var(--special)!important;border-color:var(--special)!important;background:transparent!important}
+html[data-brand-system] .rpm-node[aria-pressed=true]{border-color:var(--special)!important}
+html[data-brand-system] .map-traveler circle:first-child{stroke:var(--special)!important;fill:color-mix(in srgb,var(--special) 10%,transparent)!important}html[data-brand-system] .map-traveler circle:last-child{fill:var(--special)!important}
+html[data-brand-system] :is(.ru-reveal-handle,.rp-divider){background:var(--special)!important}html[data-brand-system] :is(.ru-reveal-handle span,.rp-divider>span){color:var(--special)!important;border-color:var(--special)!important}
+html[data-brand-system] .rn-small-label{color:var(--special)!important}
+html[data-brand-system] :is(a,button,[role=slider]):focus-visible{outline-color:var(--special)!important}
+html[data-brand-system] .site-page :is(h1,h2,h3,h4) em{color:var(--accent)}
+.home-title-graphic{order:-2;position:relative;width:72px;height:72px;margin:0 0 18px;color:var(--special);pointer-events:none}
+.home-title-graphic svg{display:none;width:100%;height:100%;overflow:visible;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+html[data-brand-title="1"] .title-lens-seal{display:block;transform:rotate(calc((1 - var(--name-p))*-25deg)) scale(calc(.9 + var(--name-p)*.1))}.title-lens-seal .seal-inner{stroke:var(--accent);stroke-width:.65;stroke-dasharray:2 5}.title-lens-seal .seal-center{fill:var(--accent);stroke:none}
+html[data-brand-title="2"] .home-title-graphic{position:absolute;left:50%;top:-22px;width:min(950px,96%);height:calc(100% + 42px);margin:0;transform:translateX(-50%)}html[data-brand-title="2"] .title-camera-frame{display:block;stroke-width:1.2;vector-effect:non-scaling-stroke}.title-camera-frame path{vector-effect:non-scaling-stroke}.camera-register{stroke:var(--accent);stroke-width:1}
+html[data-brand-title="3"] .home-title-graphic{width:170px;height:64px;margin-bottom:18px}html[data-brand-title="3"] .title-architecture{display:block}.architecture-pillars{stroke:var(--accent)}.architecture-scan{stroke-width:.65;opacity:.65}
+.brand-system-review{position:fixed;z-index:930;top:110px;right:var(--pad);width:min(740px,calc(100vw - var(--pad)*2));padding:12px 14px;box-sizing:border-box;border:1px solid #ffffff20;border-radius:10px;background:#090d0bf0;color:var(--ink);font:12px var(--mono)}
+.brand-system-review header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.brand-system-review button{min-height:38px;border:1px solid transparent;border-radius:5px;background:none;color:var(--dim);padding:7px 9px;font:11px/1.4 var(--mono);cursor:pointer}.brand-system-review button[aria-pressed=true]{border-color:var(--special);color:var(--ink)}.brand-system-review header button{border:0;color:var(--accent);min-height:25px;padding:3px 0}.brand-palette-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.brand-palette-options button{display:flex;align-items:center;gap:7px;justify-content:center}.brand-palette-options i{display:block;flex:none;width:9px;height:9px;border-radius:50%}.brand-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}.brand-controls>div{display:flex;gap:5px}.brand-controls label{display:flex;align-items:center;gap:8px;color:var(--dim);font-size:11px}.brand-controls select{background:#101511;color:var(--ink);border:1px solid #ffffff30;border-radius:4px;padding:7px 5px;font:11px var(--mono);min-height:36px}
+@media(max-width:800px){html:root[data-restored-font="lora"] .home-name-reveal[data-signature] .hnr-name{font-size:clamp(42px,12.5vw,80px)!important}html:root[data-restored-font="champagne"] .home-name-reveal[data-signature] .hnr-name{font-size:clamp(48px,14vw,92px)!important}.home-title-graphic{width:55px;height:55px;margin-bottom:16px}html[data-brand-title="3"] .home-title-graphic{width:138px;height:52px}.brand-system-review{left:var(--pad);right:var(--pad);top:84px;width:auto;padding:10px;font-size:11px}.brand-palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}.brand-palette-options button{font-size:10px;min-height:38px;padding:6px 3px}.brand-controls{display:block}.brand-controls>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.brand-controls>div button{font-size:10px;padding:6px 3px}.brand-controls label{justify-content:flex-end;margin-top:8px}.brand-controls select{max-width:140px}html[data-brand-title="2"] .home-title-graphic{width:100%;height:calc(100% + 32px);top:-16px}}
+@media(max-height:500px) and (min-width:801px){html[data-restored-font] .home-name-reveal[data-signature] .hnr-name{font-size:clamp(42px,7vw,84px)!important}.home-title-graphic{width:42px;height:42px;margin-bottom:10px}html[data-brand-title="3"] .home-title-graphic{height:40px;width:110px;margin-bottom:10px}}
+html[data-brand-system] .site-page .home-title-graphic{filter:none!important;box-shadow:none!important}
+@media(prefers-reduced-motion:reduce){.home-title-graphic *{transform:none!important;animation:none!important;transition:none!important}}
+
+html:root[data-signature-font="original"]{--serif:'Lora',Georgia,serif!important}
+html:root[data-signature-font="original"] .home-name-reveal[data-signature] .hnr-name{font-family:'Lora',Georgia,serif!important;font-size:clamp(68px,9.4vw,150px)!important;font-weight:400!important}
+html:root[data-signature-font="original"] .home-name-reveal[data-signature] .hnr-name em{color:var(--accent)!important}
+@media(max-width:800px){html:root[data-signature-font="original"] .home-name-reveal[data-signature] .hnr-name{font-size:clamp(42px,12.5vw,80px)!important}}
+@media(max-height:500px) and (min-width:801px){html:root[data-signature-font="original"] .home-name-reveal[data-signature] .hnr-name{font-size:clamp(42px,7vw,84px)!important}}
+
+/* Accepted mineral details: gold remains the primary accent. */
+html:root{--special:#8DB7B6;--mineral-steel:#B4C6CB}
+html[data-brand-system] :is(.rpm-wire,.rpm-connections path,.rpm-connector){stroke:var(--special)!important}
+html[data-brand-system] :is(.cts-paths button,.rn-film-tabs,.ru-tabs){border-color:color-mix(in srgb,var(--special) 45%,transparent)}
+html[data-brand-system] :is(.ru-spec-ribbon,.rn-status,.focus-selection-bar){border-color:color-mix(in srgb,var(--special) 32%,transparent)}
+html[data-brand-system] :is(.title-camera-frame,.title-architecture,.title-lens-seal){stroke:var(--special)}
+html[data-brand-system] .nav-logo-mark{background:transparent url('../proto/logo-mineral.svg') center/100% 100% no-repeat!important;mask:none!important;-webkit-mask:none!important}
+html[data-brand-system] .nav-brand:hover .nav-logo-corner{filter:none}
+.site-intro .intro-logo-stage>div[role="img"]{display:none!important}
+.site-intro .intro-logo-stage{filter:none!important}
+.capture-to-stage .cts-tabs{grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(6px,2vw,28px);margin-top:8px}
+.capture-to-stage .cts-tabs button{border:0;border-bottom:1px solid transparent;border-radius:0;background:transparent;min-height:48px;padding:10px 0;font:400 clamp(11px,1.1vw,14px)/1.4 var(--sans);transition:color .25s ease,border-color .25s ease}
+.capture-to-stage .cts-tabs button:hover{color:var(--ink);border-bottom-color:var(--mineral-steel)}
+.capture-to-stage .cts-tabs button[aria-selected=true]{background:none;border-bottom-color:var(--special);color:var(--special)}
+.capture-to-stage .cts-viewer img{transition:opacity .4s ease}
+@media(max-width:350px){.capture-to-stage .cts-tabs{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.capture-to-stage .cts-tabs button{font-size:10px;overflow-wrap:anywhere}}
+
+html[data-brand-system] :is(.rpm-wire-live,.rpm-port){stroke:var(--special)!important}.site-intro .intro-logo-stage .intro-mineral-logo{filter:none}
+
+/* Mineral teal is the shared secondary accent, visible at rest as well as on hover. */
+html:root[data-brand-system]{--hair:color-mix(in srgb,var(--special) 38%,transparent)}
+html[data-brand-system] .site-nav{border-color:color-mix(in srgb,var(--special) 36%,transparent)!important}
+html[data-brand-system] .site-page .focus-selection-bar{background:color-mix(in srgb,var(--special) 9%,var(--bg))!important;border-color:color-mix(in srgb,var(--special) 50%,transparent)!important}
+html[data-brand-system] .site-page .ongoing-card{background:color-mix(in srgb,var(--special) 6%,var(--bg))!important;border-color:color-mix(in srgb,var(--special) 40%,transparent)!important}
+html[data-brand-system] .ongoing-fill,html[data-brand-system] .ongoing-dot{background:var(--special)!important;box-shadow:none!important}
+html[data-brand-system] .ongoing-track{background:color-mix(in srgb,var(--special) 18%,transparent)!important}
+html[data-brand-system] .favourite-copy>a,html[data-brand-system] .favourite-copy>span{color:var(--special)!important}
+html[data-brand-system] .chapter-guide .cg-line{background:color-mix(in srgb,var(--special) 45%,transparent)!important}
+html[data-brand-system] .chapter-guide .cg-dot{border-color:var(--special)!important}
+html[data-brand-system] .chapter-guide .cg-marker[data-complete=true] .cg-dot{background:var(--special)!important}
+html[data-brand-system] .chapter-guide .cg-label{color:var(--special)!important}
+html[data-brand-system] .site-page .rpm-node{border-color:color-mix(in srgb,var(--special) 48%,transparent)!important}
+html[data-brand-system] .site-page .rpm-vp-group{border-color:color-mix(in srgb,var(--special) 55%,transparent)!important}
+html[data-brand-system] .site-page .rpm-node:hover,html[data-brand-system] .site-page .rpm-node:focus-visible{border-color:var(--special)!important}
+html[data-brand-system] .site-page .rpm-wire{stroke:color-mix(in srgb,var(--special) 65%,transparent)!important}
+html[data-brand-system] .site-page .rpm-port{fill:var(--bg)!important;stroke:var(--special)!important}
+html[data-brand-system] .site-page .rana-journey .map-pin circle{fill:var(--special)!important}
+html[data-brand-system] .site-page .rana-journey .map-pin path{stroke:var(--special)!important}
+html[data-brand-system] .site-page :is(.cts-tabs button,.rn-film-tabs button,.ru-tabs button){border-bottom-color:color-mix(in srgb,var(--special) 32%,transparent)}
+html[data-brand-system] .cts-paths button{border-bottom-color:var(--special)!important}
+html[data-brand-system] .site-page .lens-options :is(.lens-date,.lens-label,.lens-level){color:var(--special)!important}
+html[data-brand-system] .site-page .lens-options .lens-surface{border-color:color-mix(in srgb,var(--special) 42%,transparent)!important}
+html[data-brand-system] .site-page .lens-options .is-selected .lens-surface{border-color:var(--special)!important}
+html[data-brand-system] .site-page .orbit-guide{border-color:color-mix(in srgb,var(--special) 45%,transparent)!important}
+html[data-brand-system] .site-page .learning-hover small{color:var(--special)!important}
+html[data-brand-system] .site-page .quiet-focus-list button:is(:hover,:focus-visible,.is-active) strong{color:var(--special)!important}
+
+html[data-brand-system] .title-camera-frame .camera-register{stroke:var(--special)}
